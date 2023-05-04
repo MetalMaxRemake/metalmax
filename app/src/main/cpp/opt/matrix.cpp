@@ -4,6 +4,7 @@
 
 #include "matrix.h"
 #include "matrix_mul_neo.h"
+#include "mem_opt.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -235,7 +236,7 @@ void rotateM(float *m, int mOffset,
     float sTemp[16], result[16];
     setRotateM(sTemp, 0, a, x, y, z);
     matrix_multiply_4x4_neon_asm(sTemp, m, result);
-    memcpy(m, result, 16);
+    __memcpy_aarch64_simd(m, result, 16);
 }
 
 void orthoM(float m[], int mOffset,

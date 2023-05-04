@@ -1,5 +1,6 @@
 #include <cstring>
 #include "nes_fds.h"
+#include "../../../opt/mem_opt.h"
 
 namespace xgm {
 
@@ -85,7 +86,7 @@ void NES_FDS::Reset ()
 
     for (int i=0; i<2; ++i)
     {
-        ::memset(wave[i], 0, sizeof(wave[i]));
+        ::__memset_aarch64(wave[i], 0, sizeof(wave[i]));
         freq[i] = 0;
         phase[i] = 0;
     }

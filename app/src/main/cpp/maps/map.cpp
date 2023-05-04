@@ -30,7 +30,7 @@ unsigned char *current_map;
 void initFullMap() {
     if(fullMap == nullptr) {
         unsigned char *result = (unsigned char *)malloc(sizeof (char) * (map_width*map_height*256));
-        memset(result, 0, sizeof (char) * (map_width*map_height*256));
+        __memset_aarch64(result, 0, sizeof (char) * (map_width*map_height*256));
         int bmpIdx = 0;
         for(int i = 0;i<map_height;i++) {
             for(int j = 0;j<map_width;j++) {
@@ -71,7 +71,7 @@ unsigned char *getImage(int x, int y, unsigned char *result) {
     if(fullMap == nullptr) {
         initFullMap();
     }
-    memset(result, 0, 16 * 16 * 256);
+    __memset_aarch64(result, 0, 16 * 16 * 256);
     int maxX = map_height * 256, maxY = map_width * 256;
     int renderXEnd = x + 256, renderYEnd = y + 256;
     for (int i = 0; i < 256; i++) {
@@ -86,7 +86,7 @@ unsigned char *getImage(int x, int y, unsigned char *result) {
         int maxj2 = (renderYEnd - y - 1);
         int maxj = min(maxj1, maxj2);
         int length = min(maxj, 256);
-        __memmove_aarch64(result + resultStartIdx, fullMap + fullMapStartIdx, length);
+        __memcpy_aarch64_simd(result + resultStartIdx, fullMap + fullMapStartIdx, length);
     }
     pthread_mutex_unlock(&mapRefreshMutex);
     return result;

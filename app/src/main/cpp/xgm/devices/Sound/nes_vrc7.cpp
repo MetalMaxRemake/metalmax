@@ -1,5 +1,6 @@
 #include <cstring>
 #include "nes_vrc7.h"
+#include "../../../opt/mem_opt.h"
 
 namespace xgm
 {
@@ -75,8 +76,8 @@ namespace xgm
     if (patch_custom) 
     {
       uint8_t dump[19 * 8];
-      memcpy(dump, patch_custom, 16 * 8);
-      memset(dump + 16 * 8, 0, 3 * 8);
+      __memcpy_aarch64_simd(dump, patch_custom, 16 * 8);
+      __memset_aarch64(dump + 16 * 8, 0, 3 * 8);
       OPLL_setPatch(opll, dump);
     }
     OPLL_reset (opll);

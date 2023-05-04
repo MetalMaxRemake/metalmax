@@ -159,7 +159,7 @@ void initQuadCoordinates(int width, int height) {
             width / 2.0f, height / 2.0f, 0,
             width / 2.0f, -height / 2.0f, 0
     };
-    __memmove_aarch64(quadCoords, tempQuadCoords, 12 * sizeof (float));
+    __memcpy_aarch64_simd(quadCoords, tempQuadCoords, 12 * sizeof (float));
     float tempTextureCoords[] = {
             0,
             maxTexY / (float) textureSize,
@@ -170,7 +170,7 @@ void initQuadCoordinates(int width, int height) {
             maxTexX / (float) textureSize,
             maxTexY / (float) textureSize,
     };
-    __memmove_aarch64(textureCoords, tempTextureCoords, 8 * sizeof (float));
+    __memcpy_aarch64_simd(textureCoords, tempTextureCoords, 8 * sizeof (float));
 }
 
 unsigned int loadShader(const char *shaderCode, GLenum type) {
@@ -361,7 +361,7 @@ bool isColorDebugMode() {
 }
 
 void debugColorMode() {
-    memset(currentBuffer, posX, 256*256);
+    __memset_aarch64(currentBuffer, posX, 256*256);
     __android_log_print(ANDROID_LOG_ERROR, "GLView", "color:%d", posX);
 }
 

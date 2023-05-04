@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include "nes_bank.h"
+#include "../../../opt/mem_opt.h"
 
 // this workaround solves a problem with mirrored FDS RAM writes
 // when the same bank is used twice; some NSF rips reuse bank 00
@@ -45,7 +46,7 @@ namespace xgm
   {
     int i;
 
-    // ƒoƒ“ƒNƒXƒCƒbƒ`‚Ì‰Šú’l‚Í‘S‚Äuƒoƒ“ƒN–³Œøv
+    // ï¿½oï¿½ï¿½ï¿½Nï¿½Xï¿½Cï¿½bï¿½`ï¿½Ìï¿½ï¿½ï¿½ï¿½lï¿½Í‘Sï¿½Äuï¿½oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½v
     for (i = 0; i < 16; i++)
       bankdefault[i] = -1; // -1 is special empty bank
 
@@ -58,14 +59,14 @@ namespace xgm
     if (image)
       delete[]image;
     image = new UINT8[0x1000 * bankmax];
-    memset (image, 0, 0x1000 * bankmax);
-    memcpy (image + (offset & 0xfff), data, size);
+    __memset_aarch64 (image, 0, 0x1000 * bankmax);
+    __memcpy_aarch64_simd (image + (offset & 0xfff), data, size);
 
     #if FDS_MEMCPY
       if (fds_image)
         delete[] fds_image;
       fds_image = new UINT8[0x10000];
-      memset(fds_image, 0, 0x10000);
+      __memset_aarch64(fds_image, 0, 0x10000);
       for (i = 0; i < 16; i++)
         bank[i] = fds_image + 0x1000 * i;
     #else
@@ -80,7 +81,7 @@ namespace xgm
 
   void NES_BANK::Reset ()
   {
-    memset (null_bank, 0, 0x1000);
+    __memset_aarch64 (null_bank, 0, 0x1000);
     for (int i = 0; i < 16; i++)
     {
       bankswitch[i] = bankdefault[i];
@@ -88,9 +89,9 @@ namespace xgm
       #if FDS_MEMCPY
         bankswitch[i] = i;
         if (bankdefault[i] == -1 || bankdefault[i] >= bankmax)
-          memset(bank[i], 0, 0x1000);
+          __memset_aarch64(bank[i], 0, 0x1000);
         else
-          memcpy(bank[i], image + (bankdefault[i] * 0x1000), 0x1000);
+          __memcpy_aarch64_simd(bank[i], image + (bankdefault[i] * 0x1000), 0x1000);
       #endif
     }
   }
@@ -113,9 +114,9 @@ namespace xgm
       {
         int b = adr - 0x5ff0;
         if (int(val) >= bankmax)
-          memset(bank[b], 0, 0x1000);
+          __memset_aarch64(bank[b], 0, 0x1000);
         else
-          memcpy(bank[b], image + (val * 0x1000), 0x1000);
+          __memcpy_aarch64_simd(bank[b], image + (val * 0x1000), 0x1000);
         return true;
       }
       #else

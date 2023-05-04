@@ -15,6 +15,8 @@
 
 #include "ppls.h"
 #include "sstream.h"
+#include "../../../../opt/mem_opt.h"
+
 #define BLK_SIZE (32)
 
 static int is_sjis_prefix(int c)
@@ -239,7 +241,7 @@ PLSITEM *PLSITEM_new(const char *text)
   SST_set_text(sst, text) ;
 
   if((elem = (PLSITEM *)malloc(sizeof(PLSITEM)))==NULL) return NULL ;
-  memset(elem,0,sizeof(PLSITEM)) ;
+  __memset_aarch64(elem,0,sizeof(PLSITEM)) ;
 
   elem->time_in_ms = -1 ;
   elem->fade_in_ms = -1 ;

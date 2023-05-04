@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <string.h>
 #include "nes_mem.h"
+#include "../../../opt/mem_opt.h"
 
 namespace xgm
 {
@@ -15,17 +16,17 @@ namespace xgm
 
   void NES_MEM::Reset ()
   {
-    memset (image, 0, 0x800);
-    //memset (image + 0x6000, 0, 0x2000); // •ª‚©‚Á‚Ä‚Ä‚ ‚¦‚Ä‰Šú‰»‚µ‚Ä‚Ü‚¹‚ñB
+    __memset_aarch64 (image, 0, 0x800);
+    //__memset_aarch64 (image + 0x6000, 0, 0x2000); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ä‚ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ü‚ï¿½ï¿½ï¿½B
   }
 
   bool NES_MEM::SetImage (UINT8 * data, UINT32 offset, UINT32 size)
   {
-    memset (image, 0, 0x10000);
+    __memset_aarch64 (image, 0, 0x10000);
     if( offset + size < 0x10000 )
-      memcpy (image + offset, data, size );
+      __memcpy_aarch64_simd (image + offset, data, size );
     else 
-      memcpy (image + offset, data, 0x10000 - offset);
+      __memcpy_aarch64_simd (image + offset, data, 0x10000 - offset);
     return true;
   }
 
@@ -77,7 +78,7 @@ namespace xgm
   void NES_MEM::SetReserved (const UINT8* data, UINT32 size)
   {
     assert(size <= PLAYER_RESERVED_SIZE);
-    ::memcpy(image + PLAYER_RESERVED, data, size);
+    ::__memcpy_aarch64_simd(image + PLAYER_RESERVED, data, size);
   }
 
   bool NES_MEM::WriteReserved (UINT32 adr, UINT32 val)

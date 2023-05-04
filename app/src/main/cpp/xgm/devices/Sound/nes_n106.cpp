@@ -1,5 +1,6 @@
 #include <cstring>
 #include "nes_n106.h"
+#include "../../../opt/mem_opt.h"
 
 namespace xgm {
 
@@ -100,7 +101,7 @@ void NES_N106::SetOption (int id, int val)
 void NES_N106::Reset ()
 {
     master_disable = false;
-    ::memset(reg, 0, sizeof(reg));
+    ::__memset_aarch64(reg, 0, sizeof(reg));
     reg_select = 0;
     reg_advance = false;
     tick_channel = 0;

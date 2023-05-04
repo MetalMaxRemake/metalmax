@@ -1,5 +1,6 @@
 #include <cstring>
 #include "echo.h"
+#include "../../../opt/mem_opt.h"
 
 using namespace xgm;
 
@@ -12,7 +13,7 @@ void EchoUnit::Reset()
      16,  8,  4,  2,
   };
   eidx = 0;
-  memset(echo_buf,0,sizeof(INT32)*(1<<17));
+  __memset_aarch64(echo_buf,0,sizeof(INT32)*(1<<17));
   for(int i=0; i<16; i++) h[i] = hdef[i];
   lpf.SetParam(4700,100);
   lpf.Reset();
