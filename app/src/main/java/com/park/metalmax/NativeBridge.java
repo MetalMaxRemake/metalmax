@@ -1,7 +1,6 @@
 package com.park.metalmax;
 
 import dalvik.annotation.optimization.CriticalNative;
-import dalvik.annotation.optimization.FastNative;
 
 public class NativeBridge {
 
@@ -15,18 +14,18 @@ public class NativeBridge {
         return sInstance;
     }
 
-    @FastNative
+    @CriticalNative
     public static native void changeBuffer();
 
-    @FastNative
+    @CriticalNative
     public static native void onKeyEvent(int key);
-    @FastNative
+    @CriticalNative
     public static native void onFuncKeyEvent(int key);
 
     @CriticalNative
     public static native void init();
 
-    @FastNative
+    @CriticalNative
     public static native void onChange(int width, int height);
 
     @CriticalNative

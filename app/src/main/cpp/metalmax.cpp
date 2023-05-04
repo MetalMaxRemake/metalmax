@@ -58,7 +58,7 @@ void onLoop(){
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_changeBuffer(JNIEnv *env, jclass thiz) {
+Java_com_park_metalmax_NativeBridge_changeBuffer() {
 //    changeBuffer();
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
@@ -66,28 +66,27 @@ Java_com_park_metalmax_NativeBridge_changeBuffer(JNIEnv *env, jclass thiz) {
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_init(JNIEnv *env, jclass thiz) {
+Java_com_park_metalmax_NativeBridge_init() {
     initGL();
     initSL();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onChange(JNIEnv *env, jclass thiz, jint width,
-                                             jint height) {
+Java_com_park_metalmax_NativeBridge_onChange(jint width, jint height) {
     onGLSurfaceChange(width, height);
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onDrawFrame(JNIEnv *env, jclass thiz) {
+Java_com_park_metalmax_NativeBridge_onDrawFrame() {
     onGLDraw();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
+Java_com_park_metalmax_NativeBridge_onKeyEvent(jint newKey) {
     key = newKey;
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onFuncKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
+Java_com_park_metalmax_NativeBridge_onFuncKeyEvent(jint newKey) {
     funcKey = newKey;
 }
