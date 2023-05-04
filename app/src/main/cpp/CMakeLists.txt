@@ -28,4 +28,4 @@ add_library( metalmax
             charsets.cpp
             maps/map.cpp)
 target_link_libraries(metalmax
-        log android EGL GLESv2 OpenSLES)
+        log android EGL GLESv2 OpenSLES jnigraphics)

@@ -95,8 +95,8 @@ public class FunctionKeyView extends KeyView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        drawKey(canvas, TARect, TA, "turbo A");
-        drawKey(canvas, TBRect, TB, "turbo B");
+        drawKey(canvas, TARect, TA, "TR A");
+        drawKey(canvas, TBRect, TB, "TR B");
         drawKey(canvas, ARect, A, "A");
         drawKey(canvas, BRect, B, "B");
     }

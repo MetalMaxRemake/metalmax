@@ -1,8 +1,12 @@
 #include <jni.h>
 #include <__threading_support>
 #include <unistd.h>
+#include <android/bitmap.h>
 #include "native_gl.h"
 #include "native_sles.h"
+#include "charsets.h"
+#include "palette_data.h"
+#include "opt/mem_opt.h"
 
 volatile int key, funcKey;
 
@@ -84,6 +88,27 @@ void onFuncKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
     funcKey = newKey;
 }
 
+jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring text) {
+    const char *textInChar = env->GetStringUTFChars(text, JNI_FALSE);
+    unsigned char * nativeBmp = getStringImg(textInChar);
+    AndroidBitmapInfo bitmapInfo;
+    AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
+    void *pixels;
+    if (AndroidBitmap_lockPixels(env, bitmap, &pixels) < 0) {
+        return false;
+    }
+    int *data = (int *)pixels;
+    int dataIdx = 0;
+    for(int i = 0;i<bitmapInfo.height;i++) {
+        for(int j = 0;j<bitmapInfo.width;j++) {
+            data[dataIdx] = palette1[nativeBmp[dataIdx]];
+            dataIdx++;
+        }
+    }
+    AndroidBitmap_unlockPixels(env, bitmap);
+    return true;
+}
+
 static JNINativeMethod methods[] = {
         {"commonTest",   "()V",   (void *) &commonTest},
         {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
@@ -91,6 +116,7 @@ static JNINativeMethod methods[] = {
         {"glInit",         "()V",   (void *) &init},
         {"glOnChange",     "(II)V", (void *) &onChange},
         {"glOnDrawFrame",  "()V",   (void *) &onDrawFrame},
+        {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},
 };
 
 extern "C"
