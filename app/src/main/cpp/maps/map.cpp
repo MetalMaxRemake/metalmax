@@ -75,11 +75,13 @@ unsigned char *getImage(int x, int y, unsigned char *result) {
     int maxX = map_height * 256, maxY = map_width * 256;
     int renderXEnd = x + 256, renderYEnd = y + 256;
     for (int i = 0; i < 256; i++) {
-        if(i+x >= maxX || i+x >= renderXEnd) {
+        if (i + x >= maxX
+            || i + x >= renderXEnd
+            || i + x < 0) {
             continue;
         }
         int resultStartIdx = i * 256;
-        int fullMapStartIdx = (i + x) * (16*map_width) + y;
+        int fullMapStartIdx = (i + x) * (16 * map_width) + y;
         int maxj1 = (maxY - y - 1);
         int maxj2 = (renderYEnd - y - 1);
         int maxj = min(maxj1, maxj2);

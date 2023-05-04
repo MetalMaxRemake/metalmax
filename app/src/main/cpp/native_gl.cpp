@@ -296,7 +296,6 @@ void initGL() {
 void onGLSurfaceChange(int width, int height) {
     orthoM(projMatrix, 0, -width / 2.0f, +width / 2.0f, -height / 2.0f,
            +height / 2.0f, -2.0f, 2.0f);
-    int nvpy = (height - 0 - height);
     glViewport(0, 0, width, height);
     initQuadCoordinates(height, height);
     glUseProgram(program);
@@ -406,4 +405,5 @@ void changeMap() {
     posX = 0;
     posY = 0;
     refreshCurrentMap(mapId);
+    refreshImg();
 }

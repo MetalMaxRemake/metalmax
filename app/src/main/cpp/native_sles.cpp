@@ -7,16 +7,8 @@
 #include <string.h>
 #include <pthread.h>
 #include <queue>
-
-
-// for __android_log_print(ANDROID_LOG_INFO, "YourApp", "formatted message");
-// #include <android/log.h>
-
-// for native audio
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
-
-// for native asset manager
 #include <sys/types.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -32,7 +24,7 @@
 #define SAMPLE_RATE 48000
 constexpr const uint64_t kFramesToBuffer = 4096;
 
-#define CACHE_SIZE 3
+#define CACHE_SIZE 10
 
 volatile short cachedData[CACHE_SIZE][kFramesToBuffer];
 volatile int cacheIdx = 0;
@@ -50,69 +42,36 @@ static SLObjectItf bqPlayerObject = NULL;
 static SLPlayItf bqPlayerPlay;
 static SLAndroidSimpleBufferQueueItf bqPlayerBufferQueue;
 static SLEffectSendItf bqPlayerEffectSend;
-static SLMuteSoloItf bqPlayerMuteSolo;
 static SLVolumeItf bqPlayerVolume;
 static SLmilliHertz bqPlayerSampleRate = 0;
-static jint bqPlayerBufSize = 0;
-static short *resampleBuf = NULL;
-// a mutext to guard against re-entrance to record & playback
-// as well as make recording and playing back to be mutually exclusive
-// this is to avoid crash at situations like:
-//    recording is in session [not finished]
-//    user presses record button and another recording coming in
-// The action: when recording/playing back is not finished, ignore the new request
+
 static pthread_mutex_t audioEngineLock = PTHREAD_MUTEX_INITIALIZER;
 
-// aux effect on the output mix, used by the buffer queue player
 static const SLEnvironmentalReverbSettings reverbSettings =
         SL_I3DL2_ENVIRONMENT_PRESET_STONECORRIDOR;
 
-// pointer and size of the next player buffer to enqueue, and number of remaining buffers
-static short *nextBuffer;
+static short *slientBuf;
 static unsigned nextSize;
-static int nextCount;
 
-
-// synthesize a mono sawtooth wave and place it into a buffer (called automatically on load)
 __attribute__((constructor)) static void onDlOpen(void) {
     __android_log_print(ANDROID_LOG_INFO, "test", "on dlopen");
 }
 
-void releaseResampleBuf(void) {
-    if (0 == bqPlayerSampleRate) {
-        /*
-         * we are not using fast path, so we were not creating buffers, nothing to do
-         */
-        return;
-    }
-
-    free(resampleBuf);
-    resampleBuf = NULL;
-}
-
-// this callback handler is called every time a buffer finishes playing
 void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
     assert(bq == bqPlayerBufferQueue);
     assert(NULL == context);
-    // for streaming playback, replace this test by logic to find and fill the next buffer
     if (readIdx < cacheIdx) {
         SLresult result;
-        // enqueue another buffer
-        result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, (short *)cachedData[(readIdx++) % CACHE_SIZE], nextSize);
-        // the most likely other result is SL_RESULT_BUFFER_INSUFFICIENT,
-        // which for this code example would indicate a programming error
+        result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, (short *)cachedData[(readIdx++) % CACHE_SIZE], kFramesToBuffer);
         if (SL_RESULT_SUCCESS != result) {
             pthread_mutex_unlock(&audioEngineLock);
         }
         (void) result;
     } else {
-        releaseResampleBuf();
         pthread_mutex_unlock(&audioEngineLock);
     }
 }
 
-
-// create the engine and output mix objects
 void createEngine() {
     SLresult result;
 
@@ -154,22 +113,19 @@ void createEngine() {
                 outputMixEnvironmentalReverb, &reverbSettings);
         (void) result;
     }
-    // ignore unsuccessful result codes for environmental reverb, as it is optional for this example
 
 }
 
-
-// create buffer queue audio player
 void createBufferQueueAudioPlayer(int sampleRate) {
     SLresult result;
-    nextBuffer = (short *) malloc(sizeof (short) * kFramesToBuffer);
+    slientBuf = (short *) malloc(sizeof (short) * kFramesToBuffer);
     if (sampleRate >= 0) {
         bqPlayerSampleRate = sampleRate * 1000;
     }
 
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
-    SLDataFormat_PCM format_pcm = {SL_DATAFORMAT_PCM, 1, SL_SAMPLINGRATE_8,
+    SLDataFormat_PCM format_pcm = {SL_DATAFORMAT_PCM, 1, SL_SAMPLINGRATE_48,
                                    SL_PCMSAMPLEFORMAT_FIXED_16, SL_PCMSAMPLEFORMAT_FIXED_16,
                                    SL_SPEAKER_FRONT_CENTER, SL_BYTEORDER_LITTLEENDIAN};
     /*
@@ -230,12 +186,10 @@ void createBufferQueueAudioPlayer(int sampleRate) {
         (void) result;
     }
 
-#if 0   // mute/solo is not supported for sources that are known to be mono, as this is
     // get the mute/solo interface
-    result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_MUTESOLO, &bqPlayerMuteSolo);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
-#endif
+//    result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_MUTESOLO, &bqPlayerMuteSolo);
+//    assert(SL_RESULT_SUCCESS == result);
+//    (void)result;
 
     // get the volume interface
     result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume);
@@ -260,14 +214,14 @@ bool enqueuePCM(short * buf, int count) {
         // If we could not acquire audio engine lock, reject this request and client should re-try
         return JNI_FALSE;
     }
-    nextBuffer = (short *) buf;
+    slientBuf = (short *) buf;
     nextSize = count;
 
     if (nextSize > 0) {
         // here we only enqueue one buffer because it is a long clip,
         // but for streaming playback we would typically enqueue at least 2 buffers to start
         SLresult result;
-        result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, nextBuffer, nextSize);
+        result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, slientBuf, nextSize);
         if (SL_RESULT_SUCCESS != result) {
             pthread_mutex_unlock(&audioEngineLock);
             return JNI_FALSE;
@@ -280,7 +234,6 @@ bool enqueuePCM(short * buf, int count) {
 }
 
 void shutdown() {
-
     // destroy buffer queue audio player object, and invalidate all associated interfaces
     if (bqPlayerObject != NULL) {
         (*bqPlayerObject)->Destroy(bqPlayerObject);
@@ -288,7 +241,6 @@ void shutdown() {
         bqPlayerPlay = NULL;
         bqPlayerBufferQueue = NULL;
         bqPlayerEffectSend = NULL;
-        bqPlayerMuteSolo = NULL;
         bqPlayerVolume = NULL;
     }
 
@@ -321,21 +273,18 @@ struct Nsf2WavOptions {
     int32_t fade_ms;
     int channels = 1;
     double samplerate = SAMPLE_RATE;
-    int track = 1;
+    int track = 2;
     bool quiet = false;
 };
 
-struct BufferData{
-    short data[kFramesToBuffer];
-};
-
-std::queue<BufferData> soundQueue;
 pthread_mutex_t soundMutex;
+xgm::NSFPlayer player;
+int track = 0;
 
 void *convertNsf2PCM(void *) {
     xgm::NSF nsf;
     xgm::NSFPlayerConfig config;
-    xgm::NSFPlayer player;
+
 
     Nsf2WavOptions options(nsf);
     nsf.SetDefaults(options.length_ms, options.fade_ms, nsf.default_loopnum);
@@ -351,8 +300,6 @@ void *convertNsf2PCM(void *) {
     config["APU2_OPTION7"] = 0; /* disable randomized tri phase at reset */
     config["PLAY_ADVANCE"] = 1;
 
-
-//    config["MULT_SPEED"] = ;
     player.SetConfig(&config);
     player.UpdateInfinite();
     if(!player.Load(&nsf)) {
@@ -362,7 +309,7 @@ void *convertNsf2PCM(void *) {
 
     player.SetPlayFreq(options.samplerate);
     player.SetChannels(options.channels);
-    player.SetSong(2);
+    player.SetSong(track);
     player.Reset();
 
     uint64_t frames; /* total pcm frames */
@@ -371,37 +318,38 @@ void *convertNsf2PCM(void *) {
     constexpr uint64_t kMillisPerSecond = 1000;
     frames /= kMillisPerSecond;
     int fc; /* current # of frames to decode */
-    int samplePerSec = SAMPLE_RATE / kFramesToBuffer;
-    enqueuePCM(nextBuffer, kFramesToBuffer);
+    enqueuePCM(slientBuf, kFramesToBuffer);
     while (frames) {
-        fc = kFramesToBuffer;
-        timeval t1, t2;
-        gettimeofday(&t1, NULL);
-        player.Render((short *)cachedData[(cacheIdx++) % CACHE_SIZE], fc);
-//        __memmove_aarch64(nextBuffer, buf.get(), fc);
-        frames -= fc;
-//        gettimeofday(&t2, NULL);
-//        long deltaT = (t2.tv_sec - t1.tv_sec) * 1000000 + t2.tv_usec - t1.tv_usec;
-//        long sleepTime = (1000000 - samplePerSec * deltaT) / samplePerSec;
-//        if (sleepTime > 100000) {
-//            __android_log_print(ANDROID_LOG_ERROR, "opensl", "invalid sleep time! set to 100ms");
-//            sleepTime = 100000;
-//        } else if (sleepTime <= 0) {
-//            __android_log_print(ANDROID_LOG_ERROR, "opensl", "render sound too slow!");
-//            continue;
-//        }
-//        usleep(sleepTime - 10);
-        if(cacheIdx - readIdx >= 2) {
+        if(cacheIdx - readIdx >= CACHE_SIZE - 1) {
             usleep(1000 * 10);
+            continue;
         }
+        fc = kFramesToBuffer;
+        pthread_mutex_lock(&soundMutex);
+        player.Render((short *)cachedData[(cacheIdx++) % CACHE_SIZE], fc);
+        pthread_mutex_unlock(&soundMutex);
+        //fixme 当前声道数量问题没有找到解决方法，拷贝一份数据（破音），或者播放器频率减半（降调）
+        frames -= fc;
     }
 }
 
 extern "C" void initSL() {
     createEngine();
     int sampleRate = SAMPLE_RATE;
-    createBufferQueueAudioPlayer(sampleRate);
+    createBufferQueueAudioPlayer(sampleRate/2);
+    //fixme 当前声道数量问题没有找到解决方法，拷贝一份数据（破音），或者播放器频率减半（降调）
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, NULL, convertNsf2PCM, NULL);
+    pthread_create(&id, nullptr, convertNsf2PCM, nullptr);
+}
+
+extern "C" void changeMusic() {
+    track++;
+    if(track >= 96) {
+        track = 0;
+    }
+    pthread_mutex_lock(&soundMutex);
+    player.SetSong(track);
+    player.Reset();
+    pthread_mutex_unlock(&soundMutex);
 }

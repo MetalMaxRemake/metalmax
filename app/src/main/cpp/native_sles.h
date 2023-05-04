@@ -11,4 +11,5 @@
 #include <SLES/OpenSLES_AndroidMetadata.h>
 #include <SLES/OpenSLES_Platform.h>
 extern "C" void initSL();
+extern "C" void changeMusic();
 #endif //SUPERCUBE_NATIVE_SLES_H

@@ -6,17 +6,19 @@
 
 volatile int key, funcKey;
 
-const int up = 0b0001;
-const int down = 0b0010;
-const int left = 0b0100;
-const int right = 0b1000;
+const unsigned char up = 0b0001;
+const unsigned char down = 0b0010;
+const unsigned char left = 0b0100;
+const unsigned char right = 0b1000;
 
-const int a = 0b0001;
-const int b = 0b0010;
-const int ta = 0b0100;
-const int tb = 0b1000;
+const unsigned char a = 0b0001;
+const unsigned char b = 0b0010;
+const unsigned char ta = 0b0100;
+const unsigned char tb = 0b1000;
 
-char needChangeMap = 0;
+const unsigned char map_val = 0b0001;
+const unsigned char music_val = 0b0010;
+unsigned char needChange = 0;
 
 void onLoop(){
     if (key & up) {
@@ -29,13 +31,16 @@ void onLoop(){
         onRight();
     }
     if(funcKey &a) {
-        needChangeMap = 1;
-    } else if(needChangeMap) {
-        needChangeMap = 0;
+        needChange |= map_val;
+    } else if(needChange & map_val) {
+        needChange &= ~map_val;
         changeMap();
     }
     if(funcKey &b) {
-
+        needChange |= music_val;
+    } else if(needChange & music_val) {
+        needChange &= ~music_val;
+        changeMusic();
     }
 }
 
