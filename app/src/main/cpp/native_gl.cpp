@@ -17,6 +17,7 @@
 #include "maps/map.h"
 #include "charsets.h"
 #include "sound/mm_sound.h"
+#include "opt/mem_opt.h"
 
 void * currentBuffer;
 
@@ -158,7 +159,7 @@ void initQuadCoordinates(int width, int height) {
             width / 2.0f, height / 2.0f, 0,
             width / 2.0f, -height / 2.0f, 0
     };
-    memcpy(quadCoords, tempQuadCoords, 12 * sizeof (float));
+    __memmove_aarch64(quadCoords, tempQuadCoords, 12 * sizeof (float));
     float tempTextureCoords[] = {
             0,
             maxTexY / (float) textureSize,
@@ -169,7 +170,7 @@ void initQuadCoordinates(int width, int height) {
             maxTexX / (float) textureSize,
             maxTexY / (float) textureSize,
     };
-    memcpy(textureCoords, tempTextureCoords, 8 * sizeof (float));
+    __memmove_aarch64(textureCoords, tempTextureCoords, 8 * sizeof (float));
 }
 
 unsigned int loadShader(const char *shaderCode, GLenum type) {

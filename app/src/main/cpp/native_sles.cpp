@@ -29,6 +29,14 @@
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
 
+#define SAMPLE_RATE 48000
+constexpr const uint64_t kFramesToBuffer = 4096;
+
+#define CACHE_SIZE 3
+
+volatile short cachedData[CACHE_SIZE][kFramesToBuffer];
+volatile int cacheIdx = 0;
+volatile int readIdx = 0;
 // engine interfaces
 static SLObjectItf engineObject = NULL;
 static SLEngineItf engineEngine;
@@ -87,10 +95,10 @@ void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
     assert(bq == bqPlayerBufferQueue);
     assert(NULL == context);
     // for streaming playback, replace this test by logic to find and fill the next buffer
-    if (NULL != nextBuffer && 0 != nextSize) {
+    if (readIdx < cacheIdx) {
         SLresult result;
         // enqueue another buffer
-        result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, nextBuffer, nextSize);
+        result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, (short *)cachedData[(readIdx++) % CACHE_SIZE], nextSize);
         // the most likely other result is SL_RESULT_BUFFER_INSUFFICIENT,
         // which for this code example would indicate a programming error
         if (SL_RESULT_SUCCESS != result) {
@@ -154,6 +162,7 @@ void createEngine() {
 // create buffer queue audio player
 void createBufferQueueAudioPlayer(int sampleRate) {
     SLresult result;
+    nextBuffer = (short *) malloc(sizeof (short) * kFramesToBuffer);
     if (sampleRate >= 0) {
         bqPlayerSampleRate = sampleRate * 1000;
     }
@@ -302,8 +311,6 @@ void shutdown() {
 
 struct Nsf2WavOptions;
 
-constexpr const uint64_t kFramesToBuffer = 4096;
-
 struct Nsf2WavOptions {
     Nsf2WavOptions(const xgm::NSF &nsf)
             : length_ms(nsf.default_playtime),
@@ -313,7 +320,7 @@ struct Nsf2WavOptions {
     int32_t length_ms;
     int32_t fade_ms;
     int channels = 1;
-    double samplerate = xgm::DEFAULT_RATE;
+    double samplerate = SAMPLE_RATE;
     int track = 1;
     bool quiet = false;
 };
@@ -322,15 +329,10 @@ struct BufferData{
     short data[kFramesToBuffer];
 };
 
-volatile short cachedData[3][kFramesToBuffer];
-volatile int cacheIdx = 0;
-volatile int readIdx = 0;
-
 std::queue<BufferData> soundQueue;
 pthread_mutex_t soundMutex;
 
 void *convertNsf2PCM(void *) {
-    //todo use nsfplayer convert nsf data to pcm stream
     xgm::NSF nsf;
     xgm::NSFPlayerConfig config;
     xgm::NSFPlayer player;
@@ -369,34 +371,37 @@ void *convertNsf2PCM(void *) {
     constexpr uint64_t kMillisPerSecond = 1000;
     frames /= kMillisPerSecond;
     int fc; /* current # of frames to decode */
-    while(frames) {
+    int samplePerSec = SAMPLE_RATE / kFramesToBuffer;
+    enqueuePCM(nextBuffer, kFramesToBuffer);
+    while (frames) {
         fc = kFramesToBuffer;
-        player.Render(buf.get(), fc);
-        __android_log_print(ANDROID_LOG_INFO, "test", "rendered!");
-        __memmove_aarch64((unsigned short *)cachedData[(cacheIdx++)%3], buf.get(), fc);
+        timeval t1, t2;
+        gettimeofday(&t1, NULL);
+        player.Render((short *)cachedData[(cacheIdx++) % CACHE_SIZE], fc);
+//        __memmove_aarch64(nextBuffer, buf.get(), fc);
         frames -= fc;
-        usleep(1000 * 5);
-    }
-}
-
-void *render(void *) {
-    while(true) {
-        if(readIdx >= cacheIdx) {
+//        gettimeofday(&t2, NULL);
+//        long deltaT = (t2.tv_sec - t1.tv_sec) * 1000000 + t2.tv_usec - t1.tv_usec;
+//        long sleepTime = (1000000 - samplePerSec * deltaT) / samplePerSec;
+//        if (sleepTime > 100000) {
+//            __android_log_print(ANDROID_LOG_ERROR, "opensl", "invalid sleep time! set to 100ms");
+//            sleepTime = 100000;
+//        } else if (sleepTime <= 0) {
+//            __android_log_print(ANDROID_LOG_ERROR, "opensl", "render sound too slow!");
+//            continue;
+//        }
+//        usleep(sleepTime - 10);
+        if(cacheIdx - readIdx >= 2) {
             usleep(1000 * 10);
-            continue;
         }
-        enqueuePCM((short *)cachedData[(readIdx++)%3], kFramesToBuffer);
-//        soundQueue.pop();
-
     }
 }
 
 extern "C" void initSL() {
     createEngine();
-    int sampleRate = 48000;
+    int sampleRate = SAMPLE_RATE;
     createBufferQueueAudioPlayer(sampleRate);
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
     pthread_create(&id, NULL, convertNsf2PCM, NULL);
-    pthread_create(&id, NULL, render, NULL);
 }

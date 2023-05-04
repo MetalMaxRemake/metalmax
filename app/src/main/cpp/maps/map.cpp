@@ -11,7 +11,7 @@
 #include <string.h>
 #include <__threading_support>
 
-int map_width = 256,map_height = 256;
+volatile int map_width = 256,map_height = 256;
 pthread_mutex_t mapRefreshMutex;
 
 void fill(int i, int j, int bmpIdx, unsigned char *result) {
@@ -84,7 +84,7 @@ unsigned char *getImage(int x, int y, unsigned char *result) {
         int maxj2 = (renderYEnd - y - 1);
         int maxj = min(maxj1, maxj2);
         int length = min(maxj, 256);
-        __memmove_aarch64(&result[resultStartIdx], &fullMap[fullMapStartIdx], length);
+        __memmove_aarch64(result + resultStartIdx, fullMap + fullMapStartIdx, length);
     }
     pthread_mutex_unlock(&mapRefreshMutex);
     return result;
