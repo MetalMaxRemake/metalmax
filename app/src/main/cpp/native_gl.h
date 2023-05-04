@@ -11,7 +11,7 @@
 void initGL();
 void onGLSurfaceChange(int width, int height);
 void onGLDraw();
-void changeBuffer();
+void initFirstBuffer();
 void onRight();
 void onLeft();
 void onUp();

@@ -20,73 +20,84 @@ const unsigned char map_val = 0b0001;
 const unsigned char music_val = 0b0010;
 unsigned char needChange = 0;
 
-void onLoop(){
+void onLoop() {
     if (key & up) {
         onUp();
-    } if (key & down) {
+    }
+    if (key & down) {
         onDown();
-    } if (key & left) {
+    }
+    if (key & left) {
         onLeft();
-    } if (key & right) {
+    }
+    if (key & right) {
         onRight();
     }
-    if(funcKey &a) {
+    if (funcKey & a) {
         needChange |= map_val;
-    } else if(needChange & map_val) {
+    } else if (needChange & map_val) {
         needChange &= ~map_val;
         changeMap();
     }
-    if(funcKey &b) {
+    if (funcKey & b) {
         needChange |= music_val;
-    } else if(needChange & music_val) {
+    } else if (needChange & music_val) {
         needChange &= ~music_val;
         changeMusic();
     }
 }
 
 //定义线程函数
-[[noreturn]] void* logic_thread(void *arg)
-{
+[[noreturn]] void *logic_thread(void *arg) {
     while (true) {
         onLoop();
-        if(isColorDebugMode()) {
+        if (isColorDebugMode()) {
             usleep(100 * 1000);
         }
         usleep(16 * 1000);
     }
 }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_changeBuffer() {
-//    changeBuffer();
-    pthread_t id;
-    //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, NULL, logic_thread, NULL);
+void commonTest() {
+    //test code
+    initFirstBuffer();
 }
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_init() {
+
+void init() {
     initGL();
     initSL();
 }
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onChange(jint width, jint height) {
+
+void onChange(jint width, jint height) {
     onGLSurfaceChange(width, height);
 }
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onDrawFrame() {
+
+void onDrawFrame() {
     onGLDraw();
 }
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onKeyEvent(jint newKey) {
+
+void onKeyEvent(jint newKey) {
     key = newKey;
 }
+
+void onFuncKeyEvent(jint newKey) {
+    funcKey = newKey;
+}
+
+static JNINativeMethod methods[] = {
+        {"commonTest",   "()V",   (void *) &commonTest},
+        {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
+        {"onFuncKeyEvent", "(I)V",  (void *) &onFuncKeyEvent},
+        {"glInit",         "()V",   (void *) &init},
+        {"glOnChange",     "(II)V", (void *) &onChange},
+        {"glOnDrawFrame",  "()V",   (void *) &onDrawFrame},
+};
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onFuncKeyEvent(jint newKey) {
-    funcKey = newKey;
+Java_com_park_metalmax_NativeBridge_initNativeMethod(JNIEnv *env, jclass clazz) {
+    (*env).RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0]));
+    pthread_t id;
+    //创建函数线程，并且指定函数线程要执行的函数
+    pthread_create(&id, NULL, logic_thread, NULL);
 }

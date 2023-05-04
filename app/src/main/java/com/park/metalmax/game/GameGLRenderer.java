@@ -10,16 +10,16 @@ import javax.microedition.khronos.opengles.GL10;
 public class GameGLRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        NativeBridge.init();
+        NativeBridge.glInit();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        NativeBridge.onChange(width, height);
+        NativeBridge.glOnChange(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        NativeBridge.onDrawFrame();
+        NativeBridge.glOnDrawFrame();
     }
 }

@@ -2,7 +2,6 @@ package com.park.metalmax;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,40 +31,19 @@ public class MainActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(initView());
+        NativeBridge.initNativeMethod();
         mainHandler.postDelayed(() -> {
             try {
-                NativeBridge.changeBuffer();
+                NativeBridge.commonTest();
             }catch (Throwable tr){
                 tr.printStackTrace();
                 Toast.makeText(MainActivity.this, "native test failed! exiting ...", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }, 1000);
-
-        new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    runOnUiThread(() -> {
-                        getDrawCache();
-                    });
-
-                }
-            }
-        }.start();
     }
 
     private GameGLView mGameGlView;
-
-    public Bitmap getDrawCache() {
-        mGameGlView.buildDrawingCache();
-        return mGameGlView.getDrawingCache();
-    }
 
     private View initView() {
         //root

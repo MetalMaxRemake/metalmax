@@ -14,8 +14,10 @@ public class NativeBridge {
         return sInstance;
     }
 
+    public static native void initNativeMethod();
+
     @CriticalNative
-    public static native void changeBuffer();
+    public static native void commonTest();
 
     @CriticalNative
     public static native void onKeyEvent(int key);
@@ -23,12 +25,12 @@ public class NativeBridge {
     public static native void onFuncKeyEvent(int key);
 
     @CriticalNative
-    public static native void init();
+    public static native void glInit();
 
     @CriticalNative
-    public static native void onChange(int width, int height);
+    public static native void glOnChange(int width, int height);
 
     @CriticalNative
-    public static native void onDrawFrame();
+    public static native void glOnDrawFrame();
 
 }

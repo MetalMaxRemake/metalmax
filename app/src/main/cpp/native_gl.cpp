@@ -305,7 +305,7 @@ void onGLSurfaceChange(int width, int height) {
     texCoordHandle = glGetAttribLocation(program, "a_texCoord");
 }
 
-void changeBuffer() {
+void initFirstBuffer() {
     currentBuffer = getImage(0, 0, nullptr);
 }
 
