@@ -7,5 +7,6 @@
 
 unsigned char *getCharImg(int ascii);
 unsigned char *getStringImg(const char *str);
+unsigned char *getZhStringImg(const char *str, int len);
 
 #endif //METALMAX_CHARSETS_H

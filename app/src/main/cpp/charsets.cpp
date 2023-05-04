@@ -106,6 +106,29 @@ unsigned char data[96][8]={
         {0,148,88,148,0,156,220,212,},
 };
 
+unsigned char zh_cn[4][12][2]={
+        {{0,0},{0,0},{8,0},{8,0},{254,128},{136,128},{136,128},{254,128},{8,0},{8,0},{8,0},{0,0},},
+        {{0,0},{0,0},{16,0},{8,0},{254,128},{34,0},{34,0},{20,0},{8,0},{20,0},{226,128},{0,0},},
+        {{0,0},{0,0},{188,128},{100,128},{166,128},{110,128},{46,128},{170,128},{136,128},{148,128},{164,128},{0,0},},
+        {{0,0},{0,0},{66,128},{34,0},{14,128},{194,0},{94,0},{74,0},{72,0},{108,0},{88,128},{0,0},},
+};
+
+unsigned char *getZhStringImg(const char *str, int len) {
+    unsigned char *res = (unsigned char *) malloc(sizeof(char) * 12 * 12 * len);
+    int img_width = 12 * len;
+    for (int charIdx = 0; charIdx < len; charIdx++) {
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 8; j++) {
+                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 4 : 1;
+            }
+            for (int j = 8; j < 12; j++) {
+                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? 4 : 1;
+            }
+        }
+    }
+    return res;
+}
+
 unsigned char *getStringImg(const char *str) {
     int len = strlen(str);
     unsigned char *res = (unsigned char *) malloc(sizeof(char) * 8 * 8 * len);

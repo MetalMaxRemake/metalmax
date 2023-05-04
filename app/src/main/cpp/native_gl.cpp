@@ -317,6 +317,13 @@ void drawText(const char *string, int x, int y) {
                     GL_UNSIGNED_BYTE, getStringImg(string));
 }
 
+void drawChineseText(const char *string, int len, int x, int y) {
+    glTexSubImage2D(GL_TEXTURE_2D, 0, x*16, y*16, 12 *len, 12, GL_ALPHA,
+                    GL_UNSIGNED_BYTE, getZhStringImg(string, len));
+}
+
+const char chinese_demo[4] = {0,1,2,3};
+
 void onGLDraw() {
     glClear(GL_COLOR_BUFFER_BIT);
     glEnableVertexAttribArray(positionHandle);
@@ -341,10 +348,11 @@ void onGLDraw() {
     pthread_mutex_lock(&onMutex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT_PAL, GL_ALPHA,
                     GL_UNSIGNED_BYTE, currentBuffer);
+    pthread_mutex_unlock(&onMutex);
     drawText("PARK_671 TEST VERSION", 2,2);
     drawText("GRAPHIC=OPENGL ES 2.0",2,3);
     drawText("SOUND=OPENSL ES 1.0",2,4);
-    pthread_mutex_unlock(&onMutex);
+    drawChineseText(chinese_demo,4, 2, 5);
     checkGlError("emu render");
     glDrawElements(GL_TRIANGLES, 6,
                    GL_UNSIGNED_SHORT, drawOrder);

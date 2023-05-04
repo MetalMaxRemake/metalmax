@@ -58,29 +58,29 @@ void onLoop() {
     }
 }
 
-void commonTest() {
+void commonTest(JNIEnv *env, jclass clazz) {
     //test code
     initFirstBuffer();
 }
 
-void init() {
+void init(JNIEnv *env, jclass clazz) {
     initGL();
     initSL();
 }
 
-void onChange(jint width, jint height) {
+void onChange(JNIEnv *env, jclass clazz, jint width, jint height) {
     onGLSurfaceChange(width, height);
 }
 
-void onDrawFrame() {
+void onDrawFrame(JNIEnv *env, jclass clazz) {
     onGLDraw();
 }
 
-void onKeyEvent(jint newKey) {
+void onKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
     key = newKey;
 }
 
-void onFuncKeyEvent(jint newKey) {
+void onFuncKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
     funcKey = newKey;
 }
 

@@ -6,7 +6,6 @@ set(ANDROID_STL "none")
 enable_language(ASM)
 set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS s)
 
-# 查找source目录下的所有*.cpp,*.c源文件,并将文件列表保存到 DIR_LIB_SRCS 变量
 file(GLOB_RECURSE MAP_DATA_SRC "maps/map_data/*.cpp" "maps/map_data/*.c")
 file(GLOB_RECURSE SOUND_DATA_SRC "sound/*.cpp" "sound/*.c")
 file(GLOB_RECURSE MAIN_SRC "*.cpp" "*.c")

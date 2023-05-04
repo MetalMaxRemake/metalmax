@@ -1,6 +1,6 @@
 package com.park.metalmax;
 
-import dalvik.annotation.optimization.CriticalNative;
+import dalvik.annotation.optimization.FastNative;
 
 public class NativeBridge {
 
@@ -16,21 +16,21 @@ public class NativeBridge {
 
     public static native void initNativeMethod();
 
-    @CriticalNative
+    @FastNative
     public static native void commonTest();
 
-    @CriticalNative
+    @FastNative
     public static native void onKeyEvent(int key);
-    @CriticalNative
+    @FastNative
     public static native void onFuncKeyEvent(int key);
 
-    @CriticalNative
+    @FastNative
     public static native void glInit();
 
-    @CriticalNative
+    @FastNative
     public static native void glOnChange(int width, int height);
 
-    @CriticalNative
+    @FastNative
     public static native void glOnDrawFrame();
 
 }

@@ -331,6 +331,7 @@ void *convertNsf2PCM(void *) {
         //fixme 当前声道数量问题没有找到解决方法，拷贝一份数据（破音），或者播放器频率减半（降调）
         frames -= fc;
     }
+    return nullptr;
 }
 
 extern "C" void initSL() {
