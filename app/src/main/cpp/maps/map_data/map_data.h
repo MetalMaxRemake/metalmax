@@ -5,7 +5,9 @@
 #ifndef METALMAX_MAP_DATA_H
 #define METALMAX_MAP_DATA_H
 
-#define MAP_COUNT 3
+#define MAP_COUNT 10
+#define BYTE_MAP_COUNT 3
+#define SHORT_MAP_COUNT 7
 
 #include "map_00.h"
 #include "map_01.h"
@@ -18,7 +20,8 @@
 #include "map_08.h"
 #include "map_09.h"
 
-extern "C" unsigned char *map_data[MAP_COUNT];
+extern "C" unsigned char *byte_map_data[BYTE_MAP_COUNT];
+extern "C" unsigned short *short_map_data[SHORT_MAP_COUNT];
 extern "C" unsigned short map_size[MAP_COUNT * 2];
 
 #endif //METALMAX_MAP_DATA_H

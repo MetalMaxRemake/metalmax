@@ -25,7 +25,9 @@ void fill(int i, int j, int bmpIdx, unsigned char *result) {
 }
 
 unsigned char *fullMap = nullptr;
-unsigned char *current_map;
+unsigned char current_map_type = 0;
+unsigned char *byte_current_map;
+unsigned short *short_current_map;
 
 void initFullMap() {
     if(fullMap == nullptr) {
@@ -34,7 +36,11 @@ void initFullMap() {
         int bmpIdx = 0;
         for(int i = 0;i<map_height;i++) {
             for(int j = 0;j<map_width;j++) {
-                bmpIdx = current_map[i*map_width + j];
+                if(current_map_type) {
+                    bmpIdx = byte_current_map[i * map_width + j];
+                } else{
+                    bmpIdx = short_current_map[i * map_width + j];
+                }
                 fill(i, j, bmpIdx, result);
             }
         }
@@ -56,7 +62,13 @@ void refreshCurrentMap(int mapId) {
     pthread_mutex_lock(&mapRefreshMutex);
 //    releaseMap(); fixme bug crash
     fullMap = nullptr;
-    current_map = map_data[mapId];
+    if(mapId<BYTE_MAP_COUNT) {
+        byte_current_map = byte_map_data[mapId];
+        current_map_type = 1;
+    } else{
+        short_current_map = short_map_data[mapId-BYTE_MAP_COUNT];
+        current_map_type = 0;
+    }
     map_height = map_size[mapId * 2];
     map_width = map_size[mapId * 2 + 1];
     initFullMap();
@@ -72,20 +84,33 @@ unsigned char *getImage(int x, int y, unsigned char *result) {
         initFullMap();
     }
     __memset_aarch64(result, 0, 16 * 16 * 256);
-    int maxX = map_height * 256, maxY = map_width * 256;
-    int renderXEnd = x + 256, renderYEnd = y + 256;
+    //这里的逻辑是一大坨屎山
+    int maxX = map_height * 16, maxY = map_width * 16;
+    int renderXEnd = x + 255, renderYEnd = y + 255;
+    int length = 0;
+    int maxj1 = (maxY - y - 1);
+    int maxj2 = (renderYEnd - y - 1);
+    int maxj = min(maxj1, maxj2);
     for (int i = 0; i < 256; i++) {
         if (i + x >= maxX
             || i + x >= renderXEnd
             || i + x < 0) {
             continue;
         }
+        if(y >= maxY
+            || y >= renderYEnd
+            || 255 + y < 0) {
+            continue;
+        }
         int resultStartIdx = i * 256;
         int fullMapStartIdx = (i + x) * (16 * map_width) + y;
-        int maxj1 = (maxY - y - 1);
-        int maxj2 = (renderYEnd - y - 1);
-        int maxj = min(maxj1, maxj2);
-        int length = min(maxj, 256);
+        if (y < 0) {
+            resultStartIdx -= y;
+            fullMapStartIdx -= y;
+            length = maxj + y;
+        } else {
+            length = min(maxj, 256);
+        }
         __memcpy_aarch64_simd(result + resultStartIdx, fullMap + fullMapStartIdx, length);
     }
     pthread_mutex_unlock(&mapRefreshMutex);

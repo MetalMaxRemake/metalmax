@@ -18,6 +18,7 @@
 #include "charsets.h"
 #include "sound/mm_sound.h"
 #include "opt/mem_opt.h"
+#include "maps/map_data/map_data.h"
 
 void * currentBuffer;
 
@@ -407,7 +408,7 @@ int mapId = 0;
 
 void changeMap() {
     mapId++;
-    if (mapId >= 3) {
+    if (mapId >= MAP_COUNT) {
         mapId = 0;
     }
     posX = 0;
