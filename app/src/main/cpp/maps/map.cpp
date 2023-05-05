@@ -25,8 +25,6 @@ void fill(int i, int j, int bmpIdx, unsigned char *result) {
 }
 
 unsigned char *fullMap = nullptr;
-unsigned char current_map_type = 0;
-unsigned char *byte_current_map;
 unsigned short *short_current_map;
 
 void initFullMap() {
@@ -35,12 +33,8 @@ void initFullMap() {
         __memset_aarch64(result, 0, sizeof (char) * (map_width*map_height*256));
         int bmpIdx = 0;
         for(int i = 0;i<map_height;i++) {
-            for(int j = 0;j<map_width;j++) {
-                if(current_map_type) {
-                    bmpIdx = byte_current_map[i * map_width + j];
-                } else{
-                    bmpIdx = short_current_map[i * map_width + j];
-                }
+            for (int j = 0; j < map_width; j++) {
+                bmpIdx = short_current_map[i * map_width + j];
                 fill(i, j, bmpIdx, result);
             }
         }
@@ -62,13 +56,8 @@ void refreshCurrentMap(int mapId) {
     pthread_mutex_lock(&mapRefreshMutex);
     releaseMap();
     fullMap = nullptr;
-    if(mapId<BYTE_MAP_COUNT) {
-        byte_current_map = byte_map_data[mapId];
-        current_map_type = 1;
-    } else{
-        short_current_map = short_map_data[mapId-BYTE_MAP_COUNT];
-        current_map_type = 0;
-    }
+    short_current_map = short_map_data[mapId];
+    current_map_type = 0;
     map_height = map_size[mapId * 2];
     map_width = map_size[mapId * 2 + 1];
     initFullMap();

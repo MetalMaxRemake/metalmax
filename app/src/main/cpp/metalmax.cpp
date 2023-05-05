@@ -101,7 +101,7 @@ jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring 
     int dataIdx = 0;
     for(int i = 0;i<bitmapInfo.height;i++) {
         for(int j = 0;j<bitmapInfo.width;j++) {
-            data[dataIdx] = palette1[nativeBmp[dataIdx]];
+            data[dataIdx] = palette[nativeBmp[dataIdx]];
             dataIdx++;
         }
     }
