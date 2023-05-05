@@ -60,7 +60,7 @@ int min(int a, int b) {
 
 void refreshCurrentMap(int mapId) {
     pthread_mutex_lock(&mapRefreshMutex);
-//    releaseMap(); fixme bug crash
+    releaseMap();
     fullMap = nullptr;
     if(mapId<BYTE_MAP_COUNT) {
         byte_current_map = byte_map_data[mapId];
@@ -88,8 +88,8 @@ unsigned char *getImage(int x, int y, unsigned char *result) {
     int maxX = map_height * 16, maxY = map_width * 16;
     int renderXEnd = x + 255, renderYEnd = y + 255;
     int length = 0;
-    int maxj1 = (maxY - y - 1);
-    int maxj2 = (renderYEnd - y - 1);
+    int maxj1 = (maxY - y);
+    int maxj2 = (renderYEnd - y) + 1;
     int maxj = min(maxj1, maxj2);
     for (int i = 0; i < 256; i++) {
         if (i + x >= maxX
