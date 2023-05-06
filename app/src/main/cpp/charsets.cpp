@@ -119,10 +119,10 @@ unsigned char *getZhStringImg(const char *str, int len) {
     for (int charIdx = 0; charIdx < len; charIdx++) {
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 8; j++) {
-                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 4 : 1;
+                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 8 : 3;//black - white
             }
             for (int j = 8; j < 12; j++) {
-                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? 4 : 1;
+                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? 8 : 3;
             }
         }
     }
@@ -137,7 +137,7 @@ unsigned char *getStringImg(const char *str) {
         int ascii = str[charIdx] - 32;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                res[i * img_width + j + charIdx * 8] = (data[ascii][i] & (1 << (8 - j))) ? 4 : 1;
+                res[i * img_width + j + charIdx * 8] = (data[ascii][i] & (1 << (8 - j))) ? 8 : 3;
             }
         }
     }
