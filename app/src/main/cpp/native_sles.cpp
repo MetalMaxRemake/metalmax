@@ -337,7 +337,7 @@ void *convertNsf2PCM(void *) {
 extern "C" void initSL() {
     createEngine();
     int sampleRate = SAMPLE_RATE;
-    createBufferQueueAudioPlayer(sampleRate/2);
+    createBufferQueueAudioPlayer(sampleRate);
     //fixme 当前声道数量问题没有找到解决方法，拷贝一份数据（破音），或者播放器频率减半（降调）
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数

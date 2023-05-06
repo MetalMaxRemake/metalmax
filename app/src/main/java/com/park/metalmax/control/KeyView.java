@@ -63,10 +63,8 @@ public class KeyView extends View {
     private Bitmap getKeyBmp(String text) {
         Bitmap bitmapScale = bitmapMap.get(text);
         if(bitmapScale == null) {
-            Bitmap bitmap = Bitmap.createBitmap(8 * text.length(), 8, Bitmap.Config.ARGB_8888);
-            NativeBridge.getCharImg(bitmap, text);
             int scale = MainActivity.dpToPx(getContext(), 40) / 30;
-            bitmapScale = Bitmap.createScaledBitmap(bitmap, scale * 8 * text.length(), scale * 8, false);
+            bitmapScale = Bitmap.createScaledBitmap(NativeBridge.getPxImg(text), scale * 8 * text.length(), scale * 8, false);
             bitmapMap.put(text, bitmapScale);
         }
         return bitmapScale;

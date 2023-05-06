@@ -16,8 +16,16 @@ public class NativeBridge {
         return sInstance;
     }
 
+    public static Bitmap getPxImg(String text) {
+        Bitmap bitmap = Bitmap.createBitmap(8 * text.length(), 8, Bitmap.Config.ARGB_8888);
+        NativeBridge.getCharImg(bitmap, text);
+        return bitmap;
+    }
+
+    @FastNative
     public static native boolean getCharImg(Bitmap bitmap, String text);
 
+    @FastNative
     public static native void initNativeMethod();
 
     @FastNative
