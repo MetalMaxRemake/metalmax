@@ -9,6 +9,7 @@ set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS s)
 file(GLOB_RECURSE MAP_DATA_SRC "maps/map_data/*.cpp" "maps/map_data/*.c" "maps/*.cpp")
 file(GLOB_RECURSE SOUND_DATA_SRC "sound/*.cpp" "sound/*.c")
 file(GLOB_RECURSE MAIN_SRC "*.cpp" "*.c")
+
 file(GLOB_RECURSE NSF_PLAYER_SRC
         "xgm/devices/Audio/*.cpp" "xgm/devices/CPU/*.cpp" "xgm/devices/Memory/*.cpp"
         "xgm/devices/Misc/*.cpp" "xgm/devices/Sound/*.cpp" "xgm/player/nsf/*.cpp"

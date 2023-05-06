@@ -83,7 +83,7 @@ entrance_count_70,entrance_count_71,entrance_count_72,entrance_count_73,entrance
 entrance_count_80,entrance_count_81,entrance_count_82,entrance_count_83,entrance_count_84,entrance_count_85,entrance_count_86,entrance_count_87,entrance_count_88,entrance_count_89,
 entrance_count_90,entrance_count_91,entrance_count_92,entrance_count_93,entrance_count_94,entrance_count_95,entrance_count_96,entrance_count_97,entrance_count_98,entrance_count_99,};
 
-unsigned short fill[MAP_COUNT] = {
+unsigned short map_fill[MAP_COUNT] = {
 fill_0,fill_1,fill_2,fill_3,fill_4,fill_5,fill_6,fill_7,fill_8,fill_9,
 fill_10,fill_11,fill_12,fill_13,fill_14,fill_15,fill_16,fill_17,fill_18,fill_19,
 fill_20,fill_21,fill_22,fill_23,fill_24,fill_25,fill_26,fill_27,fill_28,fill_29,

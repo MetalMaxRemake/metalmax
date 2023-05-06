@@ -103,5 +103,9 @@
 #include "map_99.h"
 extern "C" unsigned short *short_map_data[MAP_COUNT];
 extern "C" unsigned short map_size[MAP_COUNT * 2];
+extern "C" unsigned short map_fill[MAP_COUNT];
+extern "C" unsigned short entrance_count[MAP_COUNT];
+extern "C" unsigned char *entrances[MAP_COUNT];
+
 
 #endif //METALMAX_MAP_DATA_H
