@@ -71,6 +71,7 @@ public class MainActivity extends Activity {
         public void run() {
             isRunning.set(true);
             streamPlayer = new StreamPlayer();
+            NativeBridge.slInit();
             streamPlayer.initAudioTrack(16000, 1);
             streamPlayer.play();
             short[] buf = new short[1024];

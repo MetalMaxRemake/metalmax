@@ -97,10 +97,16 @@ void *convertNsf2PCM(void *) {
     return nullptr;
 }
 
+char isInited = 0;
+
 extern "C" void initSL() {
     //曾经这里有一堆opensl的屎山代码，怎么调都有bug（破音，降调，加速...
     //后来我弃暗投明选择了传回java用audio tracker
     //以后有缘我再尝试opensl吧
+    if(isInited) {
+        return;
+    }
+    isInited = 1;
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
     pthread_create(&id, nullptr, convertNsf2PCM, nullptr);

@@ -23,6 +23,9 @@ public class NativeBridge {
     }
 
     @FastNative
+    public static native void slInit();
+
+    @FastNative
     public static native void getBuffer(short[] buffer);
 
     @FastNative

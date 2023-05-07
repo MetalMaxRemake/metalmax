@@ -70,7 +70,6 @@ void commonTest(JNIEnv *env, jclass clazz) {
 
 void init(JNIEnv *env, jclass clazz) {
     initGL();
-    initSL();
 }
 
 void onChange(JNIEnv *env, jclass clazz, jint width, jint height) {
@@ -117,6 +116,10 @@ void getSoundBuffer(JNIEnv *env, jclass clazz, jshortArray array) {
     }
 }
 
+void slInit(JNIEnv *env, jclass clazz) {
+    initSL();
+}
+
 static JNINativeMethod methods[] = {
         {"commonTest",   "()V",   (void *) &commonTest},
         {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
@@ -125,6 +128,7 @@ static JNINativeMethod methods[] = {
         {"glOnChange",     "(II)V", (void *) &onChange},
         {"glOnDrawFrame",  "()V",   (void *) &onDrawFrame},
         {"getBuffer", "([S)V",   (void *) &getSoundBuffer},
+        {"slInit", "()V",   (void *) &slInit},
         {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},
 };
 
