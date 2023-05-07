@@ -110,13 +110,11 @@ jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring 
     return true;
 }
 
-jshortArray getSoundBuffer(JNIEnv *env, jclass clazz) {
-    jshortArray result = env->NewShortArray(1024);
-    short *buffer = getBuffer(nullptr, reinterpret_cast<int *>(buffer));
+void getSoundBuffer(JNIEnv *env, jclass clazz, jshortArray array) {
+    short *buffer = getBuffer();
     if(buffer != nullptr) {
-        env->SetShortArrayRegion(result, 0, 1024, buffer);
+        env->SetShortArrayRegion(array, 0, 1024, buffer);
     }
-    return result;
 }
 
 static JNINativeMethod methods[] = {
@@ -126,7 +124,7 @@ static JNINativeMethod methods[] = {
         {"glInit",         "()V",   (void *) &init},
         {"glOnChange",     "(II)V", (void *) &onChange},
         {"glOnDrawFrame",  "()V",   (void *) &onDrawFrame},
-        {"getBuffer",  "()[S",   (void *) &getSoundBuffer},
+        {"getBuffer", "([S)V",   (void *) &getSoundBuffer},
         {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},
 };
 

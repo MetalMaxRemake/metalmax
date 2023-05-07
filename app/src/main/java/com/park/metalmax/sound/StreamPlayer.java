@@ -4,7 +4,7 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-public class MusicPlayer {
+public class StreamPlayer {
 
     private AudioTrack mAudioTrack;
 
@@ -30,8 +30,14 @@ public class MusicPlayer {
                 channelConfig,
                 AudioFormat.ENCODING_PCM_16BIT,
                 bufferSize, AudioTrack.MODE_STREAM);
+    }
 
+    public void play() {
         mAudioTrack.play();//very important  启动音频设备
+    }
+
+    public void stop() {
+        mAudioTrack.stop();
     }
 
     public synchronized void playTrack(short[] buffer, int length){

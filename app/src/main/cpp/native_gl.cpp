@@ -186,6 +186,10 @@ void initTextures() {
 unsigned char colorBlockBuffer[256][256];
 unsigned char *convertedMap;
 
+unsigned char * versionBuffer;
+unsigned char * graphicBuffer;
+unsigned char * chineseBuffer;
+
 void initRenderBuffer() {
     unsigned char color = 0;
     for (int j = 0; j < 16; j++) {
@@ -223,24 +227,29 @@ void onGLSurfaceChange(int width, int height) {
     texCoordHandle = glGetAttribLocation(program, "a_texCoord");
 }
 
+const char chinese_demo[4] = {0,1,2,3};
+const char *version_string = "PARK_671 TEST VERSION 0.1";
+const char *graphic_string = "OPENGL ES 2.0";
+
 void initFirstBuffer() {
     currentBuffer = getImage(0, 0, nullptr);
+    versionBuffer = getStringImg(version_string);
+    graphicBuffer = getStringImg(graphic_string);
+    chineseBuffer = getZhStringImg(chinese_demo,4);
 }
 
 pthread_mutex_t onMutex;
 
-void drawText(const char *string, int x, int y) {
+void drawText(const char *string, unsigned char * textBuffer, int x, int y) {
     int len = strlen(string);
     glTexSubImage2D(GL_TEXTURE_2D, 0, x*16, y*16, 8 *len, 8, GL_ALPHA,
-                    GL_UNSIGNED_BYTE, getStringImg(string));
+                    GL_UNSIGNED_BYTE, textBuffer);
 }
 
-void drawChineseText(const char *string, int len, int x, int y) {
+void drawChineseText(unsigned char * textBuffer, int len, int x, int y) {
     glTexSubImage2D(GL_TEXTURE_2D, 0, x*16, y*16, 12 *len, 12, GL_ALPHA,
-                    GL_UNSIGNED_BYTE, getZhStringImg(string, len));
+                    GL_UNSIGNED_BYTE, textBuffer);
 }
-
-const char chinese_demo[4] = {0,1,2,3};
 
 void onGLDraw() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -267,10 +276,9 @@ void onGLDraw() {
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT_PAL, GL_ALPHA,
                     GL_UNSIGNED_BYTE, currentBuffer);
     pthread_mutex_unlock(&onMutex);
-    drawText("PARK_671 TEST VERSION", 2,2);
-    drawText("GRAPHIC=OPENGL ES 2.0",2,3);
-    drawText("SOUND=AUDIO TRACKER(JAVA)",2,4);
-    drawChineseText(chinese_demo,4, 2, 5);
+    drawText(version_string, versionBuffer, 2,2);
+    drawText(graphic_string, graphicBuffer, 2,3);
+    drawChineseText(chineseBuffer,4, 2, 5);
     checkGlError("emu render");
     glDrawElements(GL_TRIANGLES, 6,
                    GL_UNSIGNED_SHORT, drawOrder);

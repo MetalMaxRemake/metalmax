@@ -5,6 +5,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
@@ -19,13 +20,17 @@ import com.park.metalmax.control.DirectKeyView;
 import com.park.metalmax.control.FunctionKeyView;
 import com.park.metalmax.game.GameGLRenderer;
 import com.park.metalmax.game.GameGLView;
-import com.park.metalmax.sound.MusicPlayer;
+import com.park.metalmax.sound.StreamPlayer;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends Activity {
 
     Handler mainHandler = new Handler(Looper.getMainLooper());
+    Handler audioThreadHandler;
+    HandlerThread audioThread = new HandlerThread("audio_thread");
 
-    MusicPlayer musicPlayer;
+    StreamPlayer streamPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +49,38 @@ public class MainActivity extends Activity {
                 finish();
             }
         }, 1000);
-        new Thread() {
-            @Override
-            public void run() {
-                musicPlayer = new MusicPlayer();
-                musicPlayer.initAudioTrack(16000, 1);
-                while (true) {
-                    short[] buf = NativeBridge.getBuffer();
-                    musicPlayer.playTrack(buf, 1024);
-                }
-            }
-        }.start();
+        audioThread.start();
+        audioThreadHandler = new Handler(audioThread.getLooper());
     }
 
-    private GameGLView mGameGlView;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        audioThreadHandler.post(audioTask);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isRunning.set(false);
+    }
+
+    private final AtomicBoolean isRunning = new AtomicBoolean(true);
+    private final Runnable audioTask = new Runnable() {
+        @Override
+        public void run() {
+            isRunning.set(true);
+            streamPlayer = new StreamPlayer();
+            streamPlayer.initAudioTrack(16000, 1);
+            streamPlayer.play();
+            short[] buf = new short[1024];
+            while (isRunning.get()) {
+                NativeBridge.getBuffer(buf);
+                streamPlayer.playTrack(buf, 1024);
+            }
+            streamPlayer.stop();
+        }
+    };
 
     private View initView() {
         //root
@@ -72,7 +95,6 @@ public class MainActivity extends Activity {
         gameGLView.setEGLContextClientVersion(2);
         gameGLView.setRenderer(renderer);
         gameGLView.setDrawingCacheEnabled(true);
-        mGameGlView = gameGLView;
         rootLayout.addView(gameGLView);
         //ControlView
         LinearLayout keyViewLayout = new LinearLayout(MainActivity.this);

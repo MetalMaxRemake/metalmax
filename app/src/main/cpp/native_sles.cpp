@@ -118,7 +118,7 @@ extern "C" void changeMusic() {
     pthread_mutex_unlock(&soundMutex);
 }
 
-extern "C" short *getBuffer(short *buffer, int *size) {
+extern "C" short *getBuffer() {
     if(readIdx >= cacheIdx) {
         return nullptr;
     }

@@ -7,6 +7,6 @@
 
 extern "C" void initSL();
 extern "C" void changeMusic();
-extern "C" short *getBuffer(short *buffer, int *size);
+extern "C" short *getBuffer();
 
 #endif //SUPERCUBE_NATIVE_SLES_H
