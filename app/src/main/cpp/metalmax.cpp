@@ -2,6 +2,7 @@
 #include <__threading_support>
 #include <unistd.h>
 #include <android/bitmap.h>
+#include <android/log.h>
 #include "native_gl.h"
 #include "native_sles.h"
 #include "charsets.h"
@@ -109,6 +110,15 @@ jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring 
     return true;
 }
 
+jshortArray getSoundBuffer(JNIEnv *env, jclass clazz) {
+    jshortArray result = env->NewShortArray(1024);
+    short *buffer = getBuffer(nullptr, reinterpret_cast<int *>(buffer));
+    if(buffer != nullptr) {
+        env->SetShortArrayRegion(result, 0, 1024, buffer);
+    }
+    return result;
+}
+
 static JNINativeMethod methods[] = {
         {"commonTest",   "()V",   (void *) &commonTest},
         {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
@@ -116,6 +126,7 @@ static JNINativeMethod methods[] = {
         {"glInit",         "()V",   (void *) &init},
         {"glOnChange",     "(II)V", (void *) &onChange},
         {"glOnDrawFrame",  "()V",   (void *) &onDrawFrame},
+        {"getBuffer",  "()[S",   (void *) &getSoundBuffer},
         {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},
 };
 
@@ -126,4 +137,8 @@ Java_com_park_metalmax_NativeBridge_initNativeMethod(JNIEnv *env, jclass clazz) 
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
     pthread_create(&id, NULL, logic_thread, NULL);
+}
+
+__attribute__((constructor)) static void onDlOpen(void) {
+    __android_log_print(ANDROID_LOG_INFO, "test", "on dlopen");
 }

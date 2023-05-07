@@ -269,7 +269,7 @@ void onGLDraw() {
     pthread_mutex_unlock(&onMutex);
     drawText("PARK_671 TEST VERSION", 2,2);
     drawText("GRAPHIC=OPENGL ES 2.0",2,3);
-    drawText("SOUND=OPENSL ES 1.0",2,4);
+    drawText("SOUND=AUDIO TRACKER(JAVA)",2,4);
     drawChineseText(chinese_demo,4, 2, 5);
     checkGlError("emu render");
     glDrawElements(GL_TRIANGLES, 6,

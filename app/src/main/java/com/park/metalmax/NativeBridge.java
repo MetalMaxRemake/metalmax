@@ -23,6 +23,9 @@ public class NativeBridge {
     }
 
     @FastNative
+    public static native short[] getBuffer();
+
+    @FastNative
     public static native boolean getCharImg(Bitmap bitmap, String text);
 
     @FastNative

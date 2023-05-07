@@ -27,4 +27,4 @@ add_library( metalmax
             ${NSF_PLAYER_SRC}
             charsets.cpp)
 target_link_libraries(metalmax
-        log android EGL GLESv2 OpenSLES jnigraphics)
+        log android EGL GLESv2 jnigraphics)

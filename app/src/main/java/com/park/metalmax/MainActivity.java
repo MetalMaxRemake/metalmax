@@ -19,10 +19,13 @@ import com.park.metalmax.control.DirectKeyView;
 import com.park.metalmax.control.FunctionKeyView;
 import com.park.metalmax.game.GameGLRenderer;
 import com.park.metalmax.game.GameGLView;
+import com.park.metalmax.sound.MusicPlayer;
 
 public class MainActivity extends Activity {
 
     Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    MusicPlayer musicPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,17 @@ public class MainActivity extends Activity {
                 finish();
             }
         }, 1000);
+        new Thread() {
+            @Override
+            public void run() {
+                musicPlayer = new MusicPlayer();
+                musicPlayer.initAudioTrack(16000, 1);
+                while (true) {
+                    short[] buf = NativeBridge.getBuffer();
+                    musicPlayer.playTrack(buf, 1024);
+                }
+            }
+        }.start();
     }
 
     private GameGLView mGameGlView;
