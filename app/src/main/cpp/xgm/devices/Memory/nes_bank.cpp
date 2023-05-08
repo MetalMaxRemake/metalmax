@@ -23,7 +23,6 @@ namespace xgm
   NES_BANK::NES_BANK ()
   {
     image = NULL;
-    fds_enable = false;
   };
 
   NES_BANK::~NES_BANK ()
@@ -107,46 +106,6 @@ namespace xgm
       return true;
     }
 
-    if (fds_enable)
-    {
-      #if FDS_MEMCPY
-      if (0x5ff6 <= adr && adr < 0x6000)
-      {
-        int b = adr - 0x5ff0;
-        if (int(val) >= bankmax)
-          __memset_aarch64(bank[b], 0, 0x1000);
-        else
-          __memcpy_aarch64_simd(bank[b], image + (val * 0x1000), 0x1000);
-        return true;
-      }
-      #else
-      if (0x5ff6 <= adr && adr < 0x5ff8)
-      {
-        bankswitch[adr & 7] = val & 0xff;
-        return true;
-      }
-      #endif
-
-      if (0 <= bankswitch[adr >> 12] && 0x6000 <= adr && adr < 0xe000)
-      {
-        // for detecting FDS ROMs with improper mirrored writes
-        #if DETECT_FDS_MIRROR
-          for (int i=0; i < 14; ++i)
-          {
-            int b = adr >> 12;
-            if (i != b && bankswitch[i] == bankswitch[b])
-            {
-              DEBUG_OUT("[%04X] write mirrored to [%04X] = %02X\n",
-                adr, (i * 0x1000) | (adr & 0x0fff), val);
-            }
-          }
-        #endif
-
-        bank[bankswitch[adr >> 12]][adr & 0x0fff] = val;
-        return true;
-      }
-    }
-
     return false;
   }
 
@@ -164,27 +123,7 @@ namespace xgm
       return true;
     }
 
-    if (fds_enable)
-    {
-      if (0x5ff6 <= adr && adr < 0x5ff8)
-      {
-        val = bankswitch[adr & 7];
-        return true;
-      }
-
-      if (0 <= bankswitch[adr >> 12] && 0x6000 <= adr && adr < 0x8000)
-      {
-        val = bank[bankswitch[adr >> 12]][adr & 0xfff];
-        return true;
-      }
-    }
-
     return false;
-  }
-
-  void NES_BANK::SetFDSMode (bool t)
-  {
-    fds_enable = t;
   }
 
 }                               // namespace

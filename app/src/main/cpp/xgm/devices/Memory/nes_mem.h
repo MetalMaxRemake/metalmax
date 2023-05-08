@@ -11,7 +11,6 @@ namespace xgm
   {
   protected:
     UINT8 image[0x10000];
-    bool fds_enable;
 
   public:
       NES_MEM ();
@@ -20,7 +19,6 @@ namespace xgm
     bool Read (UINT32 adr, UINT32 & val, UINT32 id=0);
     bool Write (UINT32 adr, UINT32 val, UINT32 id=0);
     bool SetImage (UINT8 * data, UINT32 offset, UINT32 size);
-    void SetFDSMode (bool); // enables writing to $6000-DFFF for FDS
     void SetReserved (const UINT8* data, UINT32 size);
 	bool WriteReserved (UINT32 adr, UINT32 val);
   };

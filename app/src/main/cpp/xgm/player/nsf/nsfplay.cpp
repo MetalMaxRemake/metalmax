@@ -208,9 +208,6 @@ namespace xgm
     rconv.SetCPU(&cpu);
     rconv.SetDMC(dmc);
 
-    mem.SetFDSMode(false);
-    bank.SetFDSMode(false);
-
     // memory layer comes last
     stack.Attach (&layer);
 

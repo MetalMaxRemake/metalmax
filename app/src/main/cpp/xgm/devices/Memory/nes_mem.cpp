@@ -7,7 +7,6 @@ namespace xgm
 {
   NES_MEM::NES_MEM ()
   {
-    fds_enable = false;
   }
 
   NES_MEM::~NES_MEM ()
@@ -42,10 +41,6 @@ namespace xgm
       image[adr] = val;
       return true;
     }
-    if (fds_enable && 0x8000 <= adr && adr < 0xe000)
-    {
-      image[adr] = val;
-    }
     return false;
   }
 
@@ -68,11 +63,6 @@ namespace xgm
     }
     val = 0;
     return false;
-  }
-
-  void NES_MEM::SetFDSMode (bool t)
-  {
-    fds_enable = t;
   }
 
   void NES_MEM::SetReserved (const UINT8* data, UINT32 size)
