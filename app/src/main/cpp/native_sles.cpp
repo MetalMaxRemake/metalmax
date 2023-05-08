@@ -48,7 +48,7 @@ pthread_mutex_t soundMutex;
 xgm::NSFPlayer player;
 int track = 0;
 
-void *convertNsf2PCM(void *) {
+[[noreturn]] void *convertNsf2PCM(void *) {
     xgm::NSF nsf;
     xgm::NSFPlayerConfig config;
     Nsf2WavOptions options(nsf);
@@ -61,8 +61,6 @@ void *convertNsf2PCM(void *) {
     __android_log_print(ANDROID_LOG_INFO, "test", "mm_song_num:%d", count);
 
     config["MASTER_VOLUME"] = 128; /* default volume = 128 */
-    config["APU2_OPTION5"] = 0; /* disable randomized noise phase at reset */
-    config["APU2_OPTION7"] = 0; /* disable randomized tri phase at reset */
     config["PLAY_ADVANCE"] = 1;
 
     player.SetConfig(&config);
@@ -76,14 +74,8 @@ void *convertNsf2PCM(void *) {
     player.SetChannels(options.channels);
     player.SetSong(track);
     player.Reset();
-
-    uint64_t frames; /* total pcm frames */
-    frames  = (uint64_t)options.length_ms * options.samplerate;
-    frames += (uint64_t)options.fade_ms * options.samplerate;
-    constexpr uint64_t kMillisPerSecond = 1000;
-    frames /= kMillisPerSecond;
     int fc; /* current # of frames to decode */
-    while (frames) {
+    while (true) {
         if(cacheIdx - readIdx >= CACHE_SIZE - 1) {
             usleep(1000 * 10);
             continue;
@@ -92,7 +84,6 @@ void *convertNsf2PCM(void *) {
         pthread_mutex_lock(&soundMutex);
         player.Render((short *)cachedData[(cacheIdx++) % CACHE_SIZE], fc);
         pthread_mutex_unlock(&soundMutex);
-        frames -= fc;
     }
     return nullptr;
 }

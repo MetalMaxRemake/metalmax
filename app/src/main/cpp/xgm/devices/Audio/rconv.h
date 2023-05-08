@@ -8,7 +8,6 @@ namespace xgm
 
 class NES_CPU; // forward
 class NES_DMC;
-class NES_MMC5;
 
 // RateConverter
 //
@@ -28,7 +27,6 @@ protected:
 	UINT32 clocks; // render clocks pending Tick
 	NES_CPU* cpu;
 	NES_DMC* dmc;
-	NES_MMC5* mmc5;
 	int cpu_clocks; // CPU clocks pending Tick
 	int cpu_rest; // extra clock accumulator (instructions will get ahead by a few clocks)
 	bool fast_skip;
@@ -52,7 +50,6 @@ public:
 
 	void SetCPU(NES_CPU* c) { cpu=c; }
 	void SetDMC(NES_DMC* d) { dmc=d; }
-	void SetMMC5(NES_MMC5* m) { mmc5=m; }
 	void SetFastSkip(bool s) { fast_skip=s; }
 };
 

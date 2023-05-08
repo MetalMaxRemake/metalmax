@@ -15,11 +15,11 @@ namespace xgm
     bool psfx;
   };
   const unsigned int NSFE_ENTRIES = 256;
-  const unsigned int NSFE_MIXES = 8;
+  const unsigned int NSFE_MIXES = 2;
   const INT16 NSFE_MIXE_DEFAULT = 32767;
 
   /**
-   * NSFƒtƒ@ƒCƒ‹Œ^
+   * NSFï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½^
    */
   class NSF : public SoundDataMSP
   {
@@ -48,12 +48,6 @@ namespace xgm
     UINT16 speed_pal;
     UINT8 pal_ntsc;
     UINT8 soundchip;
-    bool use_vrc7;
-    bool use_vrc6;
-    bool use_fds;
-    bool use_fme7;
-    bool use_mmc5;
-    bool use_n106;
     UINT8 extra[4];
     UINT8 *body;
     int bodysize;
@@ -62,37 +56,35 @@ namespace xgm
     int nsfe_plst_size;
     NSFE_Entry nsfe_entry[NSFE_ENTRIES];
     INT16 nsfe_mixe[NSFE_MIXES];
-    int vrc7_type;
-    const UINT8* vrc7_patches;
     UINT16 speed_dendy;
     UINT8 regn;
     int regn_pref;
     UINT8 nsf2_bits;
 
-    /** Œ»İ‘I‘ğ’†‚Ì‹È”Ô† */
+    /** ï¿½ï¿½ï¿½İ‘Iï¿½ğ’†‚Ì‹È”Ôï¿½ */
     int song;
-    /** ƒvƒŒƒCƒŠƒXƒg‚©‚ç“Ç‚ñ‚¾ƒf[ƒ^‚È‚çtrue */
+    /** ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½ï¿½Ç‚ñ‚¾ƒfï¿½[ï¿½^ï¿½È‚ï¿½true */
     bool playlist_mode;
-    /** ‰‰‘tŠÔ */
+    /** ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ */
     int time_in_ms, default_playtime;
-    /** ƒ‹[ƒvŠÔ */
+    /** ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½ï¿½ */
     int loop_in_ms;
-    /** ƒtƒF[ƒhŠÔ */
+    /** ï¿½tï¿½Fï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ */
     int fade_in_ms, default_fadetime;
-    /** ƒ‹[ƒv‰ñ” */
+    /** ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ */
     int loop_num, default_loopnum;
-    /** ‰‰‘tŠÔ‚ª•s–¾‚ÌtrueiƒfƒtƒHƒ‹ƒg‚Ì‰‰‘tŠÔ‚ğg—pj*/
+    /** ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Ô‚ï¿½ï¿½sï¿½ï¿½ï¿½Ìï¿½trueï¿½iï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½Ì‰ï¿½ï¿½tï¿½ï¿½ï¿½Ô‚ï¿½ï¿½gï¿½pï¿½j*/
     bool playtime_unknown;
     bool title_unknown;
 
       NSF ();
      ~NSF ();
     /**
-     * NSFƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+     * NSFï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ì“Ç‚İï¿½ï¿½ï¿½
      *
-     * @param image ƒoƒCƒiƒŠƒCƒ[ƒW‚Ö‚Ìƒ|ƒCƒ“ƒ^
-     * @param size  ƒCƒ[ƒW‚ÌƒTƒCƒY
-     * @return ¬Œ÷ true ¸”s false
+     * @param image ï¿½oï¿½Cï¿½iï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^
+     * @param size  ï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½ÌƒTï¿½Cï¿½Y
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true ï¿½ï¿½ï¿½sï¿½ï¿½ false
      */
 
     // loads file (playlist or NSF or NSFe)
@@ -109,9 +101,9 @@ namespace xgm
 
     void DebugOut ();
     /**
-     * ƒ^ƒCƒgƒ‹•¶š—ñ‚Ìæ“¾
+     * ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìæ“¾
      *
-     * @return ƒ^ƒCƒgƒ‹•¶š—ñ (ì‹ÈÒ - ƒ^ƒCƒgƒ‹)
+     * @return ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Èï¿½ - ï¿½^ï¿½Cï¿½gï¿½ï¿½)
      */
     const char *GetTitleString (const char *format=NULL, int song=-1);
     const char *GetPlaylistString (const char *format, bool b);

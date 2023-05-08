@@ -1,7 +1,6 @@
 #include "rconv.h"
 #include "../CPU/nes_cpu.h"
 #include "../Sound/nes_dmc.h"
-#include "../Sound/nes_mmc5.h"
 
 namespace xgm{
 
@@ -22,7 +21,7 @@ static double window(int n, int M)
 }
 
 RateConverter::RateConverter () : clock(0.0), rate(0.0), mult(0), clocks(0),
-	cpu(NULL), dmc(NULL), mmc5(NULL), cpu_clocks(0), cpu_rest(0),
+	cpu(NULL), dmc(NULL), cpu_clocks(0), cpu_rest(0),
 	fast_skip(true)
 {
 }
@@ -73,7 +72,7 @@ void RateConverter::Reset ()
 
 }
 
-// ”{—¦‚ÍŠï””{‚Ì‚İ
+// ï¿½{ï¿½ï¿½ï¿½ÍŠï”ï¿½{ï¿½Ì‚ï¿½
 void RateConverter::SetClock (double c)
 {
   clock = c;
@@ -108,7 +107,6 @@ void RateConverter::ClockCPU(int c)
 		}
 	}
 	if (dmc) dmc->TickFrameSequence(real_cpu_clocks);
-	if (mmc5) mmc5->TickFrameSequence(real_cpu_clocks);
 }
 
 void RateConverter::Skip ()
@@ -154,7 +152,7 @@ void RateConverter::Skip ()
 	}
 }
 
-// “ü—Í‚Í-32768`+32767‚Ü‚Å
+// ï¿½ï¿½ï¿½Í‚ï¿½-32768ï¿½`+32767ï¿½Ü‚ï¿½
 inline UINT32 RateConverter::FastRender (INT32 b[2])
 {
   assert (target);

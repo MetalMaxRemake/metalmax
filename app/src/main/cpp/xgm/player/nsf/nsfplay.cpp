@@ -15,19 +15,12 @@ namespace xgm
 
     sc[APU] = (apu = new NES_APU());
     sc[DMC] = (dmc = new NES_DMC());
-    sc[FDS] = (fds = new NES_FDS());
-    sc[FME7] = (fme7 = new NES_FME7());
-    sc[MMC5] = (mmc5 = new NES_MMC5());
-    sc[N106] = (n106 = new NES_N106());
-    sc[VRC6] = (vrc6 = new NES_VRC6());
-    sc[VRC7] = (vrc7 = new NES_VRC7());
     ld = new NESDetector();
     logcpu = new CPULogger();
 
     nsf2_irq.SetCPU(&cpu); // IRQ
     dmc->SetAPU(apu); // set APU
     dmc->SetCPU(&cpu); // IRQ requires CPU access
-    mmc5->SetCPU(&cpu); // MMC5 PCM read action requires CPU read access
 
     /* �A���v���t�B���^�����[�g�R���o�[�^������ ��ڑ� */
     for (int i = 0; i < NES_DEVICE_MAX; i++)
@@ -47,12 +40,6 @@ namespace xgm
   {
     delete apu;
     delete dmc;
-    delete fds;
-    delete fme7;
-    delete mmc5;
-    delete n106;
-    delete vrc6;
-    delete vrc7;
     delete ld;
     delete logcpu;
   }
@@ -220,75 +207,9 @@ namespace xgm
 
     rconv.SetCPU(&cpu);
     rconv.SetDMC(dmc);
-    rconv.SetMMC5(NULL);
 
-    if (nsf->use_mmc5)
-    {
-      stack.Attach (sc[MMC5]);
-      mixer.Attach (&amp[MMC5]);
-      rconv.SetMMC5(mmc5);
-    }
-    if (nsf->use_vrc6)
-    {
-      stack.Attach (sc[VRC6]);
-      mixer.Attach (&amp[VRC6]);
-    }
-    if (nsf->use_vrc7)
-    {
-      int patch_set = (*config)["VRC7_PATCH"].GetInt();
-      bool opll = nsf->vrc7_type == 1;
-      if (config->GetDeviceOption(VRC7, NES_VRC7::OPT_OPLL).GetInt() != 0)
-      {
-        opll = true;
-        nsf->vrc7_type = 1; // don't really want to modify nsf but this lets NSFTrackDialog notice the extra channels
-      }
-
-      if (opll) // YM2413 / OPLL
-        patch_set = 7;
-      vrc7->UseAllChannels(opll);
-      vrc7->SetPatchSet(patch_set);
-      vrc7->SetPatchSetCustom(nsf->vrc7_patches);
-      stack.Attach (sc[VRC7]);
-      mixer.Attach (&amp[VRC7]);
-    }
-    if (nsf->use_fme7)
-    {
-      stack.Attach (sc[FME7]);
-      mixer.Attach (&amp[FME7]);
-    }
-    if (nsf->use_n106)
-    {
-      stack.Attach (sc[N106]);
-      mixer.Attach (&amp[N106]);
-    }
-    if (nsf->use_fds)
-    {
-      bool write_enable = (config->GetDeviceOption(FDS, NES_FDS::OPT_WRITE_PROTECT).GetInt() == 0);
-      bool multichip = 
-        nsf->use_mmc5 ||
-        nsf->use_vrc6 ||
-        nsf->use_vrc7 ||
-        nsf->use_fme7 ||
-        nsf->use_n106 ;
-
-      if (multichip) write_enable = false;
-
-      stack.Attach (sc[FDS]); // last before memory layer
-      mixer.Attach (&amp[FDS]);
-      mem.SetFDSMode (write_enable);
-      bank.SetFDSMode (write_enable);
-
-      if (!multichip)
-      {
-        bank.SetBankDefault(6, nsf->bankswitch[6]);
-        bank.SetBankDefault(7, nsf->bankswitch[7]);
-      }
-    }
-    else
-    {
-      mem.SetFDSMode (false);
-      bank.SetFDSMode (false);
-    }
+    mem.SetFDSMode(false);
+    bank.SetFDSMode(false);
 
     // memory layer comes last
     stack.Attach (&layer);
@@ -443,12 +364,6 @@ void NSFPlayer::SetPlayFreq (double r)
     // �}�X�N�X�V
     apu->SetMask( (*config)["MASK"].GetInt()    );
     dmc->SetMask( (*config)["MASK"].GetInt()>>2 );
-    fds->SetMask( (*config)["MASK"].GetInt()>>5 );
-    mmc5->SetMask((*config)["MASK"].GetInt()>>6 );
-    fme7->SetMask((*config)["MASK"].GetInt()>>9 );
-    vrc6->SetMask((*config)["MASK"].GetInt()>>12);
-    vrc7->SetMask((*config)["MASK"].GetInt()>>15);
-    n106->SetMask((*config)["MASK"].GetInt()>>21);
 
     for(int i=0;i<NES_TRACK_MAX;i++)
       infobuf[i].Clear();
@@ -524,17 +439,7 @@ void NSFPlayer::SetPlayFreq (double r)
         // tick CPU
         cpu_clock_rest += cpu_clock_per_sample;
         int cpu_clocks = (int)(cpu_clock_rest);
-        // Moved to RateConverter:
-        //if (cpu_clocks > 0)
-        //{
-        //    UINT32 real_cpu_clocks = cpu.Exec ( cpu_clocks );
-        //    cpu_clock_rest -= (double)(real_cpu_clocks);
-        //
-        //  // tick APU frame sequencer
-        //  dmc->TickFrameSequence(real_cpu_clocks);
-        //  if (nsf->use_mmc5)
-        //      mmc5->TickFrameSequence(real_cpu_clocks);
-        //}
+
         rconv.TickCPU(cpu_clocks);
         cpu_clock_rest -= double(cpu_clocks);
 
@@ -575,42 +480,6 @@ void NSFPlayer::SetPlayFreq (double r)
 
       for(i=0;i<3;i++)
         infobuf[APU2_TRK0+i].AddInfo(total_render,dmc->GetTrackInfo(i));
-
-      if(nsf->use_fds)
-        infobuf[FDS_TRK0].AddInfo(total_render,fds->GetTrackInfo(0));
-
-      if(nsf->use_vrc6)
-      {
-        for(i=0; i<3; i++)
-          infobuf[VRC6_TRK0+i].AddInfo(total_render,vrc6->GetTrackInfo(i));
-      }
-
-      if(nsf->use_n106)
-      {
-        for(i=0;i<8;i++)
-          infobuf[N106_TRK0+i].AddInfo(total_render,n106->GetTrackInfo(i));
-      }
-
-      if(nsf->use_vrc7)
-      {
-        for(i=0; i<6; i++)
-          infobuf[VRC7_TRK0+i].AddInfo(total_render,vrc7->GetTrackInfo(i));
-        if (nsf->vrc7_type == 1)
-          for(i=6; i<9; i++)
-            infobuf[VRC7_TRK6+i-6].AddInfo(total_render,vrc7->GetTrackInfo(i));
-      }
-
-      if(nsf->use_mmc5)
-      {
-        for(i=0; i<3; i++)
-          infobuf[MMC5_TRK0+i].AddInfo(total_render,mmc5->GetTrackInfo(i));
-      }
-
-      if(nsf->use_fme7)
-      {
-        for(i=0; i<5; i++)
-          infobuf[FME7_TRK0+i].AddInfo(total_render,fme7->GetTrackInfo(i));
-      }
     }
   }
   
@@ -648,18 +517,7 @@ void NSFPlayer::SetPlayFreq (double r)
       // tick CPU
       cpu_clock_rest += cpu_clock_per_sample;
       int cpu_clocks = (int)(cpu_clock_rest);
-      // Moved to RateConverter:
-      //if (cpu_clocks > 0)
-      //{
-      //    UINT32 real_cpu_clocks = cpu.Exec ( cpu_clocks );
-      //    cpu_clock_rest -= (double)(real_cpu_clocks);
-      //
-      //    // tick APU frame sequencer
-      //    dmc->TickFrameSequence(real_cpu_clocks);
-      //    if (nsf->use_mmc5)
-      //        mmc5->TickFrameSequence(real_cpu_clocks);
-      //}
-      //UpdateInfo();
+
       rconv.TickCPU(cpu_clocks);
       cpu_clock_rest -= double(cpu_clocks);
 
@@ -839,18 +697,12 @@ void NSFPlayer::SetPlayFreq (double r)
 
     // adjust volume by NSFE mixe chunk
 
-    const int MIXE_DEVICE_MAP[NES_DEVICE_MAX] = { 0, 1, 7, 5, 6, 2, 3, 4 }; // map device ID to mixe
+    const int MIXE_DEVICE_MAP[NES_DEVICE_MAX] = { 0, 1, }; // map device ID to mixe
     const int MIXE_DEVICE_ADJUST[NSFE_MIXES] =
     {
         // millibels difference between device "square" and APU square
         0,    // APU (1x)
-        -20, // DMC
-        0,    // VRC6 (1x)
-        1340, // VRC7
-        690,  // FDS (~2.4x)
-        0,    // MMC5 (1x)
-        1540, // N163 (~6.0x)
-        -250,  // 5B
+        -20 // DMC
     };
 
     const int mixe_device = MIXE_DEVICE_MAP[id];
@@ -888,36 +740,6 @@ void NSFPlayer::SetPlayFreq (double r)
       for (i = 0; i < NES_DMC::OPT_END; i++)
         dmc->SetOption (i, config->GetDeviceOption(id,i));
       dmc->SetMask((*config)["MASK"].GetInt()>>2);
-      break;
-    case FDS:
-      for (i = 0; i < NES_FDS::OPT_END; i++)
-        fds->SetOption (i, config->GetDeviceOption(id,i).GetInt());
-      fds->SetMask((*config)["MASK"].GetInt()>>5);
-      break;
-    case MMC5:
-      for (i = 0; i < NES_MMC5::OPT_END; i++)
-        mmc5->SetOption (i, config->GetDeviceOption(id,i));
-      mmc5->SetMask((*config)["MASK"].GetInt()>>6);
-      break;
-    case FME7:
-      for (i = 0; i < NES_FME7::OPT_END; i++)
-        fme7->SetOption (i, config->GetDeviceOption(id,i));
-      fme7->SetMask((*config)["MASK"].GetInt()>>9);
-      break;
-    case VRC6:
-      for (i = 0; i < NES_VRC6::OPT_END; i++)
-        vrc6->SetOption (i, config->GetDeviceOption(id,i));
-      vrc6->SetMask((*config)["MASK"].GetInt()>>12);
-      break;
-    case VRC7:
-      for (i = 0; i < NES_VRC7::OPT_END; i++)
-        vrc7->SetOption (i, config->GetDeviceOption(id,i));
-      vrc7->SetMask((*config)["MASK"].GetInt()>>15);
-      break;
-    case N106:
-      for (i = 0; i < NES_N106::OPT_END; i++)
-        n106->SetOption (i, config->GetDeviceOption(id,i));
-      n106->SetMask((*config)["MASK"].GetInt()>>21);
       break;
     default:
       break;
@@ -957,12 +779,6 @@ void NSFPlayer::SetPlayFreq (double r)
         {
             case APU: apu->SetStereoMix(ci,l,r); break;
             case DMC: dmc->SetStereoMix(ci,l,r); break;
-            case FDS: fds->SetStereoMix(ci,l,r); break;
-            case MMC5: mmc5->SetStereoMix(ci,l,r); break;
-            case FME7: fme7->SetStereoMix(ci,l,r); break;
-            case VRC6: vrc6->SetStereoMix(ci,l,r); break;
-            case VRC7: vrc7->SetStereoMix(ci,l,r); break;
-            case N106: n106->SetStereoMix(ci,l,r); break;
         }
     }
   }

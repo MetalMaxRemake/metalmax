@@ -9,13 +9,7 @@
 #include "../../devices/Memory/nes_mem.h"
 #include "../../devices/Memory/nsf2_vectors.h"
 #include "../../devices/Sound/nes_apu.h"
-#include "../../devices/Sound/nes_vrc7.h"
-#include "../../devices/Sound/nes_fme7.h"
-#include "../../devices/Sound/nes_vrc6.h"
 #include "../../devices/Sound/nes_dmc.h"
-#include "../../devices/Sound/nes_mmc5.h"
-#include "../../devices/Sound/nes_n106.h"
-#include "../../devices/Sound/nes_fds.h"
 #include "../../devices/Audio/filter.h"
 #include "../../devices/Audio/mixer.h"
 #include "../../devices/Audio/fader.h"
@@ -45,8 +39,8 @@ namespace xgm
     double cpu_clock_rest;
     double apu_clock_rest;
 
-    int time_in_ms;             // ‰‰‘t‚µ‚½ŠÔ(ms)
-    bool playtime_detected;     // ‰‰‘tŠÔ‚ªŒŸo‚³‚ê‚½‚çtrue
+    int time_in_ms;             // ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ms)
+    bool playtime_detected;     // ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ê‚½ï¿½ï¿½true
     bool infinite;               // never fade out
 
     void Reload ();
@@ -69,55 +63,42 @@ namespace xgm
     NSF2_Vectors nsf2_vectors;
     NSF2_IRQ nsf2_irq;
 
-    ISoundChip *sc[NES_DEVICE_MAX];      // ƒTƒEƒ“ƒhƒ`ƒbƒv‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
-    Amplifier amp[NES_DEVICE_MAX];       // ƒAƒ“ƒv
+    ISoundChip *sc[NES_DEVICE_MAX];      // ï¿½Tï¿½Eï¿½ï¿½ï¿½hï¿½`ï¿½bï¿½vï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½X
+    Amplifier amp[NES_DEVICE_MAX];       // ï¿½Aï¿½ï¿½ï¿½v
     RateConverter rconv;
-    DCFilter dcf;                        // ÅIo—Í’i‚ÉŠ|‚¯‚é’¼—¬ƒtƒBƒ‹ƒ^
-    Filter lpf;                          // ÅIo—Í‚ÉŠ|‚¯‚éƒ[ƒpƒXƒtƒBƒ‹ƒ^
-    ILoopDetector *ld;                   // ƒ‹[ƒvŒŸoŠí
+    DCFilter dcf;                        // ï¿½ÅIï¿½oï¿½Í’iï¿½ÉŠ|ï¿½ï¿½ï¿½é’¼ï¿½ï¿½ï¿½tï¿½Bï¿½ï¿½ï¿½^
+    Filter lpf;                          // ï¿½ÅIï¿½oï¿½Í‚ÉŠ|ï¿½ï¿½ï¿½éƒï¿½[ï¿½pï¿½Xï¿½tï¿½Bï¿½ï¿½ï¿½^
+    ILoopDetector *ld;                   // ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½oï¿½ï¿½
     CPULogger *logcpu;                   // Logs CPU to file
 
-    // ƒgƒ‰ƒbƒN”Ô†‚Ì—ñ‹“
+    // ï¿½gï¿½ï¿½ï¿½bï¿½Nï¿½Ôï¿½ï¿½Ì—ï¿½
     enum {
       APU1_TRK0=0, APU1_TRK1, 
       APU2_TRK0, APU2_TRK1, APU2_TRK2,
-      FDS_TRK0,
-      MMC5_TRK0, MMC5_TRK1, MMC5_TRK2,
-      FME7_TRK0, FME7_TRK1, FME7_TRK2, FME7_TRK3, FME7_TRK4,
-      VRC6_TRK0, VRC6_TRK1, VRC6_TRK2,
-      VRC7_TRK0, VRC7_TRK1, VRC7_TRK2, VRC7_TRK3, VRC7_TRK4, VRC7_TRK5,
-      N106_TRK0, N106_TRK1, N106_TRK2, N106_TRK3, N106_TRK4, N106_TRK5, N106_TRK6, N106_TRK7,
-      VRC7_TRK6, VRC7_TRK7, VRC7_TRK8,
       NES_TRACK_MAX
     };
-    InfoBuffer infobuf[NES_TRACK_MAX];   // Šeƒgƒ‰ƒbƒN‚Ìî•ñ‚ğ•Û‘¶
+    InfoBuffer infobuf[NES_TRACK_MAX];   // ï¿½eï¿½gï¿½ï¿½ï¿½bï¿½Nï¿½Ìï¿½ï¿½ï¿½Û‘ï¿½
     
-    int total_render; // ‚±‚ê‚Ü‚Å‚É¶¬‚µ‚½”gŒ`‚ÌƒoƒCƒg”
-    int frame_render; // ‚PƒtƒŒ[ƒ€•ª‚ÌƒoƒCƒg”
-    int frame_in_ms;  // ‚PƒtƒŒ[ƒ€‚Ì’·‚³(ms)
+    int total_render; // ï¿½ï¿½ï¿½ï¿½Ü‚Å‚Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½`ï¿½Ìƒoï¿½Cï¿½gï¿½ï¿½
+    int frame_render; // ï¿½Pï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒoï¿½Cï¿½gï¿½ï¿½
+    int frame_in_ms;  // ï¿½Pï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Ì’ï¿½ï¿½ï¿½(ms)
 
-    // ŠeƒTƒEƒ“ƒhƒ`ƒbƒv‚ÌƒGƒCƒŠƒAƒXQÆ
+    // ï¿½eï¿½Tï¿½Eï¿½ï¿½ï¿½hï¿½`ï¿½bï¿½vï¿½ÌƒGï¿½Cï¿½ï¿½ï¿½Aï¿½Xï¿½Qï¿½ï¿½
     NES_APU *apu;
     NES_DMC *dmc;
-    NES_VRC6 *vrc6;
-    NES_VRC7 *vrc7;
-    NES_FME7 *fme7;
-    NES_MMC5 *mmc5;
-    NES_N106 *n106;
-    NES_FDS *fds;
 
   public:
     NSF *nsf;
     NSFPlayer ();
     ~NSFPlayer ();
 
-    /** ƒRƒ“ƒtƒBƒOî•ñ‚ÌƒZƒbƒg */
+    /** ï¿½Rï¿½ï¿½ï¿½tï¿½Bï¿½Oï¿½ï¿½ï¿½ÌƒZï¿½bï¿½g */
     virtual void SetConfig(PlayerConfig *pc) ;
 
-    /** ƒf[ƒ^‚ğƒ[ƒh‚·‚é */
+    /** ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ */
     virtual bool Load (SoundData * sdat);
 
-    /** Ä¶ü”g”‚ğİ’è‚·‚é */
+    /** ï¿½Äï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½İ’è‚·ï¿½ï¿½ */
     virtual void SetPlayFreq (double);
 
     /**
@@ -125,51 +106,51 @@ namespace xgm
      */
     virtual void SetChannels(int);
 
-    /** ƒŠƒZƒbƒg‚·‚éD‘O‚Ì‰‰‘t‚Åƒf[ƒ^‚Ì©ŒÈ‘‚«Š·‚¦‚ª”­¶‚µ‚Ä‚¢‚Ä‚àC•œ‚µ‚È‚¢D */
+    /** ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Dï¿½Oï¿½Ì‰ï¿½ï¿½tï¿½Åƒfï¿½[ï¿½^ï¿½Ìï¿½ï¿½Èï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ä‚ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½D */
     virtual void Reset ();
 
-    /** Œ»İ‰‰‘t’†‚Ì‹È”Ô†‚ğ•Ô‚· */
+    /** ï¿½ï¿½ï¿½İ‰ï¿½ï¿½tï¿½ï¿½ï¿½Ì‹È”Ôï¿½ï¿½ï¿½Ô‚ï¿½ */
     virtual int GetSong ();
 
-    /** ƒtƒF[ƒhƒAƒEƒg‚ğŠJn‚·‚é */
+    /** ï¿½tï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½ */
     virtual void FadeOut (int fade_in_ms);
 
-    /** ‰‰‘t‚·‚é‹È”Ô†‚ğİ’è‚·‚é */
+    /** ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½È”Ôï¿½ï¿½ï¿½İ’è‚·ï¿½ï¿½ */
     virtual bool SetSong (int s);
     virtual bool PrevSong (int s);
     virtual bool NextSong (int s);
 
-    /** ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ğs‚¤ */
+    /** ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½ */
     virtual UINT32 Render (INT16 * b, UINT32 length);
 
-    /** ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ğƒXƒLƒbƒv‚·‚é */
+    /** ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Xï¿½Lï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ */
     virtual UINT32 Skip (UINT32 length);
 
-    /** ‹È–¼‚ğæ“¾‚·‚é */
+    /** ï¿½È–ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½ */
     virtual const char *GetTitleString ();
 
-    /** ‰‰‘tŠÔ‚ğæ“¾‚·‚é */
+    /** ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Ô‚ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½ */
     virtual int GetLength ();
 
-    /** ‰‰‘tŠÔ‚ª©“®ŒŸo‚³‚ê‚½‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚é */
+    /** ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ */
     virtual bool IsDetected ();
 
-    /** ‰‰‘t‚ª’â~‚µ‚½‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚é */
+    /** ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ */
     virtual bool IsStopped ();
 
-    /** Œ»İ‚ÌNESƒƒ‚ƒŠó‹µ‚ğ•¶š—ñ‚Æ‚µ‚ÄŠl“¾‚·‚é */
+    /** ï¿½ï¿½ï¿½İ‚ï¿½NESï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó‹µ‚ğ•¶ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ÄŠlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     virtual void GetMemoryString (char *buf);   // Memory Dump as String
 
-    /** Œ»İ‚ÌNESƒƒ‚ƒŠó‹µ‚ğŠl“¾‚·‚é */
+    /** ï¿½ï¿½ï¿½İ‚ï¿½NESï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó‹µ‚ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     virtual void GetMemory (UINT8 * buf);       // Memory Dump
 
-    /** ƒRƒ“ƒtƒBƒOƒŒ[ƒVƒ‡ƒ“‚ÌXVî•ñ’Ê’m‚ğó‚¯æ‚éƒR[ƒ‹ƒoƒbƒN */
+    /** ï¿½Rï¿½ï¿½ï¿½tï¿½Bï¿½Oï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½Ê’mï¿½ï¿½ï¿½ó‚¯ï¿½ï¿½Rï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½N */
     virtual void Notify (int id);
 
     /** Notify for panning */
     virtual void NotifyPan (int id);
 
-    /** time_in_ms“_‚Å‚ÌƒfƒoƒCƒXî•ñ‚ğæ“¾‚·‚é */
+    /** time_in_msï¿½ï¿½ï¿½_ï¿½Å‚Ìƒfï¿½oï¿½Cï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½ */
     virtual IDeviceInfo *GetInfo(int time_in_ms, int device_id);
 
     /** Whether to use PAL/NTSC/Dendy based on flags and REGION config */

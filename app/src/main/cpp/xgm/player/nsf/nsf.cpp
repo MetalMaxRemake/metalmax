@@ -1,8 +1,4 @@
-#if defined(_MSC_VER) || defined(__MINGW32__)
-#include <windows.h>
-#else
 #define stricmp strcasecmp
-#endif
 
 #include <assert.h>
 #include <stdio.h>
@@ -450,8 +446,6 @@ static int is_sjis_prefix(int c)
     }
 
     nsf2_bits = 0;
-    vrc7_type = -1; // default
-    vrc7_patches = NULL; // none
 
     // fill NSFe values with defaults
 
@@ -527,13 +521,6 @@ static int is_sjis_prefix(int c)
     if(speed_ntsc ==0) speed_ntsc  = 16639;
     if(speed_pal  ==0) speed_pal   = 19997;
     if(speed_dendy==0) speed_dendy = speed_pal;
-
-    use_vrc6 = soundchip &  1 ? true : false;
-    use_vrc7 = soundchip &  2 ? true : false;
-    use_fds  = soundchip &  4 ? true : false;
-    use_mmc5 = soundchip &  8 ? true : false;
-    use_n106 = soundchip & 16 ? true : false;
-    use_fme7 = soundchip & 32 ? true : false;
 
     __memcpy_aarch64_simd (extra, image + 0x7c, 4);
 
@@ -676,14 +663,6 @@ static int is_sjis_prefix(int c)
           // other variables contained in other banks
           __memset_aarch64 (bankswitch, 0, 8);
           __memset_aarch64 (extra, 0, 4);
-
-          // setup derived variables
-          use_vrc6 = soundchip &  1 ? true : false;
-          use_vrc7 = soundchip &  2 ? true : false;
-          use_fds  = soundchip &  4 ? true : false;
-          use_mmc5 = soundchip &  8 ? true : false;
-          use_n106 = soundchip & 16 ? true : false;
-          use_fme7 = soundchip & 32 ? true : false;
           song = start - 1;
 
           // body should follow in 'DATA' chunk
@@ -749,29 +728,6 @@ static int is_sjis_prefix(int c)
               return false;
           }
           nsf2_bits = chunk[0];
-        }
-        else if (!strcmp(cid, "VRC7"))
-        {
-          if (chunk_size < 1)
-          {
-              nsfe_error = "'VRC7' chunk size too small.";
-              return false;
-          }
-          else if (chunk_size > 1 && chunk_size < (1+16*8))
-          {
-              nsfe_error = "'VRC7' chunk patch set incomplete.";
-              return false;
-          }
-          vrc7_type = chunk[0];
-          if (vrc7_type > 1)
-          {
-              nsfe_error = "'VRC7' variant unknown.";
-              return false;
-          }
-          if (chunk_size >= (1+16*8))
-          {
-              vrc7_patches = chunk+1;
-          }
         }
         else if (!strcmp(cid, "auth"))
         {
@@ -930,19 +886,6 @@ static int is_sjis_prefix(int c)
     if (regn & 2) DEBUG_OUT ("NTSC\n");
     if (regn & 4) DEBUG_OUT ("Dendy\n");
     if (regn == 0) DEBUG_OUT ("No region?\n");
-
-    if (soundchip & 1)
-      DEBUG_OUT ("VRC6 ");
-    if (soundchip & 2)
-      DEBUG_OUT ("VRC7 ");
-    if (soundchip & 4)
-      DEBUG_OUT ("FDS ");
-    if (soundchip & 8)
-      DEBUG_OUT ("MMC5 ");
-    if (soundchip & 16)
-      DEBUG_OUT ("Namco 106 ");
-    if (soundchip & 32)
-      DEBUG_OUT ("FME-07 ");
 
     DEBUG_OUT ("\n");
 

@@ -4,11 +4,11 @@
 
 namespace xgm
 {
-  /** ƒfƒoƒCƒX–ˆ‚Ì’Ê‚µ”Ô† */
+  /** ï¿½fï¿½oï¿½Cï¿½Xï¿½ï¿½ï¿½Ì’Ê‚ï¿½ï¿½Ôï¿½ */
   enum DeviceCode
-  { APU = 0, DMC, FME7, MMC5, N106, VRC6, VRC7, FDS, NES_DEVICE_MAX };
+  { APU = 0, DMC, NES_DEVICE_MAX};
 
-  const int NES_CHANNEL_MAX = 32;
+  const int NES_CHANNEL_MAX = 5;
 
   class NSFPlayerConfig : public PlayerConfig
   {
@@ -46,7 +46,7 @@ namespace xgm
       return data[str];
     }
 
-    /** ƒfƒoƒCƒX–ˆ‚Ì–¼‘O */
+    /** ï¿½fï¿½oï¿½Cï¿½Xï¿½ï¿½ï¿½Ì–ï¿½ï¿½O */
     static const char *dname[NES_DEVICE_MAX];
 
     // for channel/pan/mix
