@@ -46,6 +46,17 @@ unsigned char *fullMap = nullptr;
 unsigned short *short_current_map;
 unsigned short current_fill;
 
+void initAllTilesMap() {
+    fullMap = (unsigned char *) malloc(
+            sizeof(char) * ((map_width + 2*MAP_FILL_SIZE) * (map_height + 2*MAP_FILL_SIZE) * 256));
+    int bmpIdx = 0;
+    for (int i = 0; i < map_height; i++) {
+        for (int j = 0; j < map_width; j++) {
+            fill(i + MAP_FILL_SIZE, j + MAP_FILL_SIZE, bmpIdx++ % 1904, fullMap);
+        }
+    }
+}
+
 void initFullMap() {
     if (fullMap == nullptr) {
         fullMap = (unsigned char *) malloc(
@@ -87,11 +98,19 @@ int min(int a, int b) {
 void refreshCurrentMap(int mapId) {
     pthread_mutex_lock(&mapRefreshMutex);
     releaseMap();
-    short_current_map = short_map_data[mapId];
-    current_fill = map_fill[mapId];
-    map_height = map_size[mapId * 2];
-    map_width = map_size[mapId * 2 + 1];
-    initFullMap();
+    if(mapId == -1) {
+        short_current_map = nullptr;
+        current_fill = -1;
+        map_height = 44;
+        map_width = 44;
+        initAllTilesMap();
+    } else {
+        short_current_map = short_map_data[mapId];
+        current_fill = map_fill[mapId];
+        map_height = map_size[mapId * 2];
+        map_width = map_size[mapId * 2 + 1];
+        initFullMap();
+    }
     pthread_mutex_unlock(&mapRefreshMutex);
 }
 

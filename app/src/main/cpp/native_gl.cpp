@@ -205,7 +205,7 @@ void initRenderBuffer() {
             color++;
         }
     }
-    refreshCurrentMap(0);
+    refreshCurrentMap(-1);
 }
 
 void initGL() {
@@ -335,7 +335,6 @@ void onDown() {
 int mapId = 0;
 
 void changeMap() {
-    mapId++;
     if (mapId >= MAP_COUNT) {
         mapId = 0;
     }
@@ -345,4 +344,5 @@ void changeMap() {
     refreshCurrentMap(mapId);
     finishPerf("refreshCurrentMap");
     refreshImg();
+    mapId++;
 }
