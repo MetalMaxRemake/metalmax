@@ -20,6 +20,7 @@
 #include "opt/mem_opt.h"
 #include "maps/map_data/map_data.h"
 #include "palette_data.h"
+#include "perf.h"
 
 void * currentBuffer;
 
@@ -305,7 +306,9 @@ void refreshImg() {
         return;
     }
     pthread_mutex_lock(&onMutex);
+//    startPerf();
     currentBuffer = getImage(posX, posY, (unsigned char *)currentBuffer);
+//    finishPerf("refreshImg");
     pthread_mutex_unlock(&onMutex);
 }
 
@@ -338,6 +341,8 @@ void changeMap() {
     }
     posX = 0;
     posY = 0;
+    startPerf();
     refreshCurrentMap(mapId);
+    finishPerf("refreshCurrentMap");
     refreshImg();
 }

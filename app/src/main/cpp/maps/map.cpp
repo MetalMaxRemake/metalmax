@@ -17,12 +17,28 @@ volatile int map_width = 256,map_height = 256;
 pthread_mutex_t mapRefreshMutex;
 
 void fill(int i, int j, int bmpIdx, unsigned char *result) {
-    for(int x = 0;x<16;x++) {
-        int holeX = x + i*16;
-        for(int y = 0;y<16;y++) {
-            int holeY = y + j*16;
-            result[holeX*((map_width + 2*MAP_FILL_SIZE)*16) + holeY] = bitmaps[bmpIdx][x * 16 + y];
-        }
+    int map_raw_width = ((map_width + 2 * MAP_FILL_SIZE) * 16);
+    int map_column_offset = j * 16;
+    int map_raw_offset = i * 16;
+    for (int x = 0; x < 4; x++) {
+        int block_start = x * 4;
+        //循环展开 + simd_memcpy
+        __memcpy_aarch64_simd(
+                result + ((block_start + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + (block_start * 16),
+                16);
+        __memcpy_aarch64_simd(
+                result + ((block_start + 1 + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + ((block_start + 1) * 16),
+                16);
+        __memcpy_aarch64_simd(
+                result + ((block_start + 2 + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + ((block_start + 2) * 16),
+                16);
+        __memcpy_aarch64_simd(
+                result + ((block_start + 3 + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + ((block_start + 3) * 16),
+                16);
     }
 }
 
@@ -97,12 +113,9 @@ unsigned char *getImage(int x, int y, unsigned char *result) {
     int maxj1 = (maxY - y);
     int maxj2 = (renderYEnd - y) + 1;
     int maxj = min(maxj1, maxj2);
-    for (int i = 0; i < 256; i++) {
-        if (i + x >= maxX
-            || i + x >= renderXEnd
-            || i + x < 0) {
-            continue;
-        }
+    int startIdx = x < 0 ? -x : 0;
+    int endIdx = min(min(renderXEnd - x, maxX - x), 255);
+    for (int i = startIdx; i <= endIdx; i++) {
         if(y >= maxY
             || y >= renderYEnd
             || 255 + y < 0) {

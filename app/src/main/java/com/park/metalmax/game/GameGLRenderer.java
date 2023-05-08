@@ -1,6 +1,8 @@
 package com.park.metalmax.game;
 
 import android.opengl.GLSurfaceView;
+import android.os.SystemClock;
+import android.util.Log;
 
 import com.park.metalmax.NativeBridge;
 
@@ -18,8 +20,12 @@ public class GameGLRenderer implements GLSurfaceView.Renderer {
         NativeBridge.glOnChange(width, height);
     }
 
+    long startTime;
+
     @Override
     public void onDrawFrame(GL10 gl) {
+//        startTime = SystemClock.elapsedRealtime();
         NativeBridge.glOnDrawFrame();
+//        Log.d("onDrawFrameGL", "time cost:" + (SystemClock.elapsedRealtime() - startTime) + "ms");
     }
 }
