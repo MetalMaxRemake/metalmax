@@ -16,7 +16,7 @@
 volatile int map_width = 256,map_height = 256;
 pthread_mutex_t mapRefreshMutex;
 
-void fill(int i, int j, int bmpIdx, unsigned char *result) {
+inline void fill(int i, int j, int bmpIdx, unsigned char *result) {
     int map_raw_width = ((map_width + 2 * MAP_FILL_SIZE) * 16);
     int map_column_offset = j * 16;
     int map_raw_offset = i * 16;
