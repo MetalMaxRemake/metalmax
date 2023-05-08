@@ -37,13 +37,6 @@ namespace xgm
 
     virtual void Skip ()
     {
-      // Should pass Skip on to all attached devices, but nothing currently requires it.
-
-      //DeviceList::iterator it;
-      //for (it = dlist.begin (); it != dlist.end (); it++)
-      //{
-      //  (*it)->Skip ();
-      //}
     }
 
     virtual void Tick (UINT32 clocks)

@@ -861,7 +861,6 @@ static int is_sjis_prefix(int c)
   void NSF::DebugOut ()
   {
     int i;
-
     DEBUG_OUT ("Magic:    %4s\n", magic);
     DEBUG_OUT ("Version:  %d\n", version);
     DEBUG_OUT ("Songs:    %d\n", songs);

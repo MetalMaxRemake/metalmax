@@ -9,14 +9,7 @@ namespace xgm{
 #define PRECISION 16
 
 static double window(int n, int M)
-{
-  // rectangular window
-  //return 1.0;
-
-  // hanning window
-  //return 0.5 + 0.5 * cos(PI*double(n)/double(M));
-
-  // hamming window
+{// hamming window
   return 0.54 + 0.46 * cos(PI*double(n)/double(M));
 }
 
@@ -198,22 +191,14 @@ inline UINT32 RateConverter::FastRender (INT32 b[2])
   assert (mcclocks == 0);
   clocks = 0;
   cpu_clocks = 0;
-
-  //out[0] = hr[0] * tap[0][mult];
-  //out[1] = hr[0] * tap[1][mult];
   out[0] = hri[0] * tap[0][mult];
   out[1] = hri[0] * tap[1][mult];
 
   for(int i=1; i<=mult; i++)
   {
-    //out[0] += hr[i] * (tap[0][mult+i]+tap[0][mult-i]);
-    //out[1] += hr[i] * (tap[1][mult+i]+tap[1][mult-i]);
     out[0] += hri[i] * (tap[0][mult+i]+tap[0][mult-i]);
     out[1] += hri[i] * (tap[1][mult+i]+tap[1][mult-i]);
   }
-
-  //b[0] = (INT32)out[0];
-  //b[1] = (INT32)out[1];
   b[0] = INT32(out[0] >> PRECISION);
   b[1] = INT32(out[1] >> PRECISION);
 

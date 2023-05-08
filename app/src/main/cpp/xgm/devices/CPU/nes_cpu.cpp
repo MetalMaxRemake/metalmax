@@ -74,7 +74,6 @@ NES_CPU::NES_CPU (double clock)
   nes_basecycles = clock;
   bus = NULL;
   nes_mem = NULL;
-  log_cpu = NULL;
   irqs = 0;
   enable_irq = true;
   enable_nmi = false;
@@ -166,8 +165,6 @@ int NES_CPU::Exec (int clocks)
 		{
 			if (play_addr >= 0)
 			{
-				if (log_cpu)
-					log_cpu->Play();
 				run_from (play_addr);
 			}
 			play_ready = false;
@@ -182,8 +179,6 @@ int NES_CPU::Exec (int clocks)
 				{
 					if (enable_nmi)
 					{
-						if (log_cpu)
-							log_cpu->Play();
 						context.iRequest |= IRQ_NMI;
 						breaked = false;
 					}
@@ -325,10 +320,6 @@ void NES_CPU::Start (
 		extra_init = true;
 		nmi_play = true;
 	}
-
-	if (log_cpu)
-		log_cpu->Init(song, region);
-
 	context.A = song;
 	context.X = region;
 	context.Y = extra_init ? 0x80 : 0;
@@ -370,11 +361,6 @@ void NES_CPU::Start (
 	// start of first frame
 	fclocks_left_in_frame = fclocks_per_frame;
 	play_ready = breaked && !extra_init;
-}
-
-void NES_CPU::SetLogger (CPULogger* logger)
-{
-	log_cpu = logger;
 }
 
 unsigned int NES_CPU::GetPC() const

@@ -35,13 +35,10 @@ struct Nsf2WavOptions {
             : length_ms(nsf.default_playtime),
               fade_ms(nsf.default_fadetime)
     {}
-
     int32_t length_ms;
     int32_t fade_ms;
     int channels = 1;
     double samplerate = SAMPLE_RATE;
-    int track = 2;
-    bool quiet = false;
 };
 
 pthread_mutex_t soundMutex;
@@ -85,7 +82,6 @@ int track = 0;
         player.Render((short *)cachedData[(cacheIdx++) % CACHE_SIZE], fc);
         pthread_mutex_unlock(&soundMutex);
     }
-    return nullptr;
 }
 
 char isInited = 0;

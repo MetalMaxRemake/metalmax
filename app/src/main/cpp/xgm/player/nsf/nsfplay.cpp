@@ -15,8 +15,6 @@ namespace xgm
 
     sc[APU] = (apu = new NES_APU());
     sc[DMC] = (dmc = new NES_DMC());
-    ld = new NESDetector();
-    logcpu = new CPULogger();
 
     nsf2_irq.SetCPU(&cpu); // IRQ
     dmc->SetAPU(apu); // set APU
@@ -40,8 +38,6 @@ namespace xgm
   {
     delete apu;
     delete dmc;
-    delete ld;
-    delete logcpu;
   }
 
   void NSFPlayer::SetConfig(PlayerConfig *pc)
@@ -108,46 +104,6 @@ namespace xgm
     layer.DetachAll ();
     mixer.DetachAll ();
     apu_bus.DetachAll ();
-
-    // select the loop detector
-    if((*config)["DETECT_ALT"])
-    {
-      const std::type_info &ti = typeid(ld);
-      if(strcmp(ti.name(),"NESDetectorEx")!=0)
-      {
-        delete ld;
-        ld = new NESDetectorEx();
-      }
-    }
-    else
-    {
-      const std::type_info &ti = typeid(ld);
-      if(strcmp(ti.name(),"NESDetector")!=0)
-      {
-        delete ld;
-        ld = new NESDetector();
-      }
-    }
-
-    // loop detector ends up at the front of the stack
-    // (will capture all writes, but does not capture write)
-    stack.Attach (ld);
-
-    int log_level = (*config)["LOG_CPU"];
-    logcpu->SetOption(0, log_level);
-    logcpu->SetSoundchip(nsf->soundchip);
-    logcpu->SetNSF(nsf);
-    if (log_level > 0)
-    {
-        logcpu->SetFilename((*config)["LOG_CPU_FILE"]);
-        stack.Attach(logcpu);
-        cpu.SetLogger(logcpu);
-        logcpu->SetCPU(&cpu);
-    }
-    else
-    {
-        cpu.SetLogger(NULL);
-    }
 
     // setup player program at PLAYER_RESERVED ($4100)
     const UINT8 PLAYER_PROGRAM[] =
@@ -268,10 +224,6 @@ void NSFPlayer::SetPlayFreq (double r)
 	mixer.Reset();
 	rconv.Reset();
 	fader.Reset();
-	lpf.SetRate(rate);
-	lpf.Reset();
-	dcf.SetRate(rate);
-	dcf.Reset(); 
 	DEBUG_OUT("rate: %f\n",rate);
 }
 
@@ -308,9 +260,6 @@ void NSFPlayer::SetPlayFreq (double r)
             cpu.nes_basecycles = config->GetValue("DENDY_BASECYCLES").GetInt();
             break;
     }
-
-    if (logcpu->GetLogLevel() > 0)
-        logcpu->Begin(GetTitleString());
 
     // ���t���RAM��Ԃ�j�󂳂��ꍇ������̂ŁC�ă��[�h
     Reload ();
@@ -374,7 +323,6 @@ void NSFPlayer::SetPlayFreq (double r)
     for (int i=0; i < NES_DEVICE_MAX; ++i) sc[i]->Tick(0); // determine starting state for all sound units
     fader.Tick(0);
     for (int i=0; i < (quality+1); ++i) fader.Render(b); // warm up rconv/render with enough sample to reach a steady state
-    dcf.SetLevel(b); // DC filter will use the current DC level as its starting state
   }
 
   void NSFPlayer::DetectSilent ()
@@ -396,17 +344,6 @@ void NSFPlayer::SetPlayFreq (double r)
   {
     if (fader.IsFading () || playtime_detected || !nsf->playtime_unknown || nsf->UseNSFePlaytime())
       return;
-
-    if ((*config)["AUTO_DETECT"])
-    {
-      if (ld->IsLooped (time_in_ms, (*config)["DETECT_TIME"], (*config)["DETECT_INT"]))
-      {
-        playtime_detected = true;
-        nsf->time_in_ms = ld->GetLoopEnd();
-        nsf->loop_in_ms = ld->GetLoopEnd() - ld->GetLoopStart();
-        nsf->fade_in_ms = -1;
-      }
-    }
   }
 
   void NSFPlayer::CheckTerminal ()
@@ -534,8 +471,8 @@ void NSFPlayer::SetPlayFreq (double r)
       last_out = outm;
 
       // echo.FastRender(buf);
-      dcf.FastRender(buf);
-      lpf.FastRender(buf);
+//      dcf.FastRender(buf);
+//      lpf.FastRender(buf);
 
       out[0] = buf[0];
       out[1] = buf[1];
@@ -683,8 +620,8 @@ void NSFPlayer::SetPlayFreq (double r)
       for (i = 0; i < NES_DEVICE_MAX; i++)
         Notify (i);
 
-      dcf.SetParam(270,(*config)["HPF"]);
-      lpf.SetParam(4700.0,(*config)["LPF"]);
+//      dcf.SetParam(270,(*config)["HPF"]);
+//      lpf.SetParam(4700.0,(*config)["LPF"]);
 
       //DEBUG_OUT("dcf: %3d > %f\n", (*config)["HPF"].GetInt(), dcf.GetFactor());
       //DEBUG_OUT("lpf: %3d > %f\n", (*config)["LPF"].GetInt(), lpf.GetFactor());

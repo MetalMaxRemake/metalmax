@@ -10,16 +10,11 @@
 #include "../../devices/Memory/nsf2_vectors.h"
 #include "../../devices/Sound/nes_apu.h"
 #include "../../devices/Sound/nes_dmc.h"
-#include "../../devices/Audio/filter.h"
 #include "../../devices/Audio/mixer.h"
 #include "../../devices/Audio/fader.h"
 #include "../../devices/Audio/amplifier.h"
 #include "../../devices/Audio/rconv.h"
-#include "../../devices/Audio/echo.h"
-#include "../../devices/Audio/MedianFilter.h"
 #include "../../devices/Misc/nsf2_irq.h"
-#include "../../devices/Misc/nes_detect.h"
-#include "../../devices/Misc/log_cpu.h"
 
 namespace xgm
 {
@@ -66,10 +61,6 @@ namespace xgm
     ISoundChip *sc[NES_DEVICE_MAX];      // �T�E���h�`�b�v�̃C���X�^���X
     Amplifier amp[NES_DEVICE_MAX];       // �A���v
     RateConverter rconv;
-    DCFilter dcf;                        // �ŏI�o�͒i�Ɋ|���钼���t�B���^
-    Filter lpf;                          // �ŏI�o�͂Ɋ|���郍�[�p�X�t�B���^
-    ILoopDetector *ld;                   // ���[�v���o��
-    CPULogger *logcpu;                   // Logs CPU to file
 
     // �g���b�N�ԍ��̗�
     enum {
