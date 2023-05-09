@@ -9,21 +9,25 @@
 #include "palette_data.h"
 #include "opt/mem_opt.h"
 
+typedef byte byte
+
 volatile int key, funcKey;
 
-const unsigned char up = 0b0001;
-const unsigned char down = 0b0010;
-const unsigned char left = 0b0100;
-const unsigned char right = 0b1000;
+const byte up = 0b0001;
+const byte down = 0b0010;
+const byte left = 0b0100;
+const byte right = 0b1000;
 
-const unsigned char a = 0b0001;
-const unsigned char b = 0b0010;
-const unsigned char ta = 0b0100;
-const unsigned char tb = 0b1000;
+const byte a = 0b0001;
+const byte b = 0b0010;
+const byte ta = 0b0100;
+const byte tb = 0b1000;
 
-const unsigned char map_val = 0b0001;
-const unsigned char music_val = 0b0010;
-unsigned char needChange = 0;
+const byte map_val = 0b0001;
+const byte music_val = 0b0010;
+
+//todo
+int audioIdx = 0;
 
 void onLoop() {
     if (key & up) {
@@ -48,7 +52,7 @@ void onLoop() {
         needChange |= music_val;
     } else if (needChange & music_val) {
         needChange &= ~music_val;
-        changeMusic();
+        changeAudio(audioIdx++);
     }
 }
 
@@ -90,7 +94,7 @@ void onFuncKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
 
 jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring text) {
     const char *textInChar = env->GetStringUTFChars(text, JNI_FALSE);
-    unsigned char * nativeBmp = getStringImg(textInChar);
+    byte * nativeBmp = getStringImg(textInChar);
     AndroidBitmapInfo bitmapInfo;
     AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
     void *pixels;
@@ -109,8 +113,8 @@ jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring 
     return true;
 }
 
-void getSoundBuffer(JNIEnv *env, jclass clazz, jshortArray array) {
-    short *buffer = getBuffer();
+void getAudioBufferJNI(JNIEnv *env, jclass clazz, jshortArray array) {
+    short *buffer = getAudioBuffer();
     if(buffer != nullptr) {
         env->SetShortArrayRegion(array, 0, 1024, buffer);
     }
@@ -127,7 +131,7 @@ static JNINativeMethod methods[] = {
         {"glInit",         "()V",   (void *) &init},
         {"glOnChange",     "(II)V", (void *) &onChange},
         {"glOnDrawFrame",  "()V",   (void *) &onDrawFrame},
-        {"getBuffer", "([S)V",   (void *) &getSoundBuffer},
+        {"getAudioBuffer", "([S)V",   (void *) &getAudioBufferJNI},
         {"slInit", "()V",   (void *) &slInit},
         {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},
 };

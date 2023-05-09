@@ -11,12 +11,6 @@
 void initGL();
 void onGLSurfaceChange(int width, int height);
 void onGLDraw();
-void initFirstBuffer();
-void onRight();
-void onLeft();
-void onUp();
-void onDown();
-bool isColorDebugMode();
-void changeMap();
+void updateScreenBuffer(unsigned char * buffer);
 
 #endif //METALMAX_NATIVE_GL_H

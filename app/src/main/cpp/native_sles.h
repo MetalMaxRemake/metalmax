@@ -6,7 +6,9 @@
 #define SUPERCUBE_NATIVE_SLES_H
 
 extern "C" void initSL();
-extern "C" void changeMusic();
-extern "C" short *getBuffer();
+extern "C" short *getAudioBuffer();
+extern "C" void changeAudio(int audioIdx);
+extern "C" int getAudioCount()
+
 
 #endif //SUPERCUBE_NATIVE_SLES_H

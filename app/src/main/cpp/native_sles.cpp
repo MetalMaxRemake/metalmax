@@ -43,10 +43,9 @@ struct Nsf2WavOptions {
 
 pthread_mutex_t soundMutex;
 xgm::NSFPlayer player;
-int track = 0;
+xgm::NSF nsf;
 
-[[noreturn]] void *convertNsf2PCM(void *) {
-    xgm::NSF nsf;
+[[noreturn]] void *nsfPlayerThread(void *) {
     xgm::NSFPlayerConfig config;
     Nsf2WavOptions options(nsf);
     nsf.SetDefaults(options.length_ms, options.fade_ms, nsf.default_loopnum);
@@ -55,7 +54,7 @@ int track = 0;
 
     nsf.Load((unsigned char *)all_sound, all_sound_size);
     int count = nsf.GetSongNum();
-    __android_log_print(ANDROID_LOG_INFO, "test", "mm_song_num:%d", count);
+    __android_log_print(ANDROID_LOG_INFO, "nsfPlayerThread", "mm_song_num:%d", count);
 
     config["MASTER_VOLUME"] = 128; /* default volume = 128 */
     config["PLAY_ADVANCE"] = 1;
@@ -96,22 +95,24 @@ extern "C" void initSL() {
     isInited = 1;
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, nullptr, convertNsf2PCM, nullptr);
+    pthread_create(&id, nullptr, nsfPlayerThread, nullptr);
 }
 
-extern "C" void changeMusic() {
-    track++;
-    if(track >= 96) {
-        track = 0;
+extern "C" int getAudioCount() {
+    return nsf.GetSongNum();
+}
+
+extern "C" void changeAudio(int audioIdx) {
+    if(audioIdx >= 96) {
+        audioIdx = 0;
     }
     pthread_mutex_lock(&soundMutex);
     player.Reset();
-    player.SetSong(track);
-    player.Reset();
+    player.SetSong(audioIdx);
     pthread_mutex_unlock(&soundMutex);
 }
 
-extern "C" short *getBuffer() {
+extern "C" short *getAudioBuffer() {
     if(readIdx >= cacheIdx) {
         return nullptr;
     }

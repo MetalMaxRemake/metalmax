@@ -21,8 +21,9 @@
 #include "maps/map_data/map_data.h"
 #include "palette_data.h"
 #include "perf.h"
+#include "sprite/sprite.h"
 
-void * currentBuffer;
+void * currentScreenBuffer;
 
 const int COORDS_PER_VERTEX = 3;
 const int COORDS_PER_TEXTURE = 2;
@@ -213,7 +214,7 @@ void initGL() {
     program = loadProgram(VERTEX_SHADER, FRAGMENT_SHADER);
     initTextures();
     initRenderBuffer();
-    currentBuffer = colorBlockBuffer;
+    currentMapBuffer = colorBlockBuffer;
 }
 
 void onGLSurfaceChange(int width, int height) {
@@ -228,29 +229,7 @@ void onGLSurfaceChange(int width, int height) {
     texCoordHandle = glGetAttribLocation(program, "a_texCoord");
 }
 
-const char chinese_demo[4] = {0,1,2,3};
-const char *version_string = "PARK_671 TEST VERSION 0.1";
-const char *graphic_string = "OPENGL ES 2.0";
-
-void initFirstBuffer() {
-    currentBuffer = getImage(0, 0, nullptr);
-    versionBuffer = getStringImg(version_string);
-    graphicBuffer = getStringImg(graphic_string);
-    chineseBuffer = getZhStringImg(chinese_demo,4);
-}
-
 pthread_mutex_t onMutex;
-
-void drawText(const char *string, unsigned char * textBuffer, int x, int y) {
-    int len = strlen(string);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, x*16, y*16, 8 *len, 8, GL_ALPHA,
-                    GL_UNSIGNED_BYTE, textBuffer);
-}
-
-void drawChineseText(unsigned char * textBuffer, int len, int x, int y) {
-    glTexSubImage2D(GL_TEXTURE_2D, 0, x*16, y*16, 12 *len, 12, GL_ALPHA,
-                    GL_UNSIGNED_BYTE, textBuffer);
-}
 
 void onGLDraw() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -275,7 +254,7 @@ void onGLDraw() {
     checkGlError("uniforms");
     pthread_mutex_lock(&onMutex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT_PAL, GL_ALPHA,
-                    GL_UNSIGNED_BYTE, currentBuffer);
+                    GL_UNSIGNED_BYTE, currentScreenBuffer);
     pthread_mutex_unlock(&onMutex);
     drawText(version_string, versionBuffer, 2,2);
     drawText(graphic_string, graphicBuffer, 2,3);
@@ -295,54 +274,13 @@ bool isColorDebugMode() {
     return debugColorModeEnable;
 }
 
-void debugColorMode() {
-    __memset_aarch64(currentBuffer, posX, 256*256);
-    __android_log_print(ANDROID_LOG_ERROR, "GLView", "color:%d", posX);
-}
-
-void refreshImg() {
-    if (debugColorModeEnable) {
-        debugColorMode();
-        return;
-    }
+void updateScreenBuffer(unsigned char * buffer) {
     pthread_mutex_lock(&onMutex);
-//    startPerf();
-    currentBuffer = getImage(posX, posY, (unsigned char *)currentBuffer);
-//    finishPerf("refreshImg");
+    currentScreenBuffer = buffer;
     pthread_mutex_unlock(&onMutex);
 }
 
-void onRight() {
-    posY++;
-    refreshImg();
-}
-
-void onLeft() {
-    posY--;
-    refreshImg();
-}
-
-void onUp() {
-    posX--;
-    refreshImg();
-}
-
-void onDown() {
-    posX++;
-    refreshImg();
-}
-
-int mapId = 0;
-
-void changeMap() {
-    if (mapId >= MAP_COUNT) {
-        mapId = 0;
-    }
-    posX = 0;
-    posY = 0;
-    startPerf();
-    refreshCurrentMap(mapId);
-    finishPerf("refreshCurrentMap");
-    refreshImg();
-    mapId++;
+void debugColorMode() {
+    __memset_aarch64(currentMapBuffer, posX, 256 * 256);
+    __android_log_print(ANDROID_LOG_ERROR, "GLView", "color:%d", posX);
 }
