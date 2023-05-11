@@ -114,7 +114,7 @@ void refreshCurrentMap(int mapId) {
     pthread_mutex_unlock(&mapRefreshMutex);
 }
 
-unsigned char *getImage(int x, int y, unsigned char *result) {
+unsigned char *renderMap(int x, int y, unsigned char *result) {
     x += MAP_FILL_SIZE * 16;
     y += MAP_FILL_SIZE * 16;
     if(result == nullptr) {

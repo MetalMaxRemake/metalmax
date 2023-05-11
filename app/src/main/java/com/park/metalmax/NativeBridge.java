@@ -45,13 +45,4 @@ public class NativeBridge {
     @FastNative
     public static native void onFuncKeyEvent(int key);
 
-    @FastNative
-    public static native void glInit();
-
-    @FastNative
-    public static native void glOnChange(int width, int height);
-
-    @FastNative
-    public static native void glOnDrawFrame();
-
 }

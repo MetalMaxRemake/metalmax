@@ -3,7 +3,7 @@
 //
 
 #include "charsets.h"
-#include "logic.h"
+#include "../logic/logic.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
@@ -145,7 +145,7 @@ unsigned char *getStringImg(const char *str) {
     return res;
 }
 
-void drawText(byte* screenBuffer, const char *str, int x, int y) {
+void renderAsciText(byte* screenBuffer, const char *str, int x, int y) {
     int len = strlen(str);
     int img_width = 256;
     int offset = y*img_width + x;
@@ -160,7 +160,7 @@ void drawText(byte* screenBuffer, const char *str, int x, int y) {
     }
 }
 
-void drawZhText(byte* screenBuffer, const char *str, int len, int x, int y) {
+void renderZhText(byte* screenBuffer, const char *str, int len, int x, int y) {
     int img_width = 256;
     int offset = y*img_width + x;
     for (int charIdx = 0; charIdx < len; charIdx++) {

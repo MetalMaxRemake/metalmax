@@ -3,7 +3,7 @@
 //
 
 #include "native_gl.h"
-#include "opt/matrix.h"
+#include "../opt/matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,14 +14,13 @@
 #define HEIGHT_PAL 240
 #define HEIGHT_NTSC 224
 
-#include "maps/map.h"
-#include "charsets.h"
-#include "sound/mm_sound.h"
-#include "opt/mem_opt.h"
-#include "maps/map_data/map_data.h"
+#include "../maps/map.h"
+#include "../charset/charsets.h"
+#include "../opt/mem_opt.h"
+#include "../maps/map_data/map_data.h"
 #include "palette_data.h"
-#include "perf.h"
-#include "sprite/sprite.h"
+#include "../perf.h"
+#include "../sprite/sprite.h"
 #include <EGL/egl.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
@@ -239,7 +238,6 @@ void initRenderBuffer() {
             color++;
         }
     }
-    refreshCurrentMap(-1);
 }
 
 void initGL() {
@@ -348,7 +346,6 @@ void initEGL(ANativeWindow* window) {
     onGLSurfaceChange();
     while (true) {
         onGLDraw();
-        usleep(1000 * 16);
     }
 }
 

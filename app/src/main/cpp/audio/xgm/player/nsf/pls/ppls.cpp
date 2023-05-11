@@ -15,7 +15,7 @@
 
 #include "ppls.h"
 #include "sstream.h"
-#include "../../../../opt/mem_opt.h"
+#include "../../../../../opt/mem_opt.h"
 
 #define BLK_SIZE (32)
 

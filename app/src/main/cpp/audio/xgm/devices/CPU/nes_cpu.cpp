@@ -3,7 +3,7 @@
 #include "nes_cpu.h"
 #include "../Memory/nes_mem.h"
 #include "../Misc/nsf2_irq.h"
-#include "../../../opt/mem_opt.h"
+#include "../../../../opt/mem_opt.h"
 
 #define DEBUG_RW 0
 #define TRACE 0
@@ -258,7 +258,6 @@ bool NES_CPU::Read (UINT32 adr, UINT32 & val, UINT32 id)
 
 void NES_CPU::Reset ()
 {
-  // KM6502�̃��Z�b�g
   __memset_aarch64 (&context, 0, sizeof (K6502_Context));
   context.ReadByte = readByte;
   context.WriteByte = writeByte;

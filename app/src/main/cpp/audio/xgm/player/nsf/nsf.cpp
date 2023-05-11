@@ -6,7 +6,7 @@
 #include <memory.h>
 #include <string.h>
 #include "nsf.h"
-#include "../../../opt/mem_opt.h"
+#include "../../../../opt/mem_opt.h"
 
 extern "C"
 {

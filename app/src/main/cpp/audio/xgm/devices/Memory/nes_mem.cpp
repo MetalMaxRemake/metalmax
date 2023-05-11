@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <string.h>
 #include "nes_mem.h"
-#include "../../../opt/mem_opt.h"
+#include "../../../../opt/mem_opt.h"
 
 namespace xgm
 {

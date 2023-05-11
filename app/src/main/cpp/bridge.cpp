@@ -4,26 +4,14 @@
 #include <android/bitmap.h>
 #include <android/log.h>
 #include <android/native_window_jni.h>
-#include "native_gl.h"
-#include "native_sles.h"
-#include "charsets.h"
-#include "palette_data.h"
+#include "graphic/native_gl.h"
+#include "audio/native_sles.h"
+#include "charset/charsets.h"
+#include "graphic/palette_data.h"
 #include "opt/mem_opt.h"
-#include "logic.h"
+#include "logic/logic.h"
 
 typedef unsigned char byte;
-
-volatile int key, funcKey;
-
-const byte up = 0b0001;
-const byte down = 0b0010;
-const byte left = 0b0100;
-const byte right = 0b1000;
-
-const byte a = 0b0001;
-const byte b = 0b0010;
-const byte ta = 0b0100;
-const byte tb = 0b1000;
 
 const byte map_val = 0b0001;
 const byte music_val = 0b0010;
@@ -32,18 +20,6 @@ const byte music_val = 0b0010;
 int audioIdx = 0;
 
 void onLoop() {
-    if (key & up) {
-        onUp();
-    }
-    if (key & down) {
-        onDown();
-    }
-    if (key & left) {
-        onLeft();
-    }
-    if (key & right) {
-        onRight();
-    }
 //    if (funcKey & a) {
 //        needChange |= map_val;
 //    } else if (needChange & map_val) {
@@ -58,28 +34,17 @@ void onLoop() {
 //    }
 }
 
-//定义线程函数
-[[noreturn]] void *logic_thread(void *arg) {
-    while (true) {
-        onLoop();
-        if (isColorDebugMode()) {
-            usleep(100 * 1000);
-        }
-        usleep(16 * 1000);
-    }
-}
-
 void commonTest(JNIEnv *env, jclass clazz) {
     //test code
-    initFirstBuffer();
+    initLogic();
 }
 
-void onKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
-    key = newKey;
+void onKeyEvent(JNIEnv *env, jclass clazz, jint key) {
+    updateDirectKey(key);
 }
 
-void onFuncKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
-    funcKey = newKey;
+void onFuncKeyEvent(JNIEnv *env, jclass clazz, jint key) {
+    updateFunctionKey(key);
 }
 
 jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring text) {
@@ -133,9 +98,6 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_initNativeMethod(JNIEnv *env, jclass clazz) {
     (*env).RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0]));
-    pthread_t id;
-    //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, NULL, logic_thread, NULL);
 }
 
 __attribute__((constructor)) static void onDlOpen(void) {

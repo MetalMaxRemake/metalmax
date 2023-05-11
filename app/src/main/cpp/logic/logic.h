@@ -7,12 +7,8 @@
 
 typedef unsigned char byte;
 
-void initFirstBuffer();
-void onRight();
-void onLeft();
-void onUp();
-void onDown();
-bool isColorDebugMode();
-void changeMap();
+void initLogic();
+void updateDirectKey(byte key);
+void updateFunctionKey(byte key);
 
 #endif //METALMAX_LOGIC_H

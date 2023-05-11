@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include "nes_bank.h"
-#include "../../../opt/mem_opt.h"
+#include "../../../../opt/mem_opt.h"
 
 // this workaround solves a problem with mirrored FDS RAM writes
 // when the same bank is used twice; some NSF rips reuse bank 00
