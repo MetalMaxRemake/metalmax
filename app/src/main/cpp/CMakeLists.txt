@@ -7,6 +7,7 @@ enable_language(ASM)
 set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS s)
 
 file(GLOB_RECURSE MAP_DATA_SRC "maps/map_data/*.cpp" "maps/map_data/*.c" "maps/*.cpp")
+file(GLOB_RECURSE MONSTER "monster/*.cpp")
 file(GLOB_RECURSE SOUND_DATA_SRC "audio/*.cpp" "audio/*.c")
 file(GLOB_RECURSE MAIN_SRC "*.cpp" "*.c")
 file(GLOB_RECURSE LOGIC_SRC "logic/*.cpp" "logic/*.c")
@@ -26,6 +27,7 @@ add_library( metalmax
             bridge.cpp perf.cpp
             opt/matrix.cpp opt/matrix_mul_neo.s opt/memcpy-advsimd.S opt/memset.S
             ${MAIN_SRC}
+            ${MONSTER}
             ${LOGIC_SRC}
             ${CHARSET_SRC}
             ${GRAPHIC_SRC}
