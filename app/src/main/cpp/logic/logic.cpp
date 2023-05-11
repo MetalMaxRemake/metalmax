@@ -8,43 +8,45 @@
 #include "../maps/map.h"
 #include "../charset/charsets.h"
 #include "../graphic/native_gl.h"
+#include "render_map.h"
+#include "render.h"
 
-const byte up = 0b0001;
-const byte down = 0b0010;
-const byte left = 0b0100;
-const byte right = 0b1000;
-
-const byte a = 0b0001;
-const byte b = 0b0010;
-const byte ta = 0b0100;
-const byte tb = 0b1000;
-
-byte * screenBuffer[2];
+byte *screenBuffer[2];
 byte bufferIdx = 0;
 
-int (*renderProxys[10])(byte *screenBuffer);
+BaseRender *renderStack[10];
+int stackIdx = 0;
 
-void setRender(int (*renderProxy)(byte *screenBuffer), int idx) {
-    renderProxys[idx] = renderProxy;
+void push(BaseRender *baseRender) {
+    renderStack[stackIdx++] = baseRender;
 }
 
-int posX, posY;
-int mapId = 0;
+BaseRender *top() {
+    return renderStack[stackIdx - 1];
+}
+
+void pop() {
+    delete top();
+    stackIdx--;
+}
 
 #define SCENE_BATTLE 0
 #define SCENE_MAP 1
 byte scene;
 
 void tikLogic();
+
 void processKey();
+
 void initLogicThread();
 
+void processRender();
+
 void initLogic() {
-    posX = 0;
-    posY = 0;
-    mapId = 0;
+    MapRender *mapRender = new MapRender;
+    mapRender->updateMap(0, 0, 0);
+    push(mapRender);
     scene = SCENE_MAP;
-    refreshCurrentMap(mapId);
     tikLogic();
     initLogicThread();
 }
@@ -54,27 +56,22 @@ void initLogic() {
  */
 void tikLogic() {
     processKey();
+    processRender();
+}
+
+void processRender() {
     if (scene == SCENE_BATTLE) {
         //todo impl
     } else if (scene == SCENE_MAP) {
-        screenBuffer[bufferIdx] = renderMap(posX, posY, screenBuffer[bufferIdx]);
-        for (int i = 0; i < 10; i++) {
-            if (renderProxys[i] != nullptr) {
-                renderProxys[i](screenBuffer[bufferIdx]);
+        for (int i = 0; i < stackIdx; i++) {
+            if (renderStack[i] != nullptr) {
+                screenBuffer[bufferIdx] = renderStack[i]->render(screenBuffer[bufferIdx]);
             }
         }
     }
     updateScreenBuffer(screenBuffer[bufferIdx]);
     bufferIdx++;
     bufferIdx = bufferIdx % 2;
-}
-
-byte needChange = 0;
-
-byte* statusMachine;
-
-void refreshSprite() {
-//    currentSpriteBuffer = getSpriteImage(1, 0, nullptr);
 }
 
 byte directKey;
@@ -89,18 +86,7 @@ void updateFunctionKey(byte key) {
 }
 
 void processKey() {
-    if (directKey & up) {
-        posX--;
-    }
-    if (directKey & down) {
-        posX++;
-    }
-    if (directKey & right) {
-        posY++;
-    }
-    if (directKey & left) {
-        posY--;
-    }
+    top()->processKey(directKey, functionKey);
 }
 
 //定义线程函数
@@ -115,17 +101,4 @@ void initLogicThread() {
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
     pthread_create(&id, NULL, logic_thread, NULL);
-}
-
-void changeMap() {
-//    if (mapId >= MAP_COUNT) {
-//        mapId = 0;
-//    }
-//    posX = 0;
-//    posY = 0;
-//    startPerf();
-//    refreshCurrentMap(mapId);
-//    finishPerf("refreshCurrentMap");
-//    refreshMap();
-//    mapId++;
 }

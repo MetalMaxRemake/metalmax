@@ -101,5 +101,5 @@ Java_com_park_metalmax_NativeBridge_initNativeMethod(JNIEnv *env, jclass clazz) 
 }
 
 __attribute__((constructor)) static void onDlOpen(void) {
-    __android_log_print(ANDROID_LOG_INFO, "test", "on dlopen");
+    logd("test", "on dlopen");
 }

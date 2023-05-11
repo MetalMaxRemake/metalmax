@@ -5,7 +5,7 @@
 #ifndef METALMAX_LOGIC_H
 #define METALMAX_LOGIC_H
 
-typedef unsigned char byte;
+#include "../global.h"
 
 void initLogic();
 void updateDirectKey(byte key);
