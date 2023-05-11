@@ -130,14 +130,8 @@ volatile int window_height, window_width;
 
 //定义线程函数
 [[noreturn]] void *gl_thread(void *arg) {
-    while (true) {
-        onGLDraw();
-        usleep(1000*16);
-    }
-}
 
-void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
-    ANativeWindow* mANativeWindow = ANativeWindow_fromSurface(env, surface);
+    ANativeWindow *mANativeWindow = (ANativeWindow *) arg;
 
     window_height = ANativeWindow_getHeight(mANativeWindow);
     window_width = ANativeWindow_getWidth(mANativeWindow);
@@ -149,8 +143,16 @@ void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
     pthread_t id;
     initGL();
     onGLSurfaceChange(window_width, window_height);
-    onGLDraw();
-    pthread_create(&id, NULL, gl_thread, NULL);
+    while (true) {
+        onGLDraw();
+        usleep(1000 * 16);
+    }
+}
+
+void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
+    ANativeWindow* mANativeWindow = ANativeWindow_fromSurface(env, surface);
+    pthread_t id;
+    pthread_create(&id, NULL, gl_thread, mANativeWindow);
 }
 
 static JNINativeMethod methods[] = {
