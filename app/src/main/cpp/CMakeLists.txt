@@ -19,7 +19,7 @@ message(STATUS "MAP_DATA_SRC = ${MAP_DATA_SRC}")
 
 add_library( metalmax
              SHARED
-             metalmax.cpp native_gl.cpp perf.cpp
+             metalmax.cpp native_gl.cpp perf.cpp logic.cpp
             opt/matrix.cpp opt/matrix_mul_neo.s opt/memcpy-advsimd.S opt/memset.S
             ${MAIN_SRC}
             ${MAP_DATA_SRC}

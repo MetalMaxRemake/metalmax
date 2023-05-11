@@ -1,6 +1,7 @@
 package com.park.metalmax;
 
 import android.graphics.Bitmap;
+import android.view.Surface;
 
 import dalvik.annotation.optimization.FastNative;
 
@@ -22,11 +23,13 @@ public class NativeBridge {
         return bitmap;
     }
 
+    public static native void initNativeWindow(Surface surface);
+
     @FastNative
     public static native void slInit();
 
     @FastNative
-    public static native void getBuffer(short[] buffer);
+    public static native void getAudioBuffer(short[] buffer);
 
     @FastNative
     public static native boolean getCharImg(Bitmap bitmap, String text);

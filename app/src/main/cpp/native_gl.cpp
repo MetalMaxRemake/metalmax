@@ -22,6 +22,42 @@
 #include "palette_data.h"
 #include "perf.h"
 #include "sprite/sprite.h"
+#include <EGL/egl.h>
+#include <android/native_window.h>
+#include <android/native_window_jni.h>
+
+/**
+ * EGL
+ */
+/*
+     * Here specify the attributes of the desired configuration.
+     * Below, we select an EGLConfig with at least 8 bits per color
+     * component compatible with on-screen windows
+     */
+const EGLint surface_attribs[] = {
+        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+        EGL_BLUE_SIZE, 8,
+        EGL_GREEN_SIZE, 8,
+        EGL_RED_SIZE, 8,
+        EGL_NONE
+};
+
+EGLint context_attrib_list[] = {EGL_CONTEXT_CLIENT_VERSION, 2,EGL_NONE };
+
+EGLint format;
+EGLint height, width;
+EGLint major, minor;
+
+EGLSurface surface;
+EGLContext context;
+EGLDisplay eglDisplay;
+
+
+static ANativeWindow* mANativeWindow;
+static ANativeWindow_Buffer nwBuffer;
+/**
+ * EGL
+ */
 
 void * currentScreenBuffer;
 
@@ -93,6 +129,13 @@ void initQuadCoordinates(int width, int height) {
     __memcpy_aarch64_simd(textureCoords, tempTextureCoords, 8 * sizeof (float));
 }
 
+void checkGlError(const char *glOperation) {
+    GLenum error;
+    while ((error = glGetError()) != GL_NO_ERROR) {
+        __android_log_print(ANDROID_LOG_ERROR, "GLView", "%s: glError :%ud", glOperation, error);
+    }
+}
+
 unsigned int loadShader(const char *shaderCode, GLenum type) {
     int compiled;
     unsigned int shader = glCreateShader(type);
@@ -127,13 +170,6 @@ unsigned int loadProgram(const char *VShaderCode, const char *FShaderCode) {
     glDeleteShader(iVshader);
     glDeleteShader(iFShader);
     return iProgramId;
-}
-
-void checkGlError(const char *glOperation) {
-    GLenum error;
-    while ((error = glGetError()) != GL_NO_ERROR) {
-        __android_log_print(ANDROID_LOG_ERROR, "GLView", "%s: glError :%ud", glOperation, error);
-    }
 }
 
 void initTextures() {
@@ -186,11 +222,6 @@ void initTextures() {
 }
 
 unsigned char colorBlockBuffer[256][256];
-unsigned char *convertedMap;
-
-unsigned char * versionBuffer;
-unsigned char * graphicBuffer;
-unsigned char * chineseBuffer;
 
 void initRenderBuffer() {
     unsigned char color = 0;
@@ -210,11 +241,10 @@ void initRenderBuffer() {
 }
 
 void initGL() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     program = loadProgram(VERTEX_SHADER, FRAGMENT_SHADER);
     initTextures();
     initRenderBuffer();
-    currentMapBuffer = colorBlockBuffer;
 }
 
 void onGLSurfaceChange(int width, int height) {
@@ -232,6 +262,9 @@ void onGLSurfaceChange(int width, int height) {
 pthread_mutex_t onMutex;
 
 void onGLDraw() {
+    if(currentScreenBuffer == nullptr) {
+        return;
+    }
     glClear(GL_COLOR_BUFFER_BIT);
     glEnableVertexAttribArray(positionHandle);
     glEnableVertexAttribArray(texCoordHandle);
@@ -256,18 +289,15 @@ void onGLDraw() {
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT_PAL, GL_ALPHA,
                     GL_UNSIGNED_BYTE, currentScreenBuffer);
     pthread_mutex_unlock(&onMutex);
-    drawText(version_string, versionBuffer, 2,2);
-    drawText(graphic_string, graphicBuffer, 2,3);
-    drawChineseText(chineseBuffer,4, 2, 5);
     checkGlError("emu render");
     glDrawElements(GL_TRIANGLES, 6,
                    GL_UNSIGNED_SHORT, drawOrder);
     glDisableVertexAttribArray(positionHandle);
     glDisableVertexAttribArray(texCoordHandle);
     checkGlError("disable vertex arrays");
+    eglSwapBuffers(eglDisplay, surface);
 }
 
-int posX = 0, posY = 0;
 bool debugColorModeEnable = false;
 
 bool isColorDebugMode() {
@@ -280,7 +310,32 @@ void updateScreenBuffer(unsigned char * buffer) {
     pthread_mutex_unlock(&onMutex);
 }
 
-void debugColorMode() {
-    __memset_aarch64(currentMapBuffer, posX, 256 * 256);
-    __android_log_print(ANDROID_LOG_ERROR, "GLView", "color:%d", posX);
+void initEGL(ANativeWindow* window) {
+    mANativeWindow = window;
+    //初始化EGL
+    EGLint configCount;
+    eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    eglInitialize(eglDisplay, &major, &minor);
+    eglChooseConfig(eglDisplay, surface_attribs, nullptr, 0, &configCount);
+    if(configCount == 0) {
+        return;
+    }
+    EGLConfig *config = (EGLConfig *)malloc(configCount * sizeof (EGLConfig));
+    eglChooseConfig(eglDisplay, surface_attribs, config, configCount, &configCount);
+
+    /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
+     * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
+     * As soon as we picked a EGLConfig, we can safely reconfigure the
+     * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
+//    ANativeWindow_acquire(mANativeWindow);
+//    ANativeWindow_lock(mANativeWindow, &nwBuffer, 0);
+//    nwBuffer.bits
+    eglGetConfigAttrib(eglDisplay, config[0], EGL_NATIVE_VISUAL_ID, &format);
+    surface = eglCreateWindowSurface(eglDisplay, config[0], mANativeWindow, nullptr);
+    context = eglCreateContext(eglDisplay, config[0], nullptr, context_attrib_list);
+    eglMakeCurrent(eglDisplay, surface, surface, context);
+
+    eglQuerySurface(eglDisplay, surface, EGL_WIDTH, &width);
+    eglQuerySurface(eglDisplay, surface, EGL_HEIGHT, &height);
+
 }

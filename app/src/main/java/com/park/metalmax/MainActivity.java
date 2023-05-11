@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.view.Gravity;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,8 +19,9 @@ import android.widget.Toast;
 
 import com.park.metalmax.control.DirectKeyView;
 import com.park.metalmax.control.FunctionKeyView;
-import com.park.metalmax.game.GameGLRenderer;
-import com.park.metalmax.game.GameGLView;
+import com.park.metalmax.game.gl.GameGLRenderer;
+import com.park.metalmax.game.gl.GameGLView;
+import com.park.metalmax.game.surface.GameSurfaceView;
 import com.park.metalmax.sound.StreamPlayer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,15 +42,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(initView());
         NativeBridge.initNativeMethod();
-        mainHandler.postDelayed(() -> {
-            try {
-                NativeBridge.commonTest();
-            }catch (Throwable tr){
-                tr.printStackTrace();
-                Toast.makeText(MainActivity.this, "native test failed! exiting ...", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }, 1000);
+        NativeBridge.commonTest();
         audioThread.start();
         audioThreadHandler = new Handler(audioThread.getLooper());
     }
@@ -76,12 +70,14 @@ public class MainActivity extends Activity {
             streamPlayer.play();
             short[] buf = new short[1024];
             while (isRunning.get()) {
-                NativeBridge.getBuffer(buf);
+                NativeBridge.getAudioBuffer(buf);
                 streamPlayer.playTrack(buf, 1024);
             }
             streamPlayer.stop();
         }
     };
+
+    private static final boolean USE_SURFACE = true;
 
     private View initView() {
         //root
@@ -89,14 +85,23 @@ public class MainActivity extends Activity {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
-        //GLView
-        GameGLView gameGLView = new GameGLView(MainActivity.this);
-        gameGLView.setLayoutParams(layoutParams);
-        GLSurfaceView.Renderer renderer = new GameGLRenderer();
-        gameGLView.setEGLContextClientVersion(2);
-        gameGLView.setRenderer(renderer);
-        gameGLView.setDrawingCacheEnabled(true);
-        rootLayout.addView(gameGLView);
+
+        if (USE_SURFACE) {
+            //SurfaceView
+            GameSurfaceView surfaceView = new GameSurfaceView(MainActivity.this);
+            surfaceView.setLayoutParams(layoutParams);
+            rootLayout.addView(surfaceView);
+        } else {
+            //GLView
+            GameGLView gameGLView = new GameGLView(MainActivity.this);
+            gameGLView.setLayoutParams(layoutParams);
+            GLSurfaceView.Renderer renderer = new GameGLRenderer();
+            gameGLView.setEGLContextClientVersion(2);
+            gameGLView.setRenderer(renderer);
+            gameGLView.setDrawingCacheEnabled(true);
+            rootLayout.addView(gameGLView);
+        }
+
         //ControlView
         LinearLayout keyViewLayout = new LinearLayout(MainActivity.this);
         keyViewLayout.setLayoutParams(layoutParams);

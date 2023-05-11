@@ -5,6 +5,8 @@
 #ifndef METALMAX_LOGIC_H
 #define METALMAX_LOGIC_H
 
+typedef unsigned char byte;
+
 void initFirstBuffer();
 void onRight();
 void onLeft();

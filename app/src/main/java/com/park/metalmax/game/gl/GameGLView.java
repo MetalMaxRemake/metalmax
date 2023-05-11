@@ -1,4 +1,4 @@
-package com.park.metalmax.game;
+package com.park.metalmax.game.gl;
 
 import android.content.Context;
 import android.graphics.Canvas;

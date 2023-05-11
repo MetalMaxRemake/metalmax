@@ -68,7 +68,7 @@ xgm::NSF nsf;
 
     player.SetPlayFreq(options.samplerate);
     player.SetChannels(options.channels);
-    player.SetSong(track);
+    player.SetSong(0);
     player.Reset();
     int fc; /* current # of frames to decode */
     while (true) {

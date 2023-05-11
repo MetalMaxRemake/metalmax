@@ -8,7 +8,7 @@
 extern "C" void initSL();
 extern "C" short *getAudioBuffer();
 extern "C" void changeAudio(int audioIdx);
-extern "C" int getAudioCount()
+extern "C" int getAudioCount();
 
 
 #endif //SUPERCUBE_NATIVE_SLES_H
