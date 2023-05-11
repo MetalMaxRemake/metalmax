@@ -103,13 +103,14 @@ extern "C" int getAudioCount() {
 }
 
 extern "C" void changeAudio(int audioIdx) {
-    if(audioIdx >= 96) {
-        audioIdx = 0;
-    }
     pthread_mutex_lock(&soundMutex);
     player.Reset();
     player.SetSong(audioIdx);
     pthread_mutex_unlock(&soundMutex);
+}
+
+extern "C" int getAudioIdx() {
+    return player.GetSong();
 }
 
 extern "C" short *getAudioBuffer() {

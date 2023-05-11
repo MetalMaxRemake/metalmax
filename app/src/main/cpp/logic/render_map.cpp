@@ -5,6 +5,7 @@
 #include "render_map.h"
 #include "../maps/map.h"
 #include "render_debug.h"
+#include "../audio/native_sles.h"
 
 void MapRender::updateMap(int newMapId, int x, int y) {
     this->mapId = newMapId;
@@ -16,6 +17,9 @@ void MapRender::updateMap(int newMapId, int x, int y) {
 byte * MapRender::render(byte *screenBuffer) {
     return renderMap(posX, posY, screenBuffer);
 }
+
+byte taPushed = 0;
+byte tbPushed = 0;
 
 bool MapRender::processKey(byte directKey, byte functionKey) {
     if (directKey & up) {
@@ -33,6 +37,21 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
     if(functionKey & a) {
         DebugRender *debugRender = new DebugRender;
         push(debugRender);
+    }
+    if(functionKey & ta) {
+        taPushed = 1;
+    } else if(taPushed) {
+        taPushed = 0;
+        mapId++;
+        mapId = mapId % 240;
+        updateMap(mapId, 0, 0);
+    }
+
+    if(functionKey & tb) {
+        tbPushed = 1;
+    } else if(tbPushed) {
+        tbPushed = 0;
+        changeAudio(getAudioIdx() + 1);
     }
     return true;
 }
