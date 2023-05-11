@@ -74,18 +74,6 @@ void commonTest(JNIEnv *env, jclass clazz) {
     initFirstBuffer();
 }
 
-void init(JNIEnv *env, jclass clazz) {
-    initGL();
-}
-
-void onChange(JNIEnv *env, jclass clazz, jint width, jint height) {
-    onGLSurfaceChange(width, height);
-}
-
-void onDrawFrame(JNIEnv *env, jclass clazz) {
-    onGLDraw();
-}
-
 void onKeyEvent(JNIEnv *env, jclass clazz, jint newKey) {
     key = newKey;
 }
@@ -126,42 +114,15 @@ void slInit(JNIEnv *env, jclass clazz) {
     initSL();
 }
 
-volatile int window_height, window_width;
-
-//定义线程函数
-[[noreturn]] void *gl_thread(void *arg) {
-
-    ANativeWindow *mANativeWindow = (ANativeWindow *) arg;
-
-    window_height = ANativeWindow_getHeight(mANativeWindow);
-    window_width = ANativeWindow_getWidth(mANativeWindow);
-    ANativeWindow_setBuffersGeometry(mANativeWindow,
-                                     window_width,
-                                     window_height,
-                                     WINDOW_FORMAT_RGBA_8888);
-    initEGL(mANativeWindow);
-    pthread_t id;
-    initGL();
-    onGLSurfaceChange(window_width, window_height);
-    while (true) {
-        onGLDraw();
-        usleep(1000 * 16);
-    }
-}
-
 void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
     ANativeWindow* mANativeWindow = ANativeWindow_fromSurface(env, surface);
-    pthread_t id;
-    pthread_create(&id, NULL, gl_thread, mANativeWindow);
+    initGraphic(mANativeWindow);
 }
 
 static JNINativeMethod methods[] = {
         {"commonTest",   "()V",   (void *) &commonTest},
         {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
         {"onFuncKeyEvent", "(I)V",  (void *) &onFuncKeyEvent},
-        {"glInit",         "()V",   (void *) &init},
-        {"glOnChange",     "(II)V", (void *) &onChange},
-        {"glOnDrawFrame",  "()V",   (void *) &onDrawFrame},
         {"getAudioBuffer", "([S)V",   (void *) &getAudioBufferJNI},
         {"slInit", "()V",   (void *) &slInit},
         {"initNativeWindow", "(Landroid/view/Surface;)V",   (void *) &initNativeWindow},

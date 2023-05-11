@@ -25,6 +25,7 @@
 #include <EGL/egl.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
+#include <unistd.h>
 
 /**
  * EGL
@@ -45,7 +46,6 @@ const EGLint surface_attribs[] = {
 EGLint context_attrib_list[] = {EGL_CONTEXT_CLIENT_VERSION, 2,EGL_NONE };
 
 EGLint format;
-EGLint height, width;
 EGLint major, minor;
 
 EGLSurface surface;
@@ -55,6 +55,8 @@ EGLDisplay eglDisplay;
 
 static ANativeWindow* mANativeWindow;
 static ANativeWindow_Buffer nwBuffer;
+
+volatile int window_height, window_width;
 /**
  * EGL
  */
@@ -241,17 +243,17 @@ void initRenderBuffer() {
 }
 
 void initGL() {
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     program = loadProgram(VERTEX_SHADER, FRAGMENT_SHADER);
     initTextures();
     initRenderBuffer();
 }
 
-void onGLSurfaceChange(int width, int height) {
-    orthoM(projMatrix, 0, -width / 2.0f, +width / 2.0f, -height / 2.0f,
-           +height / 2.0f, -2.0f, 2.0f);
-    glViewport(0, 0, width, height);
-    initQuadCoordinates(height, height);
+void onGLSurfaceChange() {
+    orthoM(projMatrix, 0, -window_width / 2.0f, +window_width / 2.0f, -window_height / 2.0f,
+           +window_height / 2.0f, -2.0f, 2.0f);
+    glViewport(0, 0, window_width, window_height);
+    initQuadCoordinates(window_height, window_height);
     glUseProgram(program);
     positionHandle = glGetAttribLocation(program, "a_position");
     textureHandle = glGetUniformLocation(program, "s_texture");
@@ -327,15 +329,31 @@ void initEGL(ANativeWindow* window) {
      * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
      * As soon as we picked a EGLConfig, we can safely reconfigure the
      * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
-//    ANativeWindow_acquire(mANativeWindow);
-//    ANativeWindow_lock(mANativeWindow, &nwBuffer, 0);
-//    nwBuffer.bits
     eglGetConfigAttrib(eglDisplay, config[0], EGL_NATIVE_VISUAL_ID, &format);
     surface = eglCreateWindowSurface(eglDisplay, config[0], mANativeWindow, nullptr);
     context = eglCreateContext(eglDisplay, config[0], nullptr, context_attrib_list);
     eglMakeCurrent(eglDisplay, surface, surface, context);
+}
 
-    eglQuerySurface(eglDisplay, surface, EGL_WIDTH, &width);
-    eglQuerySurface(eglDisplay, surface, EGL_HEIGHT, &height);
+//定义线程函数
+[[noreturn]] void *gl_thread(void *arg) {
+    window_height = ANativeWindow_getHeight(mANativeWindow);
+    window_width = ANativeWindow_getWidth(mANativeWindow);
+    ANativeWindow_setBuffersGeometry(mANativeWindow,
+                                     window_width,
+                                     window_height,
+                                     WINDOW_FORMAT_RGBA_8888);
+    initEGL(mANativeWindow);
+    initGL();
+    onGLSurfaceChange();
+    while (true) {
+        onGLDraw();
+        usleep(1000 * 16);
+    }
+}
 
+void initGraphic(ANativeWindow* window) {
+    mANativeWindow = window;
+    pthread_t id;
+    pthread_create(&id, NULL, gl_thread, mANativeWindow);
 }

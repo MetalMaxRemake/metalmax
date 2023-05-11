@@ -2,25 +2,20 @@ package com.park.metalmax;
 
 import android.app.Activity;
 import android.content.Context;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.view.Gravity;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.park.metalmax.control.DirectKeyView;
 import com.park.metalmax.control.FunctionKeyView;
-import com.park.metalmax.game.gl.GameGLRenderer;
-import com.park.metalmax.game.gl.GameGLView;
 import com.park.metalmax.game.surface.GameSurfaceView;
 import com.park.metalmax.sound.StreamPlayer;
 
@@ -77,8 +72,6 @@ public class MainActivity extends Activity {
         }
     };
 
-    private static final boolean USE_SURFACE = true;
-
     private View initView() {
         //root
         FrameLayout rootLayout = new FrameLayout(MainActivity.this);
@@ -86,21 +79,10 @@ public class MainActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
 
-        if (USE_SURFACE) {
-            //SurfaceView
-            GameSurfaceView surfaceView = new GameSurfaceView(MainActivity.this);
-            surfaceView.setLayoutParams(layoutParams);
-            rootLayout.addView(surfaceView);
-        } else {
-            //GLView
-            GameGLView gameGLView = new GameGLView(MainActivity.this);
-            gameGLView.setLayoutParams(layoutParams);
-            GLSurfaceView.Renderer renderer = new GameGLRenderer();
-            gameGLView.setEGLContextClientVersion(2);
-            gameGLView.setRenderer(renderer);
-            gameGLView.setDrawingCacheEnabled(true);
-            rootLayout.addView(gameGLView);
-        }
+        //SurfaceView
+        GameSurfaceView surfaceView = new GameSurfaceView(MainActivity.this);
+        surfaceView.setLayoutParams(layoutParams);
+        rootLayout.addView(surfaceView);
 
         //ControlView
         LinearLayout keyViewLayout = new LinearLayout(MainActivity.this);

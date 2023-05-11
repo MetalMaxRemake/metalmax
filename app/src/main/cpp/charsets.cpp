@@ -148,11 +148,13 @@ unsigned char *getStringImg(const char *str) {
 void drawText(byte* screenBuffer, const char *str, int x, int y) {
     int len = strlen(str);
     int img_width = 256;
+    int offset = y*img_width + x;
     for (int charIdx = 0; charIdx < len; charIdx++) {
         int ascii = str[charIdx] - 32;
-        for (int i = y; i < 8+y; i++) {
-            for (int j = x; j < 8+x; j++) {
-                screenBuffer[i * img_width + j + charIdx * 8] = (data[ascii][i] & (1 << (8 - j))) ? 8 : 3;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                int currentPos = i * img_width + j + charIdx * 8;
+                screenBuffer[currentPos + offset] = (data[ascii][i] & (1 << (8 - j))) ? 8 : 3;
             }
         }
     }
@@ -160,13 +162,16 @@ void drawText(byte* screenBuffer, const char *str, int x, int y) {
 
 void drawZhText(byte* screenBuffer, const char *str, int len, int x, int y) {
     int img_width = 256;
+    int offset = y*img_width + x;
     for (int charIdx = 0; charIdx < len; charIdx++) {
-        for (int i = y; i < 12+y; i++) {
-            for (int j = x; j < 8+x; j++) {
-                screenBuffer[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 8 : 3;//black - white
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 8; j++) {
+                int currentPos = i * img_width + j + charIdx * 12;
+                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 8 : 3;//black - white
             }
-            for (int j = 8+x; j < 12+x; j++) {
-                screenBuffer[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? 8 : 3;
+            for (int j = 8; j < 12; j++) {
+                int currentPos = i * img_width + j + charIdx * 12;
+                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? 8 : 3;
             }
         }
     }

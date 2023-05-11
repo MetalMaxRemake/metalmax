@@ -10,10 +10,7 @@
 #include "GLES2/gl2ext.h"
 #include "GLES2/gl2platform.h"
 
-void initGL();
-void onGLSurfaceChange(int width, int height);
-void onGLDraw();
 void updateScreenBuffer(unsigned char * buffer);
-void initEGL(ANativeWindow* window);
+void initGraphic(ANativeWindow* window);
 
 #endif //METALMAX_NATIVE_GL_H

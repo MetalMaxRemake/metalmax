@@ -8,7 +8,7 @@
 #include "native_gl.h"
 
 const char chinese_demo[4] = {0,1,2,3};
-const char *version_string = "PARK_671 TEST VERSION 0.1";
+const char *version_string = "PARK_671 TEST VERSION 0.2";
 const char *graphic_string = "OPENGL ES 2.0";
 
 byte * screenBuffer;
