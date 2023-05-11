@@ -8,11 +8,6 @@
 #include "nsf.h"
 #include "../../../../opt/mem_opt.h"
 
-extern "C"
-{
-#include "pls/ppls.h"
-}
-
 namespace xgm
 {
 
@@ -137,7 +132,7 @@ static int is_sjis_prefix(int c)
     {
       return print_title;
     }
-    
+
     if(format==NULL||strlen(format)>128)
       format = "%L (%n/%e) %T - %A";
 
@@ -221,7 +216,7 @@ static int is_sjis_prefix(int c)
         print_title[wp++] = *format++;
       }
     }
-    
+
     print_title[wp]='\0';
 
     // strip trailing whitespace
@@ -258,19 +253,11 @@ static int is_sjis_prefix(int c)
   {
     FILE *fp = NULL;
     UINT8 *buf = NULL;          //MAX 256KB
-    PLSITEM *pls = NULL;
     int size, rsize;
     const char *ext;
     const char *ext_next;
     nsf_error = "";
     nsfe_error = "";
-
-    pls = PLSITEM_new (fn);
-    if (!pls)
-    {
-      nsf_error = "Could not create playlist?";
-      goto Error_Exit;
-    }
 
     // find last . in filename
     ext = strchr(fn,'.');
@@ -280,11 +267,7 @@ static int is_sjis_prefix(int c)
     }
     else ext = "";
 
-    if (pls->type == 3)
-    {
-      strncpy (filename, pls->filename, NSF_MAX_PATH);
-    }
-    else if (ext && (!stricmp(ext, ".nsf") || !stricmp(ext, ".nsfe")))
+    if (ext && (!stricmp(ext, ".nsf") || !stricmp(ext, ".nsfe")))
     {
       strncpy (filename, fn, NSF_MAX_PATH);
     }
@@ -319,25 +302,10 @@ static int is_sjis_prefix(int c)
       goto Error_Exit;
     }
 
-    if (pls->type == 3)
-    {
-      SetTitleString (pls->title);
-      song = pls->song;
-      playlist_mode = true;
-      title_unknown = false;
-      enable_multi_tracks = false;
-    }
-    else
-    {
+
       playlist_mode = false;
       title_unknown = true;
       enable_multi_tracks = true;
-    }
-
-    time_in_ms = pls->time_in_ms;
-    loop_in_ms = pls->loop_in_ms;
-    fade_in_ms = pls->fade_in_ms;
-    loop_num = pls->loop_num;
 
     if (time_in_ms < 0)
       playtime_unknown = true;
@@ -346,14 +314,11 @@ static int is_sjis_prefix(int c)
 
     fclose (fp);
     delete[]buf;
-    PLSITEM_delete (pls);
 
     nsf_error = "";
     return true;
 
   Error_Exit:
-    if (pls)
-      PLSITEM_delete (pls);
     if (buf)
       delete[]buf;
     if (fp)
@@ -416,7 +381,7 @@ static int is_sjis_prefix(int c)
   {
     return song;
   }
-  
+
   int NSF::GetSongNum ()
   {
     return songs;

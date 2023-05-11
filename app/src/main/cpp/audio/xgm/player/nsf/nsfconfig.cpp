@@ -68,8 +68,6 @@ NSFPlayerConfig::NSFPlayerConfig () : PlayerConfig ()
   CreateValue("DENDY_BASECYCLES", 1773448);
   CreateValue("IRQ_ENABLE", 0);
   CreateValue("REGION", 0);
-  CreateValue("LOG_CPU", 0);
-  CreateValue("LOG_CPU_FILE", "nsf_write.log");
 
   CreateValue("PLAY_ADVANCE", 0);
   CreateValue("FAST_SEEK", 1);
