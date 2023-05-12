@@ -2,10 +2,12 @@
 // Created by parkyu on 2023/5/11.
 //
 
+#include <cstdlib>
 #include "render_map.h"
 #include "../maps/map.h"
 #include "render_debug.h"
 #include "../audio/native_sles.h"
+#include "render_battle.h"
 
 void MapRender::updateMap(int newMapId, int x, int y) {
     this->mapId = newMapId;
@@ -15,24 +17,38 @@ void MapRender::updateMap(int newMapId, int x, int y) {
 }
 
 byte * MapRender::render(byte *screenBuffer) {
-    return renderMap(posX, posY, screenBuffer);
+    if (top() != this) {
+        return screenBuffer;
+    } else {
+        return renderMap(posX, posY, screenBuffer);
+    }
 }
 
 byte taPushed = 0;
 byte tbPushed = 0;
+byte moved = 0;
 
 bool MapRender::processKey(byte directKey, byte functionKey) {
+    moved = 0;
     if (directKey & up) {
         posX--;
+        moved = 1;
     }
     if (directKey & down) {
         posX++;
+        moved = 1;
     }
     if (directKey & right) {
         posY++;
+        moved = 1;
     }
     if (directKey & left) {
         posY--;
+        moved = 1;
+    }
+    if(moved && random() % 1000 == 1) {
+        BattleRender *battleRender = new BattleRender;
+        push(battleRender);
     }
     if(functionKey & a) {
         DebugRender *debugRender = new DebugRender;

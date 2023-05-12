@@ -12,7 +12,7 @@ const char *version_string = "PARK_671 TEST VERSION 0.2";
 const char *graphic_string = "OPENGL ES 2.0";
 
 byte * DebugRender::render(byte *screenBuffer) {
-    renderMonster(0, 10,20, screenBuffer);
+//    renderMonster(0, 10,20, screenBuffer);
     renderAsciText(screenBuffer, version_string, 10, 10);
     renderAsciText(screenBuffer, graphic_string, 10, 20);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 30);

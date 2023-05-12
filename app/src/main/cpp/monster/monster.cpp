@@ -4,6 +4,7 @@
 
 #include "monster.h"
 #include "monster_0.h"
+#include "../opt/mem_opt.h"
 
 int monster_width = 96;
 int monster_height = 128;

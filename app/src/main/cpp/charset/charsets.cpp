@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <cstring>
 
-unsigned char data[96][8]={
+unsigned char asci[96][8]={
         {0,0,0,0,0,0,0,0,},
         {0,0,32,32,32,0,32,0,},
         {0,0,48,48,0,0,0,0,},
@@ -138,7 +138,7 @@ unsigned char *getStringImg(const char *str) {
         int ascii = str[charIdx] - 32;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                res[i * img_width + j + charIdx * 8] = (data[ascii][i] & (1 << (8 - j))) ? 8 : 3;
+                res[i * img_width + j + charIdx * 8] = (asci[ascii][i] & (1 << (8 - j))) ? 8 : 3;
             }
         }
     }
@@ -154,7 +154,7 @@ void renderAsciText(byte* screenBuffer, const char *str, int x, int y) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 int currentPos = i * img_width + j + charIdx * 8;
-                screenBuffer[currentPos + offset] = (data[ascii][i] & (1 << (8 - j))) ? 8 : 3;
+                screenBuffer[currentPos + offset] = (asci[ascii][i] & (1 << (8 - j))) ? 8 : 3;
             }
         }
     }
@@ -167,7 +167,7 @@ void renderZhText(byte* screenBuffer, const char *str, int len, int x, int y) {
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 8; j++) {
                 int currentPos = i * img_width + j + charIdx * 12;
-                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 8 : 3;//black - white
+                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 8 : 3;//white-black
             }
             for (int j = 8; j < 12; j++) {
                 int currentPos = i * img_width + j + charIdx * 12;
