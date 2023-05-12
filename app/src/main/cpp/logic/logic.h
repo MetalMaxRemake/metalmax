@@ -8,6 +8,7 @@
 #include "../global.h"
 
 void initLogic();
+void releaseLogicThread();
 void updateDirectKey(byte key);
 void updateFunctionKey(byte key);
 

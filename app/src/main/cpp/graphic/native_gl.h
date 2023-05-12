@@ -12,5 +12,6 @@
 
 void updateScreenBuffer(unsigned char * buffer);
 void initGraphic(ANativeWindow* window);
+void releaseGraphic();
 
 #endif //METALMAX_NATIVE_GL_H

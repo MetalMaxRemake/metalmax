@@ -29,5 +29,6 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d(TAG, "surfaceDestroyed");
+        NativeBridge.releaseNativeWindow();
     }
 }

@@ -89,12 +89,19 @@ void processKey() {
     top()->processKey(directKey, functionKey);
 }
 
+volatile bool logicRunning = true;
 //定义线程函数
-[[noreturn]] void *logic_thread(void *arg) {
-    while (true) {
+void *logic_thread(void *arg) {
+    logicRunning = true;
+    while (logicRunning) {
         tikLogic();
         usleep(16 * 1000);
     }
+    return nullptr;
+}
+
+void releaseLogicThread() {
+    logicRunning = false;
 }
 
 void initLogicThread() {

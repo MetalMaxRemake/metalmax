@@ -25,6 +25,8 @@ public class NativeBridge {
 
     public static native void initNativeWindow(Surface surface);
 
+    public static native void releaseNativeWindow();
+
     @FastNative
     public static native void slInit();
 

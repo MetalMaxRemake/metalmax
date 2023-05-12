@@ -12,7 +12,6 @@
 
 #define WIDTH 256
 #define HEIGHT_PAL 240
-#define HEIGHT_NTSC 224
 
 #include "../maps/map.h"
 #include "../charset/charsets.h"
@@ -46,6 +45,7 @@ EGLint context_attrib_list[] = {EGL_CONTEXT_CLIENT_VERSION, 2,EGL_NONE };
 
 EGLint format;
 EGLint major, minor;
+EGLConfig *config;
 
 EGLSurface surface;
 EGLContext context;
@@ -57,8 +57,9 @@ static ANativeWindow_Buffer nwBuffer;
 
 volatile int window_height, window_width;
 /**
- * EGL
+ * OpenGL
  */
+const int paletteSize = 256;
 
 void * currentScreenBuffer;
 
@@ -178,7 +179,6 @@ void initTextures() {
     GLuint textureIds[2];
     int textureWidth = 256;
     int textureHeight = 256;
-    int paletteSize = 256;
     glGenTextures(numTextures, textureIds);
     glBindTexture(GL_TEXTURE_2D, textureIds[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureWidth,
@@ -199,14 +199,7 @@ void initTextures() {
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    for (int i = 0; i < paletteSize; i++) {
-        int dd = palette[i];
-        int b = (dd & 0x00FF0000) >> 16;
-        int g = (dd & 0x0000FF00) >> 8;
-        int r = (dd & 0x000000FF) >> 0;
-        palette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
-    }
+    //palette!
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, paletteSize, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                 palette);
     glTexParameteri(GL_TEXTURE_2D,
@@ -222,29 +215,31 @@ void initTextures() {
     checkGlError("textures");
 }
 
-unsigned char colorBlockBuffer[256][256];
-
-void initRenderBuffer() {
-    unsigned char color = 0;
-    for (int j = 0; j < 16; j++) {
-        for (int i = 0; i < 16; i++) {
-            int startX = i*16;
-            int startY = j*16;
-            for(int x = startX; x<startX+16;x++) {
-                for(int y = startY;y<startY+16;y++) {
-                    colorBlockBuffer[x][y] = color;
-                }
-            }
-            color++;
-        }
-    }
-}
+/**
+ * debug color code
+ */
+//unsigned char colorBlockBuffer[256][256];
+//
+//void initRenderBuffer() {
+//    unsigned char color = 0;
+//    for (int j = 0; j < 16; j++) {
+//        for (int i = 0; i < 16; i++) {
+//            int startX = i*16;
+//            int startY = j*16;
+//            for(int x = startX; x<startX+16;x++) {
+//                for(int y = startY;y<startY+16;y++) {
+//                    colorBlockBuffer[x][y] = color;
+//                }
+//            }
+//            color++;
+//        }
+//    }
+//}
 
 void initGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     program = loadProgram(VERTEX_SHADER, FRAGMENT_SHADER);
     initTextures();
-    initRenderBuffer();
 }
 
 void onGLSurfaceChange() {
@@ -298,12 +293,6 @@ void onGLDraw() {
     eglSwapBuffers(eglDisplay, surface);
 }
 
-bool debugColorModeEnable = false;
-
-bool isColorDebugMode() {
-    return debugColorModeEnable;
-}
-
 void updateScreenBuffer(unsigned char * buffer) {
     pthread_mutex_lock(&onMutex);
     currentScreenBuffer = buffer;
@@ -320,21 +309,43 @@ void initEGL(ANativeWindow* window) {
     if(configCount == 0) {
         return;
     }
-    EGLConfig *config = (EGLConfig *)malloc(configCount * sizeof (EGLConfig));
+    config = (EGLConfig *)malloc(configCount * sizeof (EGLConfig));
     eglChooseConfig(eglDisplay, surface_attribs, config, configCount, &configCount);
-
-    /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
-     * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
-     * As soon as we picked a EGLConfig, we can safely reconfigure the
-     * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
     eglGetConfigAttrib(eglDisplay, config[0], EGL_NATIVE_VISUAL_ID, &format);
     surface = eglCreateWindowSurface(eglDisplay, config[0], mANativeWindow, nullptr);
     context = eglCreateContext(eglDisplay, config[0], nullptr, context_attrib_list);
     eglMakeCurrent(eglDisplay, surface, surface, context);
 }
 
+void releaseEGL() {
+    eglReleaseThread();
+    eglTerminate(eglDisplay);
+}
+
+bool paletteInited = false;
+
+void initPalette() {
+    if (paletteInited) {
+        return;
+    }
+    paletteInited = true;
+    for (int i = 0; i < paletteSize; i++) {
+        int dd = palette[i];
+        int b = (dd & 0x00FF0000) >> 16;
+        int g = (dd & 0x0000FF00) >> 8;
+        int r = (dd & 0x000000FF) >> 0;
+        palette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
+    }
+}
+
+/**
+ * 控制gl线程运行
+ * 每个v-sync判断一次
+ */
+volatile bool graphicRunning = true;
+
 //定义线程函数
-[[noreturn]] void *gl_thread(void *arg) {
+void *gl_thread(void *arg) {
     window_height = ANativeWindow_getHeight(mANativeWindow);
     window_width = ANativeWindow_getWidth(mANativeWindow);
     ANativeWindow_setBuffersGeometry(mANativeWindow,
@@ -344,13 +355,23 @@ void initEGL(ANativeWindow* window) {
     initEGL(mANativeWindow);
     initGL();
     onGLSurfaceChange();
-    while (true) {
+    graphicRunning = true;
+    while (graphicRunning) {
         onGLDraw();
     }
+    releaseEGL();
+    return nullptr;
 }
 
 void initGraphic(ANativeWindow* window) {
     mANativeWindow = window;
     pthread_t id;
-    pthread_create(&id, NULL, gl_thread, mANativeWindow);
+    initPalette();
+    pthread_create(&id, nullptr, gl_thread, mANativeWindow);
+}
+
+void releaseGraphic() {
+    logd("native_gl", "releaseGraphic");
+    graphicRunning = false;
+    free(config);
 }

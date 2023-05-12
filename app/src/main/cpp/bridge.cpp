@@ -11,29 +11,6 @@
 #include "opt/mem_opt.h"
 #include "logic/logic.h"
 
-typedef unsigned char byte;
-
-const byte map_val = 0b0001;
-const byte music_val = 0b0010;
-
-//todo
-int audioIdx = 0;
-
-void onLoop() {
-//    if (funcKey & a) {
-//        needChange |= map_val;
-//    } else if (needChange & map_val) {
-//        needChange &= ~map_val;
-//        changeMap();
-//    }
-//    if (funcKey & b) {
-//        needChange |= music_val;
-//    } else if (needChange & music_val) {
-//        needChange &= ~music_val;
-//        changeAudio(audioIdx++);
-//    }
-}
-
 void commonTest(JNIEnv *env, jclass clazz) {
     //test code
     initLogic();
@@ -84,6 +61,11 @@ void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
     initGraphic(mANativeWindow);
 }
 
+void releaseNativeWindow(JNIEnv *env, jclass clazz) {
+    releaseGraphic();
+    releaseLogicThread();
+}
+
 static JNINativeMethod methods[] = {
         {"commonTest",   "()V",   (void *) &commonTest},
         {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
@@ -91,6 +73,7 @@ static JNINativeMethod methods[] = {
         {"getAudioBuffer", "([S)V",   (void *) &getAudioBufferJNI},
         {"slInit", "()V",   (void *) &slInit},
         {"initNativeWindow", "(Landroid/view/Surface;)V",   (void *) &initNativeWindow},
+        {"releaseNativeWindow", "()V",   (void *) &releaseNativeWindow},
         {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},
 };
 
