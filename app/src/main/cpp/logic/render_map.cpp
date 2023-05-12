@@ -8,6 +8,7 @@
 #include "render_debug.h"
 #include "../audio/native_sles.h"
 #include "render_battle.h"
+#include "../charset/charsets.h"
 
 void MapRender::updateMap(int newMapId, int x, int y) {
     this->mapId = newMapId;
@@ -20,13 +21,19 @@ byte * MapRender::render(byte *screenBuffer) {
     if (top() != this) {
         return screenBuffer;
     } else {
-        return renderMap(posX, posY, screenBuffer);
+        screenBuffer = renderMap(posX, posY, screenBuffer);
+        renderAsciText(screenBuffer, "COPYRIGHT:    CREA-TECH", 10, 200);
+        renderAsciText(screenBuffer, "PUBLISH:      DATA EAST", 10, 208);
+        renderAsciText(screenBuffer, "REMAKE AUTHOR: PARK-671", 10, 216);
+        renderAsciText(screenBuffer, "THANKS:       AFOOLLOVE", 10, 224);
+        return screenBuffer;
     }
 }
 
 byte taPushed = 0;
 byte tbPushed = 0;
 byte moved = 0;
+bool aPushedb = false;
 
 bool MapRender::processKey(byte directKey, byte functionKey) {
     moved = 0;
@@ -46,11 +53,10 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
         posY--;
         moved = 1;
     }
-    if(moved && random() % 1000 == 1) {
-        BattleRender *battleRender = new BattleRender;
-        push(battleRender);
-    }
     if(functionKey & a) {
+        aPushedb = true;
+    } else if(aPushedb) {
+        aPushedb = false;
         DebugRender *debugRender = new DebugRender;
         push(debugRender);
     }
