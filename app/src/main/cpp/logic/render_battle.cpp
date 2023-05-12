@@ -22,13 +22,29 @@ void renderInfoMenu(byte *screenBuffer) {
     __memset_aarch64(screenBuffer, 3, 256 * 256);
 }
 
+int monsterIdx = 0;
+
 byte * BattleRender::render(byte *screenBuffer) {
     renderBackground(screenBuffer);
-    renderMonster(0, 10,20, screenBuffer);
+    renderMonster(monsterIdx, 10,20, screenBuffer);
     return screenBuffer;
 }
 
+bool upPushed = false, downPushed = false;
+
 bool BattleRender::processKey(byte directKey, byte functionKey) {
+    if (directKey & up) {
+        upPushed = true;
+    } else if(upPushed) {
+        upPushed = false;
+        monsterIdx--;
+    }
+    if (directKey & down) {
+        downPushed = true;
+    } else if(downPushed) {
+        downPushed = false;
+        monsterIdx++;
+    }
     if(functionKey & b) {
         pop();
     }

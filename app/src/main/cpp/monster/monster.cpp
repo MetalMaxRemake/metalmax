@@ -3,17 +3,18 @@
 //
 
 #include "monster.h"
-#include "monster_0.h"
+#include "monster_data/monster_data.h"
 #include "../opt/mem_opt.h"
 
-int monster_width = 96;
-int monster_height = 128;
 
 byte *renderMonster(int monsterId, int x, int y, byte *result) {
+    int monster_width = monster_size[monsterId * 2 + 1];
+    int monster_height = monster_size[monsterId * 2];
+
     int offset = x * 256 + y;
     for (int i = 0; i < monster_height; i++) {
         for (int j = 0; j < monster_width; j++) {
-            result[i * 256 + j + offset] = monster_0[i][j];
+            result[i * 256 + j + offset] = monster_model[monsterId][i*monster_width + j];
         }
     }
     return result;
