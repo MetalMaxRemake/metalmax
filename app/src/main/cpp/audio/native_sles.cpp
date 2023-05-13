@@ -17,16 +17,19 @@
 #include <android/log.h>
 #include <unistd.h>
 
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
-
 #define SAMPLE_RATE 16000
 constexpr const uint64_t kFramesToBuffer = 1024;
 
 #define CACHE_SIZE 3
 
 volatile short cachedData[CACHE_SIZE][kFramesToBuffer];
+volatile short pushButtonData[10][kFramesToBuffer];
 volatile int cacheIdx = 0;
 volatile int readIdx = 0;
+
+volatile int preRenderedIdx = 0;
+volatile bool mixCache = false;
+volatile int mixIdx = 0;
 
 struct Nsf2WavOptions;
 
@@ -44,6 +47,24 @@ struct Nsf2WavOptions {
 pthread_mutex_t soundMutex;
 xgm::NSFPlayer player;
 xgm::NSF nsf;
+
+/**
+ * mix buffer2 into buffer1
+ * @param buffer1
+ * @param buffer2
+ * @param len
+ */
+void mixSoundBuffer(short *buffer1, short *buffer2, int len) {
+    for (int i = 0; i < len; i++) {
+        int pcm = ((int) buffer1[i]) + ((int) buffer2[i]);
+        if (pcm > 32767) {
+            pcm = 32767;
+        } else if (pcm < -32768) {
+            pcm = -32768;
+        }
+        buffer1[i] = (short) pcm;
+    }
+}
 
 [[noreturn]] void *nsfPlayerThread(void *) {
     xgm::NSFPlayerConfig config;
@@ -68,6 +89,13 @@ xgm::NSF nsf;
 
     player.SetPlayFreq(options.samplerate);
     player.SetChannels(options.channels);
+
+    //do cache
+    player.SetSong(63);
+    player.Reset();
+    player.Render((short *)pushButtonData, kFramesToBuffer * 10);
+
+    //start play!
     player.SetSong(0);
     player.Reset();
     int fc; /* current # of frames to decode */
@@ -78,7 +106,17 @@ xgm::NSF nsf;
         }
         fc = kFramesToBuffer;
         pthread_mutex_lock(&soundMutex);
-        player.Render((short *)cachedData[(cacheIdx++) % CACHE_SIZE], fc);
+        player.Render((short *)cachedData[(cacheIdx) % CACHE_SIZE], fc);
+        if(mixCache) {
+            mixSoundBuffer((short *)cachedData[(cacheIdx) % CACHE_SIZE],
+                           (short *)pushButtonData[mixIdx],
+                           fc);
+            mixIdx++;
+            if(mixIdx >= 10) {
+                mixCache = false;
+            }
+        }
+        cacheIdx++;
         pthread_mutex_unlock(&soundMutex);
     }
 }
@@ -102,10 +140,23 @@ extern "C" int getAudioCount() {
     return nsf.GetSongNum();
 }
 
+/**
+ * 23 - 遇到挂物
+ * 63 - 按键
+ * [23, 91]
+ */
 extern "C" void changeAudio(int audioIdx) {
     pthread_mutex_lock(&soundMutex);
-    player.Reset();
     player.SetSong(audioIdx);
+    player.Reset();
+    pthread_mutex_unlock(&soundMutex);
+}
+
+extern "C" void renderCache(int preRender) {
+    pthread_mutex_lock(&soundMutex);
+    preRenderedIdx = preRender;
+    mixCache = true;
+    mixIdx = 0;
     pthread_mutex_unlock(&soundMutex);
 }
 

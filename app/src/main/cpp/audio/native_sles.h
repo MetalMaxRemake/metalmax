@@ -8,6 +8,7 @@
 extern "C" void initSL();
 extern "C" short *getAudioBuffer();
 extern "C" void changeAudio(int audioIdx);
+extern "C" void renderCache(int preRender);
 extern "C" int getAudioCount();
 extern "C" int getAudioIdx();
 

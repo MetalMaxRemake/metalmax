@@ -10,7 +10,9 @@
 
 class BattleRender : public BaseRender {
 private:
-    int pos;
+    bool enterBattle = false;
+    int splashClk = 0;
+    int splashCount = 0;
 public:
     byte * render(byte *screenBuffer);
     bool processKey(byte directKey, byte functionKey);

@@ -21,6 +21,8 @@ protected:
 public:
     virtual byte * render(byte *screenBuffer) = 0;
     virtual bool processKey(byte directKey, byte functionKey) = 0;
+    virtual void onFocus() = 0;//todo impl
+    virtual void onUnFocus() = 0;//todo impl
     virtual ~BaseRender() {};
 };
 

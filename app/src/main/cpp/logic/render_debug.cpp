@@ -10,6 +10,7 @@
 #include "../opt/mem_opt.h"
 #include "render_battle.h"
 #include "../audio/native_sles.h"
+#include "../maps/map.h"
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
@@ -29,11 +30,14 @@ void renderSelectPos(byte *screenBuffer, int x, int y) {
 }
 
 void renderDebugMenu(byte *screenBuffer) {
-    renderAsciText(screenBuffer, "  ENTER BATTLE", 10, 50);
-    renderAsciText(screenBuffer, "  NEXT MUSIC", 10, 58);
-    renderAsciText(screenBuffer, "  PRE MUSIC", 10, 66);
-    renderAsciText(screenBuffer, "  EXIT", 10, 74);
-    renderSelectPos(screenBuffer, 13, 50 + (8 * selectPos));
+    int start = 70;
+    renderAsciText(screenBuffer, "  ENTER BATTLE", 10, start + 8*0);
+    renderAsciText(screenBuffer, "  >NEXT MUSIC ", 10, start + 8*1);
+    renderAsciText(screenBuffer, "  <PRE MUSIC  ", 10, start + 8*2);
+    renderAsciText(screenBuffer, "  >NEXT MAP   ", 10, start + 8*3);
+    renderAsciText(screenBuffer, "  <PRE MAP    ", 10, start + 8*4);
+    renderAsciText(screenBuffer, "  EXIT", 10, start + 8*5);
+    renderSelectPos(screenBuffer, 13, start + (8 * selectPos));
 }
 
 void processSelection() {
@@ -45,7 +49,11 @@ void processSelection() {
         changeAudio(getAudioIdx() + 1);
     } else if (selectPos == 2) {
         changeAudio(getAudioIdx() - 1);
-    } else if (selectPos == 3) {
+    }else if (selectPos == 3) {
+        refreshCurrentMap(getCurrentMapId() + 1);
+    }else if (selectPos == 4) {
+        refreshCurrentMap(getCurrentMapId() - 1);
+    } else if (selectPos == 5) {
         pop();
     }
 }
@@ -56,6 +64,9 @@ byte *DebugRender::render(byte *screenBuffer) {
     renderAsciText(screenBuffer, "ARM AARCH64 SIMD", 10, 18);
     renderAsciText(screenBuffer, "OPENGL ES 2.0", 10, 26);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 34);
+    char info[30];
+    sprintf(info, "MUSIC %d, MAP %d", getAudioIdx(), getCurrentMapId());
+    renderAsciText(screenBuffer, info, 10, 46);
     renderDebugMenu(screenBuffer);
     return screenBuffer;
 }
@@ -68,6 +79,7 @@ bool DebugRender::processKey(byte directKey, byte functionKey) {
     } else if (upPushed) {
         upPushed = false;
         selectPos--;
+        renderCache(0);
         if (selectPos < 0) {
             selectPos = 0;
         }
@@ -77,17 +89,20 @@ bool DebugRender::processKey(byte directKey, byte functionKey) {
     } else if (downPushed) {
         downPushed = false;
         selectPos++;
-        if (selectPos > 3) {
-            selectPos = 3;
+        renderCache(0);
+        if (selectPos > 5) {
+            selectPos = 5;
         }
     }
     if (functionKey & a) {
         aPushed = true;
     } else if (aPushed) {
         aPushed = false;
+        renderCache(0);
         processSelection();
     }
     if (functionKey & b) {
+        renderCache(0);
         pop();
     }
     return true;
