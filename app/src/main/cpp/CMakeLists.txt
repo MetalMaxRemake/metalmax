@@ -35,4 +35,4 @@ add_library( metalmax
             ${SOUND_DATA_SRC}
             ${NSF_PLAYER_SRC})
 target_link_libraries(metalmax
-        log android EGL GLESv2 jnigraphics)
+        log android EGL GLESv2 OpenSLES jnigraphics)

@@ -59,16 +59,16 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
             isRunning.set(true);
-            streamPlayer = new StreamPlayer();
             NativeBridge.slInit();
-            streamPlayer.initAudioTrack(16000, 1);
-            streamPlayer.play();
-            short[] buf = new short[1024];
-            while (isRunning.get()) {
-                NativeBridge.getAudioBuffer(buf);
-                streamPlayer.playTrack(buf, 1024);
-            }
-            streamPlayer.stop();
+//            streamPlayer = new StreamPlayer();
+//            streamPlayer.initAudioTrack(16000, 1);
+//            streamPlayer.play();
+//            short[] buf = new short[1024];
+//            while (isRunning.get()) {
+//                NativeBridge.getAudioBuffer(buf);
+//                streamPlayer.playTrack(buf, 1024);
+//            }
+//            streamPlayer.stop();
         }
     };
 

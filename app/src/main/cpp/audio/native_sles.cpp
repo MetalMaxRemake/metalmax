@@ -14,11 +14,12 @@
 #include "xgm/xgm.h"
 #include "../opt/mem_opt.h"
 #include "mm_sound.h"
+#include "opensl.h"
 #include <android/log.h>
 #include <unistd.h>
 
 #define SAMPLE_RATE 16000
-constexpr const uint64_t kFramesToBuffer = 1024;
+constexpr const uint64_t kFramesToBuffer = 10240;
 
 #define CACHE_SIZE 3
 
@@ -130,6 +131,7 @@ extern "C" void initSL() {
     if(isInited) {
         return;
     }
+    startSLEngine();
     isInited = 1;
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
