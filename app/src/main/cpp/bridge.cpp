@@ -4,8 +4,8 @@
 #include <android/bitmap.h>
 #include <android/log.h>
 #include <android/native_window_jni.h>
-#include "graphic/native_gl.h"
-#include "audio/native_sles.h"
+#include "graphic/native_graphic.h"
+#include "audio/native_sound.h"
 #include "charset/charsets.h"
 #include "graphic/palette_data.h"
 #include "opt/mem_opt.h"
@@ -56,6 +56,10 @@ void slInit(JNIEnv *env, jclass clazz) {
     initSL();
 }
 
+void slRelease(JNIEnv *env, jclass clazz) {
+    releaseSL();
+}
+
 void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
     ANativeWindow* mANativeWindow = ANativeWindow_fromSurface(env, surface);
     initGraphic(mANativeWindow);
@@ -72,6 +76,7 @@ static JNINativeMethod methods[] = {
         {"onFuncKeyEvent", "(I)V",  (void *) &onFuncKeyEvent},
         {"getAudioBuffer", "([S)V",   (void *) &getAudioBufferJNI},
         {"slInit", "()V",   (void *) &slInit},
+        {"slRelease", "()V",   (void *) &slRelease},
         {"initNativeWindow", "(Landroid/view/Surface;)V",   (void *) &initNativeWindow},
         {"releaseNativeWindow", "()V",   (void *) &releaseNativeWindow},
         {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},

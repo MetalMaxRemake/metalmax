@@ -9,7 +9,7 @@
 #include "../monster/monster.h"
 #include "../opt/mem_opt.h"
 #include "render_battle.h"
-#include "../audio/native_sles.h"
+#include "../audio/native_sound.h"
 #include "../maps/map.h"
 
 const char chinese_demo[4] = {0, 1, 2, 3};

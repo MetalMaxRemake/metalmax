@@ -6,6 +6,7 @@
 #define SUPERCUBE_NATIVE_SLES_H
 
 extern "C" void initSL();
+extern "C" void releaseSL();
 extern "C" short *getAudioBuffer();
 extern "C" void changeAudio(int audioIdx);
 extern "C" void renderCache(int preRender);
