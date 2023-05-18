@@ -6,5 +6,6 @@
 #define METALMAX_OPENSL_H
 
 void startSLEngine();
+void stopSLEngine();
 
 #endif //METALMAX_OPENSL_H

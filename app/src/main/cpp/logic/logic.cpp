@@ -7,7 +7,7 @@
 #include "logic.h"
 #include "../maps/map.h"
 #include "../charset/charsets.h"
-#include "../graphic/native_gl.h"
+#include "../graphic/native_graphic.h"
 #include "render_map.h"
 #include "render.h"
 

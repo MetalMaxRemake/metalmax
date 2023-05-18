@@ -4,8 +4,8 @@
 #include <android/bitmap.h>
 #include <android/log.h>
 #include <android/native_window_jni.h>
-#include "graphic/native_gl.h"
-#include "audio/native_sles.h"
+#include "graphic/native_graphic.h"
+#include "audio/native_sound.h"
 #include "charset/charsets.h"
 #include "graphic/palette_data.h"
 #include "opt/mem_opt.h"
@@ -45,15 +45,12 @@ jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring 
     return true;
 }
 
-void getAudioBufferJNI(JNIEnv *env, jclass clazz, jshortArray array) {
-    short *buffer = getAudioBuffer();
-    if(buffer != nullptr) {
-        env->SetShortArrayRegion(array, 0, 1024, buffer);
-    }
-}
-
 void slInit(JNIEnv *env, jclass clazz) {
     initSL();
+}
+
+void slRelease(JNIEnv *env, jclass clazz) {
+    releaseSL();
 }
 
 void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
@@ -63,15 +60,14 @@ void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
 
 void releaseNativeWindow(JNIEnv *env, jclass clazz) {
     releaseGraphic();
-    releaseLogicThread();
 }
 
 static JNINativeMethod methods[] = {
         {"commonTest",   "()V",   (void *) &commonTest},
         {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
         {"onFuncKeyEvent", "(I)V",  (void *) &onFuncKeyEvent},
-        {"getAudioBuffer", "([S)V",   (void *) &getAudioBufferJNI},
         {"slInit", "()V",   (void *) &slInit},
+        {"slRelease", "()V",   (void *) &slRelease},
         {"initNativeWindow", "(Landroid/view/Surface;)V",   (void *) &initNativeWindow},
         {"releaseNativeWindow", "()V",   (void *) &releaseNativeWindow},
         {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},

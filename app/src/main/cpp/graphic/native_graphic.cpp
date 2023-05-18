@@ -1,8 +1,9 @@
 //
 // Created by youngpark on 2023/4/23.
+// EGL & FrameBuffer & OpenGL
 //
 
-#include "native_gl.h"
+#include "native_graphic.h"
 #include "../opt/matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -214,27 +215,6 @@ void initTextures() {
     mainTextureId = textureIds[0];
     checkGlError("textures");
 }
-
-/**
- * debug color code
- */
-//unsigned char colorBlockBuffer[256][256];
-//
-//void initRenderBuffer() {
-//    unsigned char color = 0;
-//    for (int j = 0; j < 16; j++) {
-//        for (int i = 0; i < 16; i++) {
-//            int startX = i*16;
-//            int startY = j*16;
-//            for(int x = startX; x<startX+16;x++) {
-//                for(int y = startY;y<startY+16;y++) {
-//                    colorBlockBuffer[x][y] = color;
-//                }
-//            }
-//            color++;
-//        }
-//    }
-//}
 
 void initGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

@@ -15,11 +15,12 @@
 #include "../opt/mem_opt.h"
 #include "mm_sound.h"
 #include "opensl.h"
+#include "../global.h"
 #include <android/log.h>
 #include <unistd.h>
 
 #define SAMPLE_RATE 16000
-constexpr const uint64_t kFramesToBuffer = 10240;
+constexpr const uint64_t kFramesToBuffer = 1024;
 
 #define CACHE_SIZE 3
 
@@ -46,6 +47,7 @@ struct Nsf2WavOptions {
 };
 
 pthread_mutex_t soundMutex;
+pthread_mutex_t cacheIdxMutex;
 xgm::NSFPlayer player;
 xgm::NSF nsf;
 
@@ -67,7 +69,7 @@ void mixSoundBuffer(short *buffer1, short *buffer2, int len) {
     }
 }
 
-[[noreturn]] void *nsfPlayerThread(void *) {
+void *nsfPlayerThread(void *) {
     xgm::NSFPlayerConfig config;
     Nsf2WavOptions options(nsf);
     nsf.SetDefaults(options.length_ms, options.fade_ms, nsf.default_loopnum);
@@ -107,6 +109,7 @@ void mixSoundBuffer(short *buffer1, short *buffer2, int len) {
         }
         fc = kFramesToBuffer;
         pthread_mutex_lock(&soundMutex);
+        pthread_mutex_lock(&cacheIdxMutex);
         player.Render((short *)cachedData[(cacheIdx) % CACHE_SIZE], fc);
         if(mixCache) {
             mixSoundBuffer((short *)cachedData[(cacheIdx) % CACHE_SIZE],
@@ -119,23 +122,26 @@ void mixSoundBuffer(short *buffer1, short *buffer2, int len) {
         }
         cacheIdx++;
         pthread_mutex_unlock(&soundMutex);
+        pthread_mutex_unlock(&cacheIdxMutex);
     }
+    return nullptr;
 }
 
 char isInited = 0;
 
 extern "C" void initSL() {
-    //曾经这里有一堆opensl的屎山代码，怎么调都有bug（破音，降调，加速...
-    //后来我弃暗投明选择了传回java用audio tracker
-    //以后有缘我再尝试opensl吧
+    startSLEngine();
     if(isInited) {
         return;
     }
-    startSLEngine();
     isInited = 1;
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
     pthread_create(&id, nullptr, nsfPlayerThread, nullptr);
+}
+
+extern "C" void releaseSL() {
+    stopSLEngine();
 }
 
 extern "C" int getAudioCount() {
@@ -169,6 +175,18 @@ extern "C" int getAudioIdx() {
 extern "C" short *getAudioBuffer() {
     if(readIdx >= cacheIdx) {
         return nullptr;
+    }
+    if(readIdx > 100000) {
+        pthread_mutex_lock(&cacheIdxMutex);
+        logd("native_sound", "reset cacheIdx");
+        if (readIdx < cacheIdx) {
+            cacheIdx %= CACHE_SIZE;
+            readIdx %= CACHE_SIZE;
+            if(readIdx >= cacheIdx) {
+                cacheIdx += CACHE_SIZE;
+            }
+        }
+        pthread_mutex_unlock(&cacheIdxMutex);
     }
     return (short *)cachedData[(readIdx++) % CACHE_SIZE];
 }

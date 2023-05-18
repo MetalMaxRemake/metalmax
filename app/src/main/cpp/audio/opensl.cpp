@@ -3,8 +3,9 @@
 //
 
 #include "opensl.h"
-#include "native_sles.h"
+#include "native_sound.h"
 #include "../opt/mem_opt.h"
+#include "../global.h"
 
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
@@ -36,14 +37,24 @@ static pthread_mutex_t audioEngineLock = PTHREAD_MUTEX_INITIALIZER;
 static const SLEnvironmentalReverbSettings reverbSettings =
         SL_I3DL2_ENVIRONMENT_PRESET_STONECORRIDOR;
 
+volatile bool isRunning = false;
+
 void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
+    if(!isRunning) {
+        pthread_mutex_unlock(&audioEngineLock);
+        return;
+    }
     assert(bq == bqPlayerBufferQueue);
     assert(NULL == context);
     SLresult result;
-//    usleep(1000*64);
+    void * buffer = getAudioBuffer();
+    while(buffer == nullptr) {
+        usleep(1000*100);
+        buffer = getAudioBuffer();
+    }
     result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue,
-                                             getAudioBuffer(),
-                                             10240);
+                                             buffer,
+                                             1024 * 2);
     assert(result == SL_RESULT_SUCCESS);
 }
 
@@ -95,7 +106,8 @@ static short *slientBuf;
 
 void createBufferQueueAudioPlayer(int sampleRate) {
     SLresult result;
-    slientBuf = (short *) malloc(sizeof(short) * 10240);
+    slientBuf = (short *) malloc(sizeof(short) * 1024);
+    __memset_aarch64(slientBuf, 0, sizeof(short) * 1024);
     if (sampleRate >= 0) {
         bqPlayerSampleRate = sampleRate * 1000;
     }
@@ -163,11 +175,6 @@ void createBufferQueueAudioPlayer(int sampleRate) {
         (void) result;
     }
 
-    // get the mute/solo interface
-//    result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_MUTESOLO, &bqPlayerMuteSolo);
-//    assert(SL_RESULT_SUCCESS == result);
-//    (void)result;
-
     // get the volume interface
     result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume);
     assert(SL_RESULT_SUCCESS == result);
@@ -180,14 +187,13 @@ void createBufferQueueAudioPlayer(int sampleRate) {
 }
 
 void *openslThread(void *) {
-    usleep(1000 * 1000);
     createEngine();
+    isRunning = true;
     int sampleRate = SAMPLE_RATE;
     createBufferQueueAudioPlayer(sampleRate);
     if (pthread_mutex_trylock(&audioEngineLock)) {
         return nullptr;
     }
-    __memset_aarch64(slientBuf, 0, sizeof(short) * 1024);
     SLresult result;
     (*bqPlayerVolume)->EnableStereoPosition(bqPlayerVolume, SL_BOOLEAN_TRUE);
     (*bqPlayerVolume)->SetStereoPosition(bqPlayerVolume, 1);
@@ -200,7 +206,12 @@ void *openslThread(void *) {
 }
 
 void startSLEngine() {
+    logd("opensl", "startSLEngine()");
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
     pthread_create(&id, nullptr, openslThread, nullptr);
+}
+
+void stopSLEngine() {
+    isRunning = false;
 }

@@ -3,9 +3,6 @@ package com.park.metalmax;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +14,8 @@ import android.widget.LinearLayout;
 import com.park.metalmax.control.DirectKeyView;
 import com.park.metalmax.control.FunctionKeyView;
 import com.park.metalmax.game.surface.GameSurfaceView;
-import com.park.metalmax.sound.StreamPlayer;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends Activity {
-
-    Handler mainHandler = new Handler(Looper.getMainLooper());
-    Handler audioThreadHandler;
-    HandlerThread audioThread = new HandlerThread("audio_thread");
-
-    StreamPlayer streamPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,39 +26,19 @@ public class MainActivity extends Activity {
         setContentView(initView());
         NativeBridge.initNativeMethod();
         NativeBridge.commonTest();
-        audioThread.start();
-        audioThreadHandler = new Handler(audioThread.getLooper());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        audioThreadHandler.post(audioTask);
+        NativeBridge.slInit();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        isRunning.set(false);
+        NativeBridge.slRelease();
     }
-
-    private final AtomicBoolean isRunning = new AtomicBoolean(true);
-    private final Runnable audioTask = new Runnable() {
-        @Override
-        public void run() {
-            isRunning.set(true);
-            NativeBridge.slInit();
-//            streamPlayer = new StreamPlayer();
-//            streamPlayer.initAudioTrack(16000, 1);
-//            streamPlayer.play();
-//            short[] buf = new short[1024];
-//            while (isRunning.get()) {
-//                NativeBridge.getAudioBuffer(buf);
-//                streamPlayer.playTrack(buf, 1024);
-//            }
-//            streamPlayer.stop();
-        }
-    };
 
     private View initView() {
         //root
@@ -119,13 +87,5 @@ public class MainActivity extends Activity {
         final float scale = context.getResources().getDisplayMetrics().density;
         // 结果+0.5是为了int取整时更接近
         return (int) (dpValue * scale + 0.5f);
-    }
-
-    /**
-     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp(相对大小)
-     */
-    public static int pxToDp(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
     }
 }

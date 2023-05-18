@@ -6,7 +6,7 @@
 #include "render_map.h"
 #include "../maps/map.h"
 #include "render_debug.h"
-#include "../audio/native_sles.h"
+#include "../audio/native_sound.h"
 #include "render_battle.h"
 #include "../charset/charsets.h"
 
