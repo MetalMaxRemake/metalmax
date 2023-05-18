@@ -31,10 +31,6 @@ public class NativeBridge {
     public static native void slInit();
     @FastNative
     public static native void slRelease();
-
-    @FastNative
-    public static native void getAudioBuffer(short[] buffer);
-
     @FastNative
     public static native boolean getCharImg(Bitmap bitmap, String text);
 

@@ -45,13 +45,6 @@ jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring 
     return true;
 }
 
-void getAudioBufferJNI(JNIEnv *env, jclass clazz, jshortArray array) {
-    short *buffer = getAudioBuffer();
-    if(buffer != nullptr) {
-        env->SetShortArrayRegion(array, 0, 1024, buffer);
-    }
-}
-
 void slInit(JNIEnv *env, jclass clazz) {
     initSL();
 }
@@ -73,7 +66,6 @@ static JNINativeMethod methods[] = {
         {"commonTest",   "()V",   (void *) &commonTest},
         {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
         {"onFuncKeyEvent", "(I)V",  (void *) &onFuncKeyEvent},
-        {"getAudioBuffer", "([S)V",   (void *) &getAudioBufferJNI},
         {"slInit", "()V",   (void *) &slInit},
         {"slRelease", "()V",   (void *) &slRelease},
         {"initNativeWindow", "(Landroid/view/Surface;)V",   (void *) &initNativeWindow},
