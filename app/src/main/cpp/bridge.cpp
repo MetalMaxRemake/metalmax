@@ -67,7 +67,6 @@ void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
 
 void releaseNativeWindow(JNIEnv *env, jclass clazz) {
     releaseGraphic();
-    releaseLogicThread();
 }
 
 static JNINativeMethod methods[] = {
