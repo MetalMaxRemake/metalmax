@@ -14,6 +14,7 @@ private:
     int splashClk = 0;
     int splashCount = 0;
 public:
+    BattleRender();
     byte * render(byte *screenBuffer);
     bool processKey(byte directKey, byte functionKey);
 };

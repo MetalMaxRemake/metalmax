@@ -8,6 +8,8 @@
 #include "../opt/mem_opt.h"
 #include "../charset/charsets.h"
 #include "../audio/native_sound.h"
+#include "../monster/monster_data/monster_data.h"
+#include "../graphic/graphic_process.h"
 
 void renderBackground(byte *screenBuffer) {
     __memset_aarch64(screenBuffer, 3, 256 * 256);
@@ -25,9 +27,16 @@ void renderInfoMenu(byte *screenBuffer) {
     __memset_aarch64(screenBuffer, 3, 256 * 256);
 }
 
+BattleRender::BattleRender() {
+
+}
+
 int monsterIdx = 0;
 
 byte * BattleRender::render(byte *screenBuffer) {
+
+
+
     if(enterBattle) {
         if(getAudioIdx() != 4) {
             changeAudio(4);
