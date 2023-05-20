@@ -11,12 +11,20 @@ class MapRender : public BaseRender {
 private:
     int posX, posY;
     int mapId = 0;
+    bool showDebug = true;
+    void drawCopyRight(byte *screenBuffer) const;
 public:
+    MapRender();
     void updateMap(int newMapId, int x, int y);
 
     byte * render(byte *screenBuffer);
 
     bool processKey(byte directKey, byte functionKey);
+
+    void processKeyClick(byte directKey, byte functionKey);
+
+    void onFocus();
+    void onUnFocus();
 
     ~MapRender();
 };

@@ -4,12 +4,14 @@
 
 #include <unistd.h>
 #include <__threading_support>
+#include <cstdlib>
 #include "logic.h"
 #include "../maps/map.h"
 #include "../charset/charsets.h"
 #include "../graphic/native_graphic.h"
 #include "render_map.h"
 #include "render.h"
+#include "render_splash.h"
 
 byte *screenBuffer[2];
 byte bufferIdx = 0;
@@ -18,7 +20,13 @@ BaseRender *renderStack[10];
 int stackIdx = 0;
 
 void push(BaseRender *baseRender) {
+    if (stackIdx > 0 && top() != nullptr) {
+        top()->onUnFocus();
+    }
     renderStack[stackIdx++] = baseRender;
+    if (stackIdx > 0 && top() != nullptr) {
+        top()->onFocus();
+    }
 }
 
 BaseRender *top() {
@@ -26,8 +34,14 @@ BaseRender *top() {
 }
 
 void pop() {
+    if (stackIdx > 0 && top() != nullptr) {
+        top()->onUnFocus();
+    }
     delete top();
     stackIdx--;
+    if (stackIdx > 0 && top() != nullptr) {
+        top()->onFocus();
+    }
 }
 
 #define SCENE_BATTLE 0
@@ -43,9 +57,11 @@ void initLogicThread();
 void processRender();
 
 void initLogic() {
-    MapRender *mapRender = new MapRender;
-    mapRender->updateMap(0, 0, 0);
-    push(mapRender);
+    for (int i = 0; i < 2; i++) {
+        screenBuffer[i] = (byte *) malloc(sizeof(char) * (256 * 256));
+    }
+    SplashRender *splashRender = new SplashRender;
+    push(splashRender);
     scene = SCENE_MAP;
     tikLogic();
     initLogicThread();
@@ -74,8 +90,11 @@ void processRender() {
     bufferIdx = bufferIdx % 2;
 }
 
-byte directKey;
-byte functionKey;
+byte directKey = 0;
+byte functionKey = 0;
+
+byte last_directKey = 0;
+byte last_functionKey = 0;
 
 void updateDirectKey(byte key) {
     directKey = key;
@@ -86,10 +105,28 @@ void updateFunctionKey(byte key) {
 }
 
 void processKey() {
-    top()->processKey(directKey, functionKey);
+    if (top()->processKey(directKey, functionKey)) {
+        last_directKey = directKey;
+        last_functionKey = functionKey;
+        return;
+    }
+    byte diff_directKey = 0;
+    byte diff_functionKey = 0;
+    if (directKey > last_directKey) {
+        diff_directKey = (directKey | last_directKey) & ~(directKey & last_directKey);
+    }
+    if (functionKey > last_functionKey) {
+        diff_functionKey = (functionKey | last_functionKey) & ~(functionKey & last_functionKey);
+    }
+    if (diff_directKey | diff_functionKey) {
+        top()->processKeyClick(diff_directKey, diff_functionKey);
+    }
+    last_directKey = directKey;
+    last_functionKey = functionKey;
 }
 
 volatile bool logicRunning = true;
+
 //定义线程函数
 void *logic_thread(void *arg) {
     logicRunning = true;

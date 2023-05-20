@@ -34,9 +34,6 @@ BattleRender::BattleRender() {
 int monsterIdx = 0;
 
 byte * BattleRender::render(byte *screenBuffer) {
-
-
-
     if(enterBattle) {
         if(getAudioIdx() != 4) {
             changeAudio(4);
@@ -64,26 +61,17 @@ byte * BattleRender::render(byte *screenBuffer) {
     return screenBuffer;
 }
 
-bool upPusheda = false, downPusheda = false;
-
-bool BattleRender::processKey(byte directKey, byte functionKey) {
+void BattleRender::processKeyClick(byte directKey, byte functionKey) {
     if(!enterBattle) {
-        return true;
+        return;
     }
     if (directKey & up) {
-        upPusheda = true;
-    } else if(upPusheda) {
-        upPusheda = false;
         monsterIdx--;
     }
     if (directKey & down) {
-        downPusheda = true;
-    } else if(downPusheda) {
-        downPusheda = false;
         monsterIdx++;
     }
     if(functionKey & b) {
         pop();
     }
-    return true;
 }

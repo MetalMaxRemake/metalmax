@@ -20,9 +20,10 @@ protected:
     const byte tb = 0b1000;
 public:
     virtual byte * render(byte *screenBuffer) = 0;
-    virtual bool processKey(byte directKey, byte functionKey) = 0;
-//    virtual void onFocus() = 0;//todo impl
-//    virtual void onUnFocus() = 0;//todo impl
+    virtual bool processKey(byte directKey, byte functionKey) {return false;};
+    virtual void processKeyClick(byte directKey, byte functionKey) {}
+    virtual void onFocus() {};
+    virtual void onUnFocus() {};
     virtual ~BaseRender() {};
 };
 

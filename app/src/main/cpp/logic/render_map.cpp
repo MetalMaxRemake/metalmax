@@ -17,61 +17,63 @@ void MapRender::updateMap(int newMapId, int x, int y) {
     refreshCurrentMap(mapId);
 }
 
+MapRender::MapRender() {
+}
+
 byte *MapRender::render(byte *screenBuffer) {
     screenBuffer = renderMap(posX, posY, screenBuffer);
-    renderAsciText(screenBuffer, "COPYRIGHT:    CREA-TECH", 10, 200);
-    renderAsciText(screenBuffer, "PUBLISH:      DATA EAST", 10, 208);
-    renderAsciText(screenBuffer, "REMAKE AUTHOR: PARK-671", 10, 216);
-    renderAsciText(screenBuffer, "THANKS:       AFOOLLOVE", 10, 224);
+    if (showDebug) {
+        drawCopyRight(screenBuffer);
+    }
     return screenBuffer;
 }
 
-byte taPushed = 0;
-byte tbPushed = 0;
-byte moved = 0;
-bool aPushedb = false;
+void MapRender::drawCopyRight(byte *screenBuffer) const {
+    renderAsciText(screenBuffer, "REMAKE: PARK-671", 10, 216);
+    renderAsciText(screenBuffer, "THANKS: AFOOLLOVE", 10, 224);
+}
 
-bool MapRender::processKey(byte directKey, byte functionKey) {
-    moved = 0;
-    if (directKey & up) {
-        posX--;
-        moved = 1;
+void MapRender::onUnFocus() {
+    showDebug = false;
+}
+
+void MapRender::onFocus() {
+    showDebug = true;
+    if (getAudioIdx() != 2) {
+        changeAudio(2);
     }
-    if (directKey & down) {
-        posX++;
-        moved = 1;
-    }
-    if (directKey & right) {
-        posY++;
-        moved = 1;
-    }
-    if (directKey & left) {
-        posY--;
-        moved = 1;
-    }
+}
+
+void MapRender::processKeyClick(byte directKey, byte functionKey) {
+    renderCache(0);
     if (functionKey & a) {
-        aPushedb = true;
-    } else if (aPushedb) {
-        aPushedb = false;
         DebugRender *debugRender = new DebugRender;
         push(debugRender);
     }
     if (functionKey & ta) {
-        taPushed = 1;
-    } else if (taPushed) {
-        taPushed = 0;
         mapId++;
         mapId = mapId % 240;
         updateMap(mapId, 0, 0);
     }
-
     if (functionKey & tb) {
-        tbPushed = 1;
-    } else if (tbPushed) {
-        tbPushed = 0;
         changeAudio(getAudioIdx() + 1);
     }
-    return true;
+}
+
+bool MapRender::processKey(byte directKey, byte functionKey) {
+    if (directKey & up) {
+        posX--;
+    }
+    if (directKey & down) {
+        posX++;
+    }
+    if (directKey & right) {
+        posY++;
+    }
+    if (directKey & left) {
+        posY--;
+    }
+    return functionKey == 0;
 }
 
 MapRender::~MapRender() {

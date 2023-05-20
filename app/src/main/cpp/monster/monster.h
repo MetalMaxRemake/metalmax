@@ -7,6 +7,6 @@
 
 #include "../global.h"
 
-byte *renderMonster(int monsterId, int x, int y, byte *result);
+byte *renderMonster(int monsterId, int rawIdx, int columnIdx, byte *result);
 
 #endif //METALMAX_MONSTER_H

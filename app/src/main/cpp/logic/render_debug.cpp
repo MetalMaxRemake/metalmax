@@ -73,39 +73,27 @@ byte *DebugRender::render(byte *screenBuffer) {
 
 bool upPushed = false, downPushed = false, aPushed = false;
 
-bool DebugRender::processKey(byte directKey, byte functionKey) {
+void DebugRender::processKeyClick(byte directKey, byte functionKey) {
+    renderCache(0);
     if (directKey & up) {
-        upPushed = true;
-    } else if (upPushed) {
-        upPushed = false;
         selectPos--;
-        renderCache(0);
         if (selectPos < 0) {
             selectPos = 0;
         }
     }
     if (directKey & down) {
-        downPushed = true;
-    } else if (downPushed) {
         downPushed = false;
         selectPos++;
-        renderCache(0);
         if (selectPos > 5) {
             selectPos = 5;
         }
     }
     if (functionKey & a) {
-        aPushed = true;
-    } else if (aPushed) {
-        aPushed = false;
-        renderCache(0);
         processSelection();
     }
     if (functionKey & b) {
-        renderCache(0);
         pop();
     }
-    return true;
 }
 
 DebugRender::DebugRender() {

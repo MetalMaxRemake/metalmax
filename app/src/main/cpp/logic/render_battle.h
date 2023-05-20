@@ -16,7 +16,7 @@ private:
 public:
     BattleRender();
     byte * render(byte *screenBuffer);
-    bool processKey(byte directKey, byte functionKey);
+    void processKeyClick(byte directKey, byte functionKey);
 };
 
 #endif //METALMAX_RENDER_BATTLE_H

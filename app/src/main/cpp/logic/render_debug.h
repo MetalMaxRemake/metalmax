@@ -15,7 +15,7 @@ public:
     DebugRender();
     ~DebugRender();
     byte * render(byte *screenBuffer);
-    bool processKey(byte directKey, byte functionKey);
+    void processKeyClick(byte directKey, byte functionKey);
 };
 
 #endif //METALMAX_RENDER_DEBUG_H

@@ -13,6 +13,7 @@ file(GLOB_RECURSE MAIN_SRC "*.cpp" "*.c")
 file(GLOB_RECURSE LOGIC_SRC "logic/*.cpp" "logic/*.c")
 file(GLOB_RECURSE CHARSET_SRC "charset/*.cpp" "charset/*.c")
 file(GLOB_RECURSE GRAPHIC_SRC "graphic/*.cpp" "graphic/*.c")
+file(GLOB_RECURSE SPLASH_SRC "splash/*.cpp" "splash/*.c")
 
 file(GLOB_RECURSE NSF_PLAYER_SRC
         "audio/*.cpp" "audio/*.c"

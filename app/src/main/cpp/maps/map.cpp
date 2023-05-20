@@ -6,6 +6,7 @@
 #include "../opt/mem_opt.h"
 #include "tile_bmp.h"
 #include "map_data/map_data.h"
+#include "../global.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +17,7 @@
 volatile int map_width = 256,map_height = 256;
 pthread_mutex_t mapRefreshMutex;
 
-inline void fill(int i, int j, int bmpIdx, unsigned char *result) {
+inline void fill(int i, int j, int bmpIdx, byte *result) {
     int map_raw_width = ((map_width + 2 * MAP_FILL_SIZE) * 16);
     int map_column_offset = j * 16;
     int map_raw_offset = i * 16;
@@ -42,13 +43,13 @@ inline void fill(int i, int j, int bmpIdx, unsigned char *result) {
     }
 }
 
-unsigned char *fullMap = nullptr;
+byte *fullMap = nullptr;
 unsigned short *short_current_map;
 unsigned short current_fill;
 int current_map_id = 0;
 
 void initAllTilesMap() {
-    fullMap = (unsigned char *) malloc(
+    fullMap = (byte *) malloc(
             sizeof(char) * ((map_width + 2*MAP_FILL_SIZE) * (map_height + 2*MAP_FILL_SIZE) * 256));
     int bmpIdx = 0;
     for (int i = 0; i < map_height; i++) {
@@ -60,7 +61,7 @@ void initAllTilesMap() {
 
 void initFullMap() {
     if (fullMap == nullptr) {
-        fullMap = (unsigned char *) malloc(
+        fullMap = (byte *) malloc(
                 sizeof(char) * ((map_width + 2*MAP_FILL_SIZE) * (map_height + 2*MAP_FILL_SIZE) * 256));
         int bmpIdx = 0;
         for (int i = 0; i < map_height; i++) {
@@ -120,11 +121,11 @@ void refreshCurrentMap(int mapId) {
     pthread_mutex_unlock(&mapRefreshMutex);
 }
 
-unsigned char *renderMap(int x, int y, unsigned char *result) {
+byte *renderMap(int x, int y, byte *result) {
     x += MAP_FILL_SIZE * 16;
     y += MAP_FILL_SIZE * 16;
     if(result == nullptr) {
-        result = (unsigned char *) malloc(sizeof(char) * (16 * 16 * 256));
+        result = (byte *) malloc(sizeof(char) * (16 * 16 * 256));
     }
     pthread_mutex_lock(&mapRefreshMutex);
     if(fullMap == nullptr) {
