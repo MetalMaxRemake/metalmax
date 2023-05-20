@@ -22,7 +22,7 @@ void SplashRender::processKeyClick(byte directKey, byte functionKey) {
     if (splash_scene >= 4 && (functionKey | directKey)) {
         pop();
         MapRender *mapRender = new MapRender;
-        mapRender->updateMap(0, 0, 0);
+        mapRender->updateMap(0, 224, 83);
         push(mapRender);
     } else {
         splash_scene++;

@@ -60,7 +60,7 @@ void processSelection() {
 
 byte *DebugRender::render(byte *screenBuffer) {
 //    renderMonster(0, 10,20, screenBuffer);
-    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.3", 10, 10);
+    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.4", 10, 10);
     renderAsciText(screenBuffer, "ARM AARCH64 SIMD", 10, 18);
     renderAsciText(screenBuffer, "OPENGL ES 2.0", 10, 26);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 34);
