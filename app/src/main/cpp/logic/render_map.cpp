@@ -13,6 +13,7 @@
 #include "../sprite/sprite.h"
 #include "status/player.h"
 #include "../maps/tile_bmp.h"
+#include "../maps/map_data/map_data.h"
 
 static const byte HUMAN_PASS = 0b0001;
 static const byte CAR_PASS = 0b0010;
@@ -77,6 +78,9 @@ void MapRender::processKeyClick(byte directKey, byte functionKey) {
         push(debugRender);
     }
     if (functionKey & ta) {
+        int map_height = map_size[mapId * 2];
+        int map_width = map_size[mapId * 2 + 1];
+        getDefaultPlayer()->setPos(map_width / 32, map_height / 32);
         mapId++;
         updateMap(mapId, 0, 0);
     }

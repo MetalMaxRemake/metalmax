@@ -11,6 +11,7 @@
 #include "render_battle.h"
 #include "../audio/native_sound.h"
 #include "../maps/map.h"
+#include "status/player.h"
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
@@ -41,6 +42,7 @@ void renderDebugMenu(byte *screenBuffer) {
 }
 
 void processSelection() {
+    Character* player = getDefaultPlayer();
     if (selectPos == 0) {
         pop();
         BattleRender *battleRender = new BattleRender;
@@ -50,8 +52,10 @@ void processSelection() {
     } else if (selectPos == 2) {
         changeAudio(getAudioIdx() - 1);
     }else if (selectPos == 3) {
+        player->setPos(0, 0);
         changeMap(getCurrentMap() + 1, 0, 0);
     }else if (selectPos == 4) {
+        player->setPos(0, 0);
         changeMap(getCurrentMap() - 1, 0, 0);
     } else if (selectPos == 5) {
         pop();
@@ -59,9 +63,7 @@ void processSelection() {
 }
 
 byte *DebugRender::render(byte *screenBuffer) {
-    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.4", 10, 10);
-    renderAsciText(screenBuffer, "ARM AARCH64 SIMD", 10, 18);
-    renderAsciText(screenBuffer, "OPENGL ES 2.0", 10, 26);
+    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.5", 10, 10);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 34);
     char info[30];
     sprintf(info, "MUSIC %d, MAP %d", getAudioIdx(), getCurrentMap());
@@ -69,8 +71,6 @@ byte *DebugRender::render(byte *screenBuffer) {
     renderDebugMenu(screenBuffer);
     return screenBuffer;
 }
-
-bool upPushed = false, downPushed = false, aPushed = false;
 
 void DebugRender::processKeyClick(byte directKey, byte functionKey) {
     renderCache(0);
@@ -81,7 +81,6 @@ void DebugRender::processKeyClick(byte directKey, byte functionKey) {
         }
     }
     if (directKey & down) {
-        downPushed = false;
         selectPos++;
         if (selectPos > 5) {
             selectPos = 5;
