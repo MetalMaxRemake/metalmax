@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <__threading_support>
 #include <cstdlib>
+#include <typeinfo>
 #include "logic.h"
 #include "../maps/map.h"
 #include "../charset/charsets.h"
@@ -17,9 +18,20 @@ byte *screenBuffer[2];
 byte bufferIdx = 0;
 
 BaseRender *renderStack[10];
+MapRender *mapRender;
 int stackIdx = 0;
 
+template<class Base, typename Derived>
+
+bool instanceOf(const Derived &object) {
+    return !dynamic_cast<Base *>(object);
+}
+
 void push(BaseRender *baseRender) {
+    bool isMapRender = instanceOf<MapRender>(baseRender);
+    if (isMapRender) {
+        mapRender = (MapRender *) baseRender;
+    }
     if (stackIdx > 0 && top() != nullptr) {
         top()->onUnFocus();
     }
@@ -41,6 +53,19 @@ void pop() {
     stackIdx--;
     if (stackIdx > 0 && top() != nullptr) {
         top()->onFocus();
+    }
+}
+
+int getCurrentMap() {
+    if (mapRender != nullptr) {
+        return mapRender->getMapId();
+    }
+    return -1;
+}
+
+void changeMap(int mapId, int x, int y) {
+    if (mapRender != nullptr) {
+        mapRender->updateMap(mapId, x, y);
     }
 }
 

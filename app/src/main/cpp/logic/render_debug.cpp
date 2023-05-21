@@ -50,22 +50,21 @@ void processSelection() {
     } else if (selectPos == 2) {
         changeAudio(getAudioIdx() - 1);
     }else if (selectPos == 3) {
-        refreshCurrentMap(getCurrentMapId() + 1);
+        changeMap(getCurrentMap() + 1, 0, 0);
     }else if (selectPos == 4) {
-        refreshCurrentMap(getCurrentMapId() - 1);
+        changeMap(getCurrentMap() - 1, 0, 0);
     } else if (selectPos == 5) {
         pop();
     }
 }
 
 byte *DebugRender::render(byte *screenBuffer) {
-//    renderMonster(0, 10,20, screenBuffer);
     renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.4", 10, 10);
     renderAsciText(screenBuffer, "ARM AARCH64 SIMD", 10, 18);
     renderAsciText(screenBuffer, "OPENGL ES 2.0", 10, 26);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 34);
     char info[30];
-    sprintf(info, "MUSIC %d, MAP %d", getAudioIdx(), getCurrentMapId());
+    sprintf(info, "MUSIC %d, MAP %d", getAudioIdx(), getCurrentMap());
     renderAsciText(screenBuffer, info, 10, 46);
     renderDebugMenu(screenBuffer);
     return screenBuffer;

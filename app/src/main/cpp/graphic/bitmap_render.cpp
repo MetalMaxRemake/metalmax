@@ -27,3 +27,27 @@ byte *renderBitmap(byte *originData,
     }
     return result;
 }
+
+/**
+ * warning: this func is slower than upper!
+ * @param originData
+ * @param colorOffset
+ * @param width
+ * @param height
+ * @param x
+ * @param y
+ * @param result
+ * @return
+ */
+byte *renderBitmapColorOffset(byte *originData, int colorOffset,
+                              int width, int height,
+                              int x, int y,
+                              byte *result) {
+    int offset = y * 256 + x;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            result[i * 256 + offset + j] = originData[i * width + j] + colorOffset;
+        }
+    }
+    return result;
+}

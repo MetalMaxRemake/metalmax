@@ -46,7 +46,6 @@ inline void fill(int i, int j, int bmpIdx, byte *result) {
 byte *fullMap = nullptr;
 unsigned short *short_current_map;
 unsigned short current_fill;
-int current_map_id = 0;
 
 void initAllTilesMap() {
     fullMap = (byte *) malloc(
@@ -97,12 +96,7 @@ int min(int a, int b) {
     return a < b ? a : b;
 }
 
-int getCurrentMapId() {
-    return current_map_id;
-}
-
 void refreshCurrentMap(int mapId) {
-    current_map_id = mapId;
     pthread_mutex_lock(&mapRefreshMutex);
     releaseMap();
     if(mapId == -1) {

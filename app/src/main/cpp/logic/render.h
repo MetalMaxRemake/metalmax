@@ -33,4 +33,8 @@ BaseRender *top();
 
 void pop();
 
+void changeMap(int mapId, int x, int y);//only support std pos
+
+int getCurrentMap();
+
 #endif //METALMAX_RENDER_H

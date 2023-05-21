@@ -7,6 +7,5 @@
 
 unsigned char *renderMap(int x, int y, unsigned char *result);
 void refreshCurrentMap(int mapId);
-int getCurrentMapId();
 
 #endif //METALMAX_MAP_H

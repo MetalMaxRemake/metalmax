@@ -10,14 +10,23 @@
 #include "render_battle.h"
 #include "../charset/charsets.h"
 
+static volatile int posX, posY;
+static volatile int mapId;
+
 void MapRender::updateMap(int newMapId, int x, int y) {
-    this->mapId = newMapId;
+    mapId = newMapId;
+    mapId = mapId % 240;
     posX = x * 16;
     posY = y * 16;
     refreshCurrentMap(mapId);
 }
 
 MapRender::MapRender() {
+    logd("MapRender", "new!");
+}
+
+int MapRender::getMapId() {
+    return mapId;
 }
 
 byte *MapRender::render(byte *screenBuffer) {
@@ -52,7 +61,6 @@ void MapRender::processKeyClick(byte directKey, byte functionKey) {
     }
     if (functionKey & ta) {
         mapId++;
-        mapId = mapId % 240;
         updateMap(mapId, 0, 0);
     }
     if (functionKey & tb) {
