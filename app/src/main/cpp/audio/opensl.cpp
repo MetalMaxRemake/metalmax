@@ -49,7 +49,7 @@ void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
     SLresult result;
     void * buffer = getAudioBuffer();
     while(buffer == nullptr) {
-        usleep(1000*100);
+        usleep(1000*20);
         buffer = getAudioBuffer();
     }
     result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue,
