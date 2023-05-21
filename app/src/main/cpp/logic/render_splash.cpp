@@ -23,11 +23,11 @@ void SplashRender::processKeyClick(byte directKey, byte functionKey) {
     if (splash_scene >= 5 && (functionKey | directKey)) {
         pop();
         MapRender *mapRender = new MapRender;
-        mapRender->updateMap(0, 224, 83);
+        mapRender->updateMap(0, 91 - 8, 232 - 8);
         push(mapRender);
     } else {
         splash_scene++;
-        if(splash_scene == 5) {
+        if (splash_scene == 5) {
             changeAudio(1);
         }
     }
@@ -57,7 +57,7 @@ byte *SplashRender::render(byte *screenBuffer) {
         int width = 208;
         int height = 32;
         percent++;
-        if(percent >= height) {
+        if (percent >= height) {
             percent = 0;
             splash_scene++;
         }
@@ -69,7 +69,7 @@ byte *SplashRender::render(byte *screenBuffer) {
         int height = 32;
         return renderBitmap((byte *) logo, width, height,
                             128 - width / 2 + 4, 128 - height / 2, screenBuffer);
-    }else if (splash_scene == 3) {
+    } else if (splash_scene == 3) {
         int width = 208;
         int height = 32;
         if (logo_y == 0) {
@@ -81,13 +81,13 @@ byte *SplashRender::render(byte *screenBuffer) {
         }
         return renderBitmap((byte *) logo, width, height,
                             128 - width / 2 + 4, logo_y, screenBuffer);
-    }  else if (splash_scene == 4) {
+    } else if (splash_scene == 4) {
         int width = 248;
         int height = 106;
-        if(percent < height) {
+        if (percent < height) {
             screenBuffer = renderBitmap((byte *) logo, 208, 32,
                                         128 - 208 / 2 + 4, 52, screenBuffer);
-            percent ++;
+            percent++;
         }
         renderAsciText(screenBuffer, "PUSH START", 90, 150);
         renderAsciText(screenBuffer, "1996 DATA EAST", 74, 180);

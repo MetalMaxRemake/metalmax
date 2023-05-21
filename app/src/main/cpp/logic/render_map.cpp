@@ -9,6 +9,13 @@
 #include "../audio/native_sound.h"
 #include "render_battle.h"
 #include "../charset/charsets.h"
+#include "../graphic/bitmap_render.h"
+#include "../sprite/sprite.h"
+#include "status/player.h"
+#include "../maps/tile_bmp.h"
+
+static const byte HUMAN_PASS = 0b0001;
+static const byte CAR_PASS = 0b0010;
 
 static volatile int posX, posY;
 static volatile int mapId;
@@ -33,7 +40,14 @@ int MapRender::getMapId() {
 }
 
 byte *MapRender::render(byte *screenBuffer) {
+    Character *player = getDefaultPlayer();
+    posX = player->renderX - 127;
+    posY = player->renderY - 127;
     screenBuffer = renderMap(posX, posY, screenBuffer);
+    player->tik();
+    renderBitmapColorOffset(player->currentBitmap, 0,
+                            16, 16,
+                            player->renderX - posX, player->renderY - posY, screenBuffer);
     if (showDebug) {
         drawCopyRight(screenBuffer);
     }
@@ -71,18 +85,35 @@ void MapRender::processKeyClick(byte directKey, byte functionKey) {
     }
 }
 
+bool canHumanPass(int targetX, int targetY) {
+    unsigned short tileIdx = getTileIdx(targetX, targetY);
+    byte currentTileFeature = feature[tileIdx];
+    return currentTileFeature & HUMAN_PASS;
+}
+
 bool MapRender::processKey(byte directKey, byte functionKey) {
+    Character *player = getDefaultPlayer();
+    if (player->steping) {
+        return functionKey == 0;
+    }
+    int targetX = player->x;
+    int targetY = player->y;
     if (directKey & up) {
-        posX--;
+        targetY--;
     }
     if (directKey & down) {
-        posX++;
+        targetY++;
     }
     if (directKey & right) {
-        posY++;
+        targetX++;
     }
     if (directKey & left) {
-        posY--;
+        targetX--;
+    }
+    //fixme tile_map.c 's feature data was TOTALLY WRONG!!!
+    if (canHumanPass(targetX, targetY) || true) {
+        player->x = targetX;
+        player->y = targetY;
     }
     return functionKey == 0;
 }

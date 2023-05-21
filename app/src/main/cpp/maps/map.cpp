@@ -7,6 +7,7 @@
 #include "tile_bmp.h"
 #include "map_data/map_data.h"
 #include "../global.h"
+#include "map_pos.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -115,7 +116,17 @@ void refreshCurrentMap(int mapId) {
     pthread_mutex_unlock(&mapRefreshMutex);
 }
 
-byte *renderMap(int x, int y, byte *result) {
+unsigned short getTileIdx(int x, int y) {
+    return short_current_map[y * (map_width) + x];
+}
+
+MapPos* getEntrance(int x, int y) {
+    int entranceCount = 0;
+    //fixme ALL map's entrances data lost position on the "from" map.
+    return nullptr;
+}
+
+byte *renderMap(int y, int x, byte *result) {
     x += MAP_FILL_SIZE * 16;
     y += MAP_FILL_SIZE * 16;
     if(result == nullptr) {

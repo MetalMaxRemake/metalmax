@@ -10,7 +10,7 @@ file(GLOB_RECURSE MAP_DATA_SRC "maps/map_data/*.cpp" "maps/map_data/*.c" "maps/*
 file(GLOB_RECURSE MONSTER "monster/*.cpp")
 file(GLOB_RECURSE SOUND_DATA_SRC "audio/*.cpp" "audio/*.c")
 file(GLOB_RECURSE MAIN_SRC "*.cpp" "*.c")
-file(GLOB_RECURSE LOGIC_SRC "logic/*.cpp" "logic/*.c")
+file(GLOB_RECURSE LOGIC_SRC "logic/*.cpp" "logic/*.c" "logic/status/player.cpp")
 file(GLOB_RECURSE CHARSET_SRC "charset/*.cpp" "charset/*.c")
 file(GLOB_RECURSE GRAPHIC_SRC "graphic/*.cpp" "graphic/*.c")
 file(GLOB_RECURSE SPLASH_SRC "splash/*.cpp" "splash/*.c")

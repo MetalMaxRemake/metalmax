@@ -30,6 +30,7 @@ byte *renderBitmap(byte *originData,
 
 /**
  * warning: this func is slower than upper!
+ * warning: trans bitmap MUST use this func!
  * @param originData
  * @param colorOffset
  * @param width
@@ -46,7 +47,12 @@ byte *renderBitmapColorOffset(byte *originData, int colorOffset,
     int offset = y * 256 + x;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            result[i * 256 + offset + j] = originData[i * width + j] + colorOffset;
+            if(originData[i * width + j] + colorOffset == 108) {
+                //skip trans color!
+                continue;
+            } else {
+                result[i * 256 + offset + j] = originData[i * width + j] + colorOffset;
+            }
         }
     }
     return result;
