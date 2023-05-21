@@ -71,6 +71,10 @@ void BattleRender::processKeyClick(byte directKey, byte functionKey) {
     if (directKey & down) {
         monsterIdx++;
     }
+    if(monsterIdx < 0) {
+        monsterIdx = 0;
+    }
+    monsterIdx %= 131;
     if(functionKey & b) {
         pop();
     }

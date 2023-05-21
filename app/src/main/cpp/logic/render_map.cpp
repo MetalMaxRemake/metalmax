@@ -14,6 +14,9 @@ static volatile int posX, posY;
 static volatile int mapId;
 
 void MapRender::updateMap(int newMapId, int x, int y) {
+    if (newMapId < 0) {
+        newMapId = 0;
+    }
     mapId = newMapId;
     mapId = mapId % 240;
     posX = x * 16;
