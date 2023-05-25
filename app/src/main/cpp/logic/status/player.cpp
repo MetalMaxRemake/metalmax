@@ -34,7 +34,9 @@ Character::Character() {
     bitmap[direct_down][1] = horizontalFlip(bitmap[direct_down][1], 16, 16);
     bitmap[direct_right][0] = horizontalFlip(bitmap[direct_right][0], 16, 16);
     bitmap[direct_right][1] = horizontalFlip(bitmap[direct_right][1], 16, 16);
-
+    direct = direct_down;
+    halfStep = 0;
+    currentBitmap = bitmap[direct][halfStep];
 }
 
 void Character::setPos(int nx, int ny) {

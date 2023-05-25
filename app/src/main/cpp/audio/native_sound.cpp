@@ -19,13 +19,14 @@
 #include <android/log.h>
 #include <unistd.h>
 
-#define SAMPLE_RATE 16000
+#define SAMPLE_RATE 48000
 constexpr const uint64_t kFramesToBuffer = 1024;
 
 #define CACHE_SIZE 3
+#define PRE_CACHE_LEN 10
 
 volatile short cachedData[CACHE_SIZE][kFramesToBuffer];
-volatile short pushButtonData[10][kFramesToBuffer];
+volatile short pushButtonData[PRE_CACHE_LEN][kFramesToBuffer];
 volatile int cacheIdx = 0;
 volatile int readIdx = 0;
 
@@ -96,7 +97,7 @@ void *nsfPlayerThread(void *) {
     //do cache
     player.SetSong(63);
     player.Reset();
-    player.Render((short *)pushButtonData, kFramesToBuffer * 10);
+    player.Render((short *)pushButtonData, kFramesToBuffer * PRE_CACHE_LEN);
 
     //start play!
     player.SetSong(0);

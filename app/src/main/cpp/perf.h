@@ -7,5 +7,6 @@
 
 extern "C" void finishPerf(const char * tag);
 extern "C" void startPerf();
+extern "C" long getDuration();
 
 #endif //METALMAX_PERF_H

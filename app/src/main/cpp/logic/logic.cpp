@@ -100,7 +100,14 @@ void tikLogic() {
     processRender();
 }
 
+void renderFps(byte * currentBuffer) {
+    char fpsInfo[110];
+    sprintf(fpsInfo, "FPS %d", getFps());
+    renderAsciText(currentBuffer, fpsInfo, 0, 0);
+}
+
 void processRender() {
+
     if (scene == SCENE_BATTLE) {
         //todo impl
     } else if (scene == SCENE_MAP) {
@@ -110,6 +117,7 @@ void processRender() {
             }
         }
     }
+    renderFps(screenBuffer[bufferIdx]);
     updateScreenBuffer(screenBuffer[bufferIdx]);
     bufferIdx++;
     bufferIdx = bufferIdx % 2;

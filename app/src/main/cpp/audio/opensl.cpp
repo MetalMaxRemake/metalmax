@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <unistd.h>
 
-#define SAMPLE_RATE 16000
+#define SAMPLE_RATE 48000
 
 // engine interfaces
 static SLObjectItf engineObject = NULL;

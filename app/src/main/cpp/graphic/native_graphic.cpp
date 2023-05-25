@@ -25,6 +25,7 @@
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <unistd.h>
+#include "../perf.h"
 
 /**
  * EGL
@@ -318,6 +319,15 @@ void initPalette() {
     }
 }
 
+volatile bool enableFps = true;
+
+volatile long duration = 0;
+
+int getFps() {
+    float fps = 1000000.0f / (duration * 1.f);
+    return (int )fps;
+}
+
 /**
  * 控制gl线程运行
  * 每个v-sync判断一次
@@ -336,7 +346,24 @@ void *gl_thread(void *arg) {
     initGL();
     onGLSurfaceChange();
     graphicRunning = true;
+    bool first = true;
+    long totalDuration = 0;
+    int count = 0;
     while (graphicRunning) {
+        if(enableFps) {
+            if (first) {
+                first = false;
+            } else {
+                totalDuration += getDuration();
+                count++;
+                if (totalDuration >= 1000000) {
+                    duration = totalDuration / count;
+                    count = 0;
+                    totalDuration = 0;
+                }
+            }
+            startPerf();
+        }
         onGLDraw();
     }
     releaseEGL();

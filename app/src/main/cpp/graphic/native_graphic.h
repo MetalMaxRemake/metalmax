@@ -13,5 +13,6 @@
 void updateScreenBuffer(unsigned char * buffer);
 void initGraphic(ANativeWindow* window);
 void releaseGraphic();
+int getFps();
 
 #endif //METALMAX_NATIVE_GRAPHIC_H
