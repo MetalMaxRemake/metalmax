@@ -356,7 +356,7 @@ void *gl_thread(void *arg) {
             } else {
                 totalDuration += getDuration();
                 count++;
-                if (totalDuration >= 1000000) {
+                if (totalDuration >= 500000) {
                     duration = totalDuration / count;
                     count = 0;
                     totalDuration = 0;
