@@ -43,7 +43,7 @@ const EGLint surface_attribs[] = {
         EGL_NONE
 };
 
-EGLint context_attrib_list[] = {EGL_CONTEXT_CLIENT_VERSION, 2,EGL_NONE };
+EGLint context_attrib_list[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 
 EGLint format;
 EGLint major, minor;
@@ -54,7 +54,7 @@ EGLContext context;
 EGLDisplay eglDisplay;
 
 
-static ANativeWindow* mANativeWindow;
+static ANativeWindow *mANativeWindow;
 static ANativeWindow_Buffer nwBuffer;
 
 volatile int window_height, window_width;
@@ -63,7 +63,7 @@ volatile int window_height, window_width;
  */
 const int paletteSize = 256;
 
-void * currentScreenBuffer;
+void *currentScreenBuffer;
 
 const int COORDS_PER_VERTEX = 3;
 const int COORDS_PER_TEXTURE = 2;
@@ -119,7 +119,7 @@ void initQuadCoordinates(int width, int height) {
             width / 2.0f, height / 2.0f, 0,
             width / 2.0f, -height / 2.0f, 0
     };
-    __memcpy_aarch64_simd(quadCoords, tempQuadCoords, 12 * sizeof (float));
+    __memcpy_aarch64_simd(quadCoords, tempQuadCoords, 12 * sizeof(float));
     float tempTextureCoords[] = {
             0,
             maxTexY / (float) textureSize,
@@ -130,7 +130,7 @@ void initQuadCoordinates(int width, int height) {
             maxTexX / (float) textureSize,
             maxTexY / (float) textureSize,
     };
-    __memcpy_aarch64_simd(textureCoords, tempTextureCoords, 8 * sizeof (float));
+    __memcpy_aarch64_simd(textureCoords, tempTextureCoords, 8 * sizeof(float));
 }
 
 void checkGlError(const char *glOperation) {
@@ -203,7 +203,7 @@ void initTextures() {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //palette!
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, paletteSize, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                palette);
+                 palette);
     glTexParameteri(GL_TEXTURE_2D,
                     GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,
@@ -238,7 +238,7 @@ void onGLSurfaceChange() {
 pthread_mutex_t onMutex;
 
 void onGLDraw() {
-    if(currentScreenBuffer == nullptr) {
+    if (currentScreenBuffer == nullptr) {
         return;
     }
     glClear(GL_COLOR_BUFFER_BIT);
@@ -274,23 +274,55 @@ void onGLDraw() {
     eglSwapBuffers(eglDisplay, surface);
 }
 
-void updateScreenBuffer(unsigned char * buffer) {
+void onSoftDraw() {
+    //direct draw to buffer
+    if (currentScreenBuffer == nullptr) {
+        return;
+    }
+    byte *screenBuffer = (byte *) currentScreenBuffer;
+    ANativeWindow_Buffer mNativeWindowBuffer;
+    ANativeWindow_lock(mANativeWindow, &mNativeWindowBuffer, nullptr);
+    int *dstBuffer = static_cast<int *>(mNativeWindowBuffer.bits);
+    int dstHeight = mNativeWindowBuffer.height;
+    int dstWidth = mNativeWindowBuffer.height;
+    int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.height) / 2;
+    __memset_aarch64(dstBuffer, 0,
+                     mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
+    float scale = (float) mNativeWindowBuffer.height / 256.0f; //计算图像宽度缩放比例
+    float scaleLeft = scale - (int) scale; //求出缩放比例的小数部分
+    int addArg = (scaleLeft > 0.5) ? 1 : 0;
+    int x, y;
+    pthread_mutex_lock(&onMutex);
+    for (int hnum = 0; hnum < dstHeight; ++hnum) //按照从左到右，从上到下的顺序进行转换
+    {
+        y = (int) (hnum / scale) + addArg;   //计算当前临近坐标的y值
+        for (int wnum = 0; wnum < dstWidth; ++wnum) {
+            x = (int) (wnum / scale) + addArg; //计算当前临近坐标的x值
+            dstBuffer[hnum * mNativeWindowBuffer.stride + wnum + offset] = palette[screenBuffer[
+                    y * 256 + x]];
+        }
+    }
+    pthread_mutex_unlock(&onMutex);
+    ANativeWindow_unlockAndPost(mANativeWindow);
+}
+
+void updateScreenBuffer(unsigned char *buffer) {
     pthread_mutex_lock(&onMutex);
     currentScreenBuffer = buffer;
     pthread_mutex_unlock(&onMutex);
 }
 
-void initEGL(ANativeWindow* window) {
+void initEGL(ANativeWindow *window) {
     mANativeWindow = window;
     //初始化EGL
     EGLint configCount;
     eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     eglInitialize(eglDisplay, &major, &minor);
     eglChooseConfig(eglDisplay, surface_attribs, nullptr, 0, &configCount);
-    if(configCount == 0) {
+    if (configCount == 0) {
         return;
     }
-    config = (EGLConfig *)malloc(configCount * sizeof (EGLConfig));
+    config = (EGLConfig *) malloc(configCount * sizeof(EGLConfig));
     eglChooseConfig(eglDisplay, surface_attribs, config, configCount, &configCount);
     eglGetConfigAttrib(eglDisplay, config[0], EGL_NATIVE_VISUAL_ID, &format);
     surface = eglCreateWindowSurface(eglDisplay, config[0], mANativeWindow, nullptr);
@@ -325,7 +357,7 @@ volatile long duration = 0;
 
 int getFps() {
     float fps = 1000000.0f / (duration * 1.f);
-    return (int )fps;
+    return (int) fps;
 }
 
 /**
@@ -334,14 +366,41 @@ int getFps() {
  */
 volatile bool graphicRunning = true;
 
-//定义线程函数
-void *gl_thread(void *arg) {
-    window_height = ANativeWindow_getHeight(mANativeWindow);
-    window_width = ANativeWindow_getWidth(mANativeWindow);
-    ANativeWindow_setBuffersGeometry(mANativeWindow,
-                                     window_width,
-                                     window_height,
-                                     WINDOW_FORMAT_RGBA_8888);
+const static byte SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
+
+volatile byte renderMode = OPEN_GL;
+
+void software() {
+    logd("native_graphic", "use software");
+    graphicRunning = true;
+    bool first = true;
+    long totalDuration = 0;
+    int count = 0;
+    ANativeWindow_acquire(mANativeWindow);
+    while (graphicRunning) {
+        if (enableFps) {
+            if (first) {
+                first = false;
+            } else {
+                totalDuration += getDuration();
+                count++;
+                if (totalDuration >= 500000) {
+                    duration = totalDuration / count;
+                    count = 0;
+                    totalDuration = 0;
+                }
+            }
+            startPerf();
+        }
+        onSoftDraw();
+    }
+    if (mANativeWindow) {
+        ANativeWindow_release(mANativeWindow);
+    }
+}
+
+void openGL() {
+    logd("native_graphic", "use opengl");
     initEGL(mANativeWindow);
     initGL();
     onGLSurfaceChange();
@@ -350,7 +409,7 @@ void *gl_thread(void *arg) {
     long totalDuration = 0;
     int count = 0;
     while (graphicRunning) {
-        if(enableFps) {
+        if (enableFps) {
             if (first) {
                 first = false;
             } else {
@@ -367,10 +426,33 @@ void *gl_thread(void *arg) {
         onGLDraw();
     }
     releaseEGL();
+}
+
+void vulkan() {
+    logd("native_graphic", "use vulkan");
+    loge("native_graphic", "current version not support vulkan");
+    exit(-1);
+}
+
+//定义线程函数
+void *gl_thread(void *arg) {
+    window_height = ANativeWindow_getHeight(mANativeWindow);
+    window_width = ANativeWindow_getWidth(mANativeWindow);
+    ANativeWindow_setBuffersGeometry(mANativeWindow,
+                                     window_width,
+                                     window_height,
+                                     WINDOW_FORMAT_RGBA_8888);
+    if (renderMode == SOFTWARE) {
+        software();
+    } else if (renderMode == OPEN_GL) {
+        openGL();
+    } else if (renderMode == VULKAN) {
+        vulkan();
+    }
     return nullptr;
 }
 
-void initGraphic(ANativeWindow* window) {
+void initGraphic(ANativeWindow *window) {
     mANativeWindow = window;
     pthread_t id;
     initPalette();
