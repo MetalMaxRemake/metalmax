@@ -11,7 +11,8 @@
 #include "render_battle.h"
 #include "../audio/native_sound.h"
 #include "../maps/map.h"
-#include "status/player.h"
+#include "status/character.h"
+#include "../maps/map_data/map_data.h"
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
@@ -52,11 +53,19 @@ void processSelection() {
     } else if (selectPos == 2) {
         changeAudio(getAudioIdx() - 1);
     }else if (selectPos == 3) {
-        player->setPos(0, 0);
-        changeMap(getCurrentMap() + 1, 0, 0);
+        //todo this is debug code
+        int mapId = getCurrentMap() + 1;
+        int map_height = map_size[mapId * 2];
+        int map_width = map_size[mapId * 2 + 1];
+        player->setPos(map_width / 2, map_height / 2);
+        changeMap(mapId, 0, 0);
     }else if (selectPos == 4) {
-        player->setPos(0, 0);
-        changeMap(getCurrentMap() - 1, 0, 0);
+        //todo this is debug code
+        int mapId = getCurrentMap() - 1;
+        int map_height = map_size[mapId * 2];
+        int map_width = map_size[mapId * 2 + 1];
+        player->setPos(map_width / 2, map_height / 2);
+        changeMap(mapId, 0, 0);
     } else if (selectPos == 5) {
         pop();
     }

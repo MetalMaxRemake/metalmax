@@ -3,7 +3,7 @@
 //
 
 #include <cstdlib>
-#include "player.h"
+#include "character.h"
 #include "../../sprite/sprite.h"
 #include "../../opt/mem_opt.h"
 #include "../../graphic/graphic_process.h"

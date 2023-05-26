@@ -2,8 +2,8 @@
 // Created by youngpark on 2023/5/21.
 //
 
-#ifndef METALMAX_PLAYER_H
-#define METALMAX_PLAYER_H
+#ifndef METALMAX_CHARACTER_H
+#define METALMAX_CHARACTER_H
 
 #include "../../global.h"
 
@@ -31,4 +31,4 @@ public:
 
 Character *getDefaultPlayer();
 
-#endif //METALMAX_PLAYER_H
+#endif //METALMAX_CHARACTER_H

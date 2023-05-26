@@ -11,7 +11,7 @@
 #include "../charset/charsets.h"
 #include "../graphic/bitmap_render.h"
 #include "../sprite/sprite.h"
-#include "status/player.h"
+#include "status/character.h"
 #include "../maps/tile_bmp.h"
 #include "../maps/map_data/map_data.h"
 
@@ -82,10 +82,11 @@ void MapRender::processKeyClick(byte directKey, byte functionKey) {
         push(debugRender);
     }
     if (functionKey & ta) {
+        mapId++;
+        //todo this is debug code
         int map_height = map_size[mapId * 2];
         int map_width = map_size[mapId * 2 + 1];
-        getDefaultPlayer()->setPos(map_width / 32, map_height / 32);
-        mapId++;
+        getDefaultPlayer()->setPos(map_width / 2, map_height / 2);
         updateMap(mapId, 0, 0);
     }
     if (functionKey & tb) {
