@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
     }
 
     private View initView() {
-        int margin = 40;
+        int margin = dpToPx(this, 40);
         //root
         FrameLayout rootLayout = new FrameLayout(MainActivity.this);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
