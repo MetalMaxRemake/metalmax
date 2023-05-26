@@ -360,6 +360,23 @@ int getFps() {
     return (int) fps;
 }
 
+inline void calculateFps(bool &first, long &totalDuration, int &count) {
+    if (enableFps) {
+        if (first) {
+            first = false;
+        } else {
+            totalDuration += getDuration();
+            count++;
+            if (totalDuration >= 500000) {
+                duration = totalDuration / count;
+                count = 0;
+                totalDuration = 0;
+            }
+        }
+        startPerf();
+    }
+}
+
 /**
  * 控制gl线程运行
  * 每个v-sync判断一次
@@ -378,20 +395,7 @@ void software() {
     int count = 0;
     ANativeWindow_acquire(mANativeWindow);
     while (graphicRunning) {
-        if (enableFps) {
-            if (first) {
-                first = false;
-            } else {
-                totalDuration += getDuration();
-                count++;
-                if (totalDuration >= 500000) {
-                    duration = totalDuration / count;
-                    count = 0;
-                    totalDuration = 0;
-                }
-            }
-            startPerf();
-        }
+        calculateFps(first, totalDuration, count);
         onSoftDraw();
     }
     if (mANativeWindow) {
@@ -409,20 +413,7 @@ void openGL() {
     long totalDuration = 0;
     int count = 0;
     while (graphicRunning) {
-        if (enableFps) {
-            if (first) {
-                first = false;
-            } else {
-                totalDuration += getDuration();
-                count++;
-                if (totalDuration >= 500000) {
-                    duration = totalDuration / count;
-                    count = 0;
-                    totalDuration = 0;
-                }
-            }
-            startPerf();
-        }
+        calculateFps(first, totalDuration, count);
         onGLDraw();
     }
     releaseEGL();
