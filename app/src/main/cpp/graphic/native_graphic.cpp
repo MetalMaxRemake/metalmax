@@ -384,16 +384,6 @@ inline void calculateFps(bool &first, long &totalDuration, int &count) {
     }
 }
 
-/**
- * 控制gl线程运行
- * 每个v-sync判断一次
- */
-volatile bool graphicRunning = true;
-
-const static byte SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
-
-volatile byte renderMode = OPEN_GL;
-
 void software() {
     logd("native_graphic", "use software");
     graphicRunning = true;
@@ -433,6 +423,16 @@ void vulkan() {
     loge("native_graphic", "current version not support vulkan");
     exit(-1);
 }
+
+/**
+ * 控制gl线程运行
+ * 每个v-sync判断一次
+ */
+volatile bool graphicRunning = true;
+
+const static byte SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
+
+volatile byte renderMode = OPEN_GL;
 
 //定义线程函数
 void *gl_thread(void *arg) {

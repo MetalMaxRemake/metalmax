@@ -31,20 +31,11 @@ BattleRender::BattleRender() {
 
 }
 
-int monsterIdx = 0;
-
-byte * BattleRender::render(byte *screenBuffer) {
+void BattleRender::tikLogic() {
     if(enterBattle) {
         if(getAudioIdx() != 4) {
             changeAudio(4);
         }
-        renderBackground(screenBuffer);
-        renderMonster(monsterIdx, 10, 20, screenBuffer);
-        char info[110];
-        sprintf(info, "CURRENT MONSTER:%d", monsterIdx);
-        renderAsciText(screenBuffer, R"(PUSH "UP" OR "DOWN" TO SWITCH)", 10, 138);
-        renderAsciText(screenBuffer, R"(PRESS "B" TO EXIT)", 10, 146);
-        renderAsciText(screenBuffer, info, 10, 154);
     } else {
         if(getAudioIdx() != 23) {
             changeAudio(23);
@@ -55,6 +46,23 @@ byte * BattleRender::render(byte *screenBuffer) {
         }
         if(splashClk % 3 == 0 && splashCount < 5) {
             splashCount++;
+        }
+    }
+}
+
+int monsterIdx = 0;
+
+byte * BattleRender::render(byte *screenBuffer) {
+    if(enterBattle) {
+        renderBackground(screenBuffer);
+        renderMonster(monsterIdx, 10, 20, screenBuffer);
+        char info[110];
+        sprintf(info, "CURRENT MONSTER:%d", monsterIdx);
+        renderAsciText(screenBuffer, R"(PUSH "UP" OR "DOWN" TO SWITCH)", 10, 138);
+        renderAsciText(screenBuffer, R"(PRESS "B" TO EXIT)", 10, 146);
+        renderAsciText(screenBuffer, info, 10, 154);
+    } else {
+        if(splashClk % 3 == 0 && splashCount < 5) {
             __memset_aarch64(screenBuffer, 8, 256 * 256);
         }
     }

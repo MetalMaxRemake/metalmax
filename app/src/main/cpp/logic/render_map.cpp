@@ -45,7 +45,6 @@ byte *MapRender::render(byte *screenBuffer) {
     posX = player->renderX - 127;
     posY = player->renderY - 127;
     screenBuffer = renderMap(posX, posY, screenBuffer);
-    player->tik();
     renderBitmapColorOffset(player->currentBitmap, 0,
                             16, 16,
                             player->renderX - posX, player->renderY - posY, screenBuffer);
@@ -53,6 +52,11 @@ byte *MapRender::render(byte *screenBuffer) {
         drawCopyRight(screenBuffer);
     }
     return screenBuffer;
+}
+
+void MapRender::tikLogic() {
+    Character *player = getDefaultPlayer();
+    player->tik();
 }
 
 void MapRender::drawCopyRight(byte *screenBuffer) const {

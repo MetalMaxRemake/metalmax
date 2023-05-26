@@ -94,6 +94,10 @@ void DebugRender::processKeyClick(byte directKey, byte functionKey) {
     }
 }
 
+void DebugRender::tikLogic() {
+
+}
+
 DebugRender::DebugRender() {
     logd("DebugRender", "new");
     selectIcon = (byte *) malloc(8 * 8);

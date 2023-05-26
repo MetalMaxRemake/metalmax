@@ -71,6 +71,7 @@ void changeMap(int mapId, int x, int y) {
 void tikLogic();
 
 void processKey();
+void processLogic();
 
 void initLogicThread();
 
@@ -89,6 +90,7 @@ void initLogic() {
  */
 void tikLogic() {
     processKey();
+    processLogic();
 }
 
 void renderFps(byte *currentBuffer) {
@@ -119,6 +121,10 @@ void updateDirectKey(byte key) {
 
 void updateFunctionKey(byte key) {
     functionKey = key;
+}
+
+void processLogic() {
+    top()->tikLogic();
 }
 
 void processKey() {

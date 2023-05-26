@@ -13,7 +13,7 @@ byte direct_down = 1;
 byte direct_left = 2;
 byte direct_right = 3;
 
-Character *warrior;
+static Character *warrior;
 
 Character::Character() {
     for (int i = 0; i < 4; i++) {

@@ -10,12 +10,13 @@
 
 class BattleRender : public BaseRender {
 private:
-    bool enterBattle = false;
-    int splashClk = 0;
-    int splashCount = 0;
+    volatile bool enterBattle = false;
+    volatile int splashClk = 0;
+    volatile int splashCount = 0;
 public:
     BattleRender();
     byte * render(byte *screenBuffer);
+    void tikLogic();
     void processKeyClick(byte directKey, byte functionKey);
 };
 

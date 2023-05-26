@@ -13,6 +13,7 @@ private:
 public:
 
     byte * render(byte *screenBuffer);
+    void tikLogic();
 
     void processKeyClick(byte directKey, byte functionKey);
 

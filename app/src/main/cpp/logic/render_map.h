@@ -16,6 +16,7 @@ public:
     void updateMap(int newMapId, int x, int y);
     int getMapId();
     byte * render(byte *screenBuffer);
+    void tikLogic();
 
     bool processKey(byte directKey, byte functionKey);
 
