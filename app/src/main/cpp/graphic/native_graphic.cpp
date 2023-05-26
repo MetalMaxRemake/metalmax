@@ -63,8 +63,6 @@ volatile int window_height, window_width;
  */
 const int paletteSize = 256;
 
-byte *screenBufferPool[2];
-byte bufferIdx = 0;
 byte*(*renderBuffer)(byte* screenBuffer);
 
 byte *currentScreenBuffer;
@@ -241,12 +239,6 @@ void onGLSurfaceChange() {
     texCoordHandle = glGetAttribLocation(program, "a_texCoord");
 }
 
-void render() {
-    screenBufferPool[bufferIdx] = renderBuffer(screenBufferPool[bufferIdx]);
-    currentScreenBuffer = screenBufferPool[bufferIdx];
-    bufferIdx = (bufferIdx + 1) % 2;
-}
-
 void onGLDraw() {
     if(currentScreenBuffer == nullptr) {
         return;
@@ -394,7 +386,7 @@ void software() {
     while (graphicRunning) {
         calculateFps(first, totalDuration, count);
         onSoftDraw();
-        render();
+        renderBuffer(currentScreenBuffer);
     }
     if (mANativeWindow) {
         ANativeWindow_release(mANativeWindow);
@@ -413,7 +405,7 @@ void openGL() {
     while (graphicRunning) {
         calculateFps(first, totalDuration, count);
         onGLDraw();
-        render();
+        renderBuffer(currentScreenBuffer);
     }
     releaseEGL();
 }
@@ -456,9 +448,7 @@ void initGraphic(ANativeWindow *window) {
     mANativeWindow = window;
     pthread_t id;
     initPalette();
-    for (int i = 0; i < 2; i++) {
-        screenBufferPool[i] = (byte *) malloc(sizeof(char) * (256 * 256));
-    }
+    currentScreenBuffer = (byte *) malloc(sizeof(char) * (256 * 256));
     pthread_create(&id, nullptr, gl_thread, mANativeWindow);
 }
 
@@ -466,4 +456,5 @@ void releaseGraphic() {
     logd("native_gl", "releaseGraphic");
     graphicRunning = false;
     free(config);
+    free(currentScreenBuffer);
 }
