@@ -63,7 +63,13 @@ volatile int window_height, window_width;
  */
 const int paletteSize = 256;
 
-void *currentScreenBuffer;
+byte *screenBufferPool[2];
+byte bufferIdx = 0;
+byte*(*renderBuffer)(byte* screenBuffer);
+
+byte *currentScreenBuffer;
+
+extern volatile bool graphicRunning;
 
 const int COORDS_PER_VERTEX = 3;
 const int COORDS_PER_TEXTURE = 2;
@@ -235,10 +241,14 @@ void onGLSurfaceChange() {
     texCoordHandle = glGetAttribLocation(program, "a_texCoord");
 }
 
-pthread_mutex_t onMutex;
+void render() {
+    screenBufferPool[bufferIdx] = renderBuffer(screenBufferPool[bufferIdx]);
+    currentScreenBuffer = screenBufferPool[bufferIdx];
+    bufferIdx = (bufferIdx + 1) % 2;
+}
 
 void onGLDraw() {
-    if (currentScreenBuffer == nullptr) {
+    if(currentScreenBuffer == nullptr) {
         return;
     }
     glClear(GL_COLOR_BUFFER_BIT);
@@ -261,10 +271,8 @@ void onGLDraw() {
 
     glActiveTexture(GL_TEXTURE0);
     checkGlError("uniforms");
-    pthread_mutex_lock(&onMutex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT_PAL, GL_ALPHA,
                     GL_UNSIGNED_BYTE, currentScreenBuffer);
-    pthread_mutex_unlock(&onMutex);
     checkGlError("emu render");
     glDrawElements(GL_TRIANGLES, 6,
                    GL_UNSIGNED_SHORT, drawOrder);
@@ -276,7 +284,7 @@ void onGLDraw() {
 
 void onSoftDraw() {
     //direct draw to buffer
-    if (currentScreenBuffer == nullptr) {
+    if(currentScreenBuffer == nullptr) {
         return;
     }
     byte *screenBuffer = (byte *) currentScreenBuffer;
@@ -286,13 +294,15 @@ void onSoftDraw() {
     int dstHeight = mNativeWindowBuffer.height;
     int dstWidth = mNativeWindowBuffer.height;
     int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.height) / 2;
+    if(!graphicRunning) {
+        return;
+    }
     __memset_aarch64(dstBuffer, 0,
                      mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
     float scale = (float) mNativeWindowBuffer.height / 256.0f; //计算图像宽度缩放比例
     float scaleLeft = scale - (int) scale; //求出缩放比例的小数部分
     int addArg = (scaleLeft > 0.5) ? 1 : 0;
     int x, y;
-    pthread_mutex_lock(&onMutex);
     for (int hnum = 0; hnum < dstHeight; ++hnum) //按照从左到右，从上到下的顺序进行转换
     {
         y = (int) (hnum / scale) + addArg;   //计算当前临近坐标的y值
@@ -302,14 +312,11 @@ void onSoftDraw() {
                     y * 256 + x]];
         }
     }
-    pthread_mutex_unlock(&onMutex);
     ANativeWindow_unlockAndPost(mANativeWindow);
 }
 
-void updateScreenBuffer(unsigned char *buffer) {
-    pthread_mutex_lock(&onMutex);
-    currentScreenBuffer = buffer;
-    pthread_mutex_unlock(&onMutex);
+void setRenderCallback(byte*(*renderScreenBuffer)(byte* screenBuffer)) {
+    renderBuffer = renderScreenBuffer;
 }
 
 void initEGL(ANativeWindow *window) {
@@ -356,7 +363,7 @@ volatile bool enableFps = true;
 volatile long duration = 0;
 
 int getFps() {
-    float fps = 1000000.0f / (duration * 1.f);
+    float fps = 1000.0f / (duration * 1.f);
     return (int) fps;
 }
 
@@ -367,13 +374,13 @@ inline void calculateFps(bool &first, long &totalDuration, int &count) {
         } else {
             totalDuration += getDuration();
             count++;
-            if (totalDuration >= 500000) {
+            if (totalDuration >= 200) {
                 duration = totalDuration / count;
                 count = 0;
                 totalDuration = 0;
             }
         }
-        startPerf();
+        startTimestamp();
     }
 }
 
@@ -397,6 +404,7 @@ void software() {
     while (graphicRunning) {
         calculateFps(first, totalDuration, count);
         onSoftDraw();
+        render();
     }
     if (mANativeWindow) {
         ANativeWindow_release(mANativeWindow);
@@ -415,6 +423,7 @@ void openGL() {
     while (graphicRunning) {
         calculateFps(first, totalDuration, count);
         onGLDraw();
+        render();
     }
     releaseEGL();
 }
@@ -447,6 +456,9 @@ void initGraphic(ANativeWindow *window) {
     mANativeWindow = window;
     pthread_t id;
     initPalette();
+    for (int i = 0; i < 2; i++) {
+        screenBufferPool[i] = (byte *) malloc(sizeof(char) * (256 * 256));
+    }
     pthread_create(&id, nullptr, gl_thread, mANativeWindow);
 }
 

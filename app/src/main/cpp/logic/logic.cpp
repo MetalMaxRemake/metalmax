@@ -14,8 +14,7 @@
 #include "render.h"
 #include "render_splash.h"
 
-byte *screenBuffer[2];
-byte bufferIdx = 0;
+byte tik_clk = 16;
 
 BaseRender *renderStack[10];
 MapRender *mapRender;
@@ -69,25 +68,18 @@ void changeMap(int mapId, int x, int y) {
     }
 }
 
-#define SCENE_BATTLE 0
-#define SCENE_MAP 1
-byte scene;
-
 void tikLogic();
 
 void processKey();
 
 void initLogicThread();
 
-void processRender();
+byte *renderScreen(byte *buffer);
 
 void initLogic() {
-    for (int i = 0; i < 2; i++) {
-        screenBuffer[i] = (byte *) malloc(sizeof(char) * (256 * 256));
-    }
+    setRenderCallback(&renderScreen);
     SplashRender *splashRender = new SplashRender;
     push(splashRender);
-    scene = SCENE_MAP;
     tikLogic();
     initLogicThread();
 }
@@ -97,30 +89,22 @@ void initLogic() {
  */
 void tikLogic() {
     processKey();
-    processRender();
 }
 
-void renderFps(byte * currentBuffer) {
+void renderFps(byte *currentBuffer) {
     char fpsInfo[110];
     sprintf(fpsInfo, "FPS %d", getFps());
     renderAsciText(currentBuffer, fpsInfo, 0, 0);
 }
 
-void processRender() {
-
-    if (scene == SCENE_BATTLE) {
-        //todo impl
-    } else if (scene == SCENE_MAP) {
-        for (int i = 0; i < stackIdx; i++) {
-            if (renderStack[i] != nullptr) {
-                screenBuffer[bufferIdx] = renderStack[i]->render(screenBuffer[bufferIdx]);
-            }
+byte *renderScreen(byte *screenBuffer) {
+    for (int i = 0; i < stackIdx; i++) {
+        if (renderStack[i] != nullptr) {
+            screenBuffer = renderStack[i]->render(screenBuffer);
         }
     }
-    renderFps(screenBuffer[bufferIdx]);
-    updateScreenBuffer(screenBuffer[bufferIdx]);
-    bufferIdx++;
-    bufferIdx = bufferIdx % 2;
+    renderFps(screenBuffer);
+    return screenBuffer;
 }
 
 byte directKey = 0;
@@ -165,7 +149,7 @@ void *logic_thread(void *arg) {
     logicRunning = true;
     while (logicRunning) {
         tikLogic();
-        usleep(16 * 1000);
+        usleep(tik_clk * 1000);
     }
     return nullptr;
 }

@@ -6,11 +6,13 @@
 #define METALMAX_NATIVE_GRAPHIC_H
 
 #include <android/native_window.h>
+#include <__threading_support>
 #include "GLES2/gl2.h"
 #include "GLES2/gl2ext.h"
 #include "GLES2/gl2platform.h"
+#include "../global.h"
 
-void updateScreenBuffer(unsigned char * buffer);
+void setRenderCallback(byte*(*getBuffer)(byte* screenBuffer));
 void initGraphic(ANativeWindow* window);
 void releaseGraphic();
 int getFps();

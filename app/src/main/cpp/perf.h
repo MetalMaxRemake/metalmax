@@ -6,6 +6,7 @@
 #define METALMAX_PERF_H
 
 extern "C" void finishPerf(const char * tag);
+extern "C" void startTimestamp();
 extern "C" void startPerf();
 extern "C" long getDuration();
 
