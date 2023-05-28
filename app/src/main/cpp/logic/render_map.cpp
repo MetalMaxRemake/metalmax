@@ -3,6 +3,7 @@
 //
 
 #include <cstdlib>
+#include <__threading_support>
 #include "render_map.h"
 #include "../maps/map.h"
 #include "render_debug.h"
@@ -40,7 +41,10 @@ int MapRender::getMapId() {
     return mapId;
 }
 
+pthread_mutex_t changeMapMutex;
+
 byte *MapRender::render(byte *screenBuffer) {
+    pthread_mutex_lock(&changeMapMutex);
     Character *player = getDefaultPlayer();
     posX = player->renderX - 127;
     posY = player->renderY - 127;
@@ -48,6 +52,7 @@ byte *MapRender::render(byte *screenBuffer) {
     renderBitmapColorOffset(player->currentBitmap, 0,
                             16, 16,
                             player->renderX - posX, player->renderY - posY, screenBuffer);
+    pthread_mutex_unlock(&changeMapMutex);
     if (showDebug) {
         drawCopyRight(screenBuffer);
     }
@@ -56,6 +61,16 @@ byte *MapRender::render(byte *screenBuffer) {
 
 void MapRender::tikLogic() {
     Character *player = getDefaultPlayer();
+    for (int i = 0; i < entrance_count[mapId]; i++) {
+        byte entrance_x = entrances[mapId][i * 5];
+        byte entrance_y = entrances[mapId][i * 5 + 1];
+        if(player -> x == entrance_x && player -> y == entrance_y) {
+            pthread_mutex_lock(&changeMapMutex);
+            player->setPos(entrances[mapId][i * 5 + 2], entrances[mapId][i * 5 + 3]);
+            updateMap(entrances[mapId][i * 5 + 4], 0, 0);
+            pthread_mutex_unlock(&changeMapMutex);
+        }
+    }
     player->tik();
 }
 
@@ -109,15 +124,19 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
     int targetY = player->y;
     if (directKey & up) {
         targetY--;
+        player->direct = up;
     }
     if (directKey & down) {
         targetY++;
+        player->direct = down;
     }
     if (directKey & right) {
         targetX++;
+        player->direct = right;
     }
     if (directKey & left) {
         targetX--;
+        player->direct = left;
     }
     //fixme tile_map.c 's feature data was TOTALLY WRONG!!!
     if (canHumanPass(targetX, targetY) || true) {

@@ -19,7 +19,7 @@
 #include <android/log.h>
 #include <unistd.h>
 
-#define SAMPLE_RATE 48000
+#define SAMPLE_RATE 16000
 constexpr const uint64_t kFramesToBuffer = 1024;
 
 #define CACHE_SIZE 3
