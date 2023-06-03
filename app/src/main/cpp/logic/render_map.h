@@ -6,11 +6,17 @@
 #define METALMAX_RENDER_MAP_H
 #include "logic.h"
 #include "render.h"
+#include "status/character.h"
 
 class MapRender : public BaseRender {
 private:
     bool showDebug = true;
+    volatile int skipFrame = 0;
     void drawCopyRight(byte *screenBuffer) const;
+
+    bool checkEntrance(Character *player, int targetX, int targetY);
+
+    bool checkOutOfMap(Character *player, int targetX, int targetY);
 public:
     MapRender();
     void updateMap(int newMapId, int x, int y);

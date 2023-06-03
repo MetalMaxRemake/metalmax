@@ -82,7 +82,7 @@ void BattleRender::processKeyClick(byte directKey, byte functionKey) {
     if(monsterIdx < 0) {
         monsterIdx = 0;
     }
-    monsterIdx %= 131;
+    monsterIdx %= monster_count;
     if(functionKey & b) {
         pop();
     }

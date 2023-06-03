@@ -4,6 +4,7 @@
 
 #include "charsets.h"
 #include "../logic/logic.h"
+#include "../graphic/palette_data.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
@@ -120,10 +121,10 @@ unsigned char *getZhStringImg(const char *str, int len) {
     for (int charIdx = 0; charIdx < len; charIdx++) {
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 8; j++) {
-                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 8 : 3;//black - white
+                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? WHITE : BLACK;//black - white
             }
             for (int j = 8; j < 12; j++) {
-                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? 8 : 3;
+                res[i * img_width + j + charIdx * 12] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? WHITE : BLACK;
             }
         }
     }
@@ -138,7 +139,7 @@ unsigned char *getStringImg(const char *str) {
         int ascii = str[charIdx] - 32;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                res[i * img_width + j + charIdx * 8] = (asci[ascii][i] & (1 << (8 - j))) ? 8 : 3;
+                res[i * img_width + j + charIdx * 8] = (asci[ascii][i] & (1 << (8 - j))) ? WHITE : BLACK;
             }
         }
     }
@@ -154,7 +155,7 @@ void renderAsciText(byte* screenBuffer, const char *str, int x, int y) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 int currentPos = i * img_width + j + charIdx * 8;
-                screenBuffer[currentPos + offset] = (asci[ascii][i] & (1 << (8 - j))) ? 8 : 3;
+                screenBuffer[currentPos + offset] = (asci[ascii][i] & (1 << (8 - j))) ? WHITE : BLACK;
             }
         }
     }
@@ -167,11 +168,11 @@ void renderZhText(byte* screenBuffer, const char *str, int len, int x, int y) {
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 8; j++) {
                 int currentPos = i * img_width + j + charIdx * 12;
-                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? 8 : 3;//white-black
+                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][0] & (1 << (8 - j))) ? WHITE : BLACK;//white-black
             }
             for (int j = 8; j < 12; j++) {
                 int currentPos = i * img_width + j + charIdx * 12;
-                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? 8 : 3;
+                screenBuffer[currentPos + offset] = (zh_cn[str[charIdx]][i][1] & (1 << (16 - j))) ? WHITE : BLACK;
             }
         }
     }

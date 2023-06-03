@@ -44,6 +44,7 @@ void Character::setPos(int nx, int ny) {
     y = ny;
     renderX = x * 16;
     renderY = y * 16;
+    halfStep = 0;
 }
 
 void Character::tik() {

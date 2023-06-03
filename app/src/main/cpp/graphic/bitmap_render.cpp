@@ -4,6 +4,7 @@
 
 #include "bitmap_render.h"
 #include "../opt/mem_opt.h"
+#include "palette_data.h"
 
 /**
  *
@@ -47,7 +48,7 @@ byte *renderBitmapColorOffset(byte *originData, int colorOffset,
     int offset = y * 256 + x;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if(originData[i * width + j] + colorOffset == 108) {
+            if(originData[i * width + j] + colorOffset == TRANSPARENT) {
                 //skip trans color!
                 continue;
             } else {

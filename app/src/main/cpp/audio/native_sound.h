@@ -9,7 +9,7 @@ extern "C" void initSL();
 extern "C" void releaseSL();
 extern "C" short *getAudioBuffer();
 extern "C" void changeAudio(int audioIdx);
-extern "C" void renderCache(int preRender);
+extern "C" void renderEffect(int effectAudioId);
 extern "C" int getAudioCount();
 extern "C" int getAudioIdx();
 

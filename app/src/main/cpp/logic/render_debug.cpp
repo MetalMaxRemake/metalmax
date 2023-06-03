@@ -13,6 +13,7 @@
 #include "../maps/map.h"
 #include "status/character.h"
 #include "../maps/map_data/map_data.h"
+#include "../audio/mm_sound.h"
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
@@ -82,7 +83,7 @@ byte *DebugRender::render(byte *screenBuffer) {
 }
 
 void DebugRender::processKeyClick(byte directKey, byte functionKey) {
-    renderCache(0);
+    renderEffect(PUSH_BUTTON_EFFECT);
     if (directKey & up) {
         selectPos--;
         if (selectPos < 0) {
