@@ -19,6 +19,7 @@ byte tik_clk = 16;
 BaseRender *renderStack[10];
 MapRender *mapRender;
 int stackIdx = 0;
+volatile bool logicRunning = true;
 
 template<class Base, typename Derived>
 
@@ -71,6 +72,7 @@ void changeMap(int mapId, int x, int y) {
 void tikLogic();
 
 void processKey();
+
 void processLogic();
 
 void initLogicThread();
@@ -78,6 +80,9 @@ void initLogicThread();
 byte *renderScreen(byte *buffer);
 
 void initLogic() {
+    if (!logicRunning) {
+        return;
+    }
     setRenderCallback(&renderScreen);
     SplashRender *splashRender = new SplashRender;
     push(splashRender);
@@ -147,8 +152,6 @@ void processKey() {
     last_directKey = directKey;
     last_functionKey = functionKey;
 }
-
-volatile bool logicRunning = true;
 
 //定义线程函数
 void *logic_thread(void *arg) {

@@ -14,6 +14,8 @@
 
 void setRenderCallback(byte*(*getBuffer)(byte* screenBuffer));
 void initGraphic(ANativeWindow* window);
+int* getCurrentPalette();
+void refreshPalette(int *currentPalette);
 void releaseGraphic();
 int getFps();
 

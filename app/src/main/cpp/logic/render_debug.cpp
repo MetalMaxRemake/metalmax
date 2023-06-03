@@ -14,6 +14,8 @@
 #include "status/character.h"
 #include "../maps/map_data/map_data.h"
 #include "../audio/mm_sound.h"
+#include "../graphic/native_graphic.h"
+#include "../graphic/palette_data.h"
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
@@ -34,17 +36,19 @@ void renderSelectPos(byte *screenBuffer, int x, int y) {
 
 void renderDebugMenu(byte *screenBuffer) {
     int start = 70;
-    renderAsciText(screenBuffer, "  ENTER BATTLE", 10, start + 8*0);
-    renderAsciText(screenBuffer, "  >NEXT MUSIC ", 10, start + 8*1);
-    renderAsciText(screenBuffer, "  <PRE MUSIC  ", 10, start + 8*2);
-    renderAsciText(screenBuffer, "  >NEXT MAP   ", 10, start + 8*3);
-    renderAsciText(screenBuffer, "  <PRE MAP    ", 10, start + 8*4);
-    renderAsciText(screenBuffer, "  EXIT", 10, start + 8*5);
+    renderAsciText(screenBuffer, "  ENTER BATTLE   ", 10, start + 8 * 0);
+    renderAsciText(screenBuffer, "  >NEXT MUSIC    ", 10, start + 8 * 1);
+    renderAsciText(screenBuffer, "  <PRE MUSIC     ", 10, start + 8 * 2);
+    renderAsciText(screenBuffer, "  >NEXT MAP      ", 10, start + 8 * 3);
+    renderAsciText(screenBuffer, "  <PRE MAP       ", 10, start + 8 * 4);
+    renderAsciText(screenBuffer, "  CHANGE PALETTE ", 10, start + 8 * 5);
+    renderAsciText(screenBuffer, "  RESET PALETTE  ", 10, start + 8 * 6);
+    renderAsciText(screenBuffer, "  EXIT", 10, start + 8 * 7);
     renderSelectPos(screenBuffer, 13, start + (8 * selectPos));
 }
 
 void processSelection() {
-    Character* player = getDefaultPlayer();
+    Character *player = getDefaultPlayer();
     if (selectPos == 0) {
         pop();
         BattleRender *battleRender = new BattleRender;
@@ -53,31 +57,53 @@ void processSelection() {
         changeAudio(getAudioIdx() + 1);
     } else if (selectPos == 2) {
         changeAudio(getAudioIdx() - 1);
-    }else if (selectPos == 3) {
-        //todo this is debug code
+    } else if (selectPos == 3) {
         int mapId = getCurrentMap() + 1;
         int map_height = map_size[mapId * 2];
         int map_width = map_size[mapId * 2 + 1];
         player->setPos(map_width / 2, map_height / 2);
         changeMap(mapId, 0, 0);
-    }else if (selectPos == 4) {
-        //todo this is debug code
+    } else if (selectPos == 4) {
         int mapId = getCurrentMap() - 1;
         int map_height = map_size[mapId * 2];
         int map_width = map_size[mapId * 2 + 1];
         player->setPos(map_width / 2, map_height / 2);
         changeMap(mapId, 0, 0);
     } else if (selectPos == 5) {
+        int *currentPalette = getCurrentPalette();
+        for (int i = 0; i < 256; i++) {
+            unsigned int dd = currentPalette[i];
+            unsigned int a = (dd & 0xFF000000) >> 24;
+            unsigned int r = (dd & 0x00FF0000) >> 16;
+            unsigned int g = (dd & 0x0000FF00) >> 8;
+            unsigned int b = (dd & 0x000000FF) >> 0;
+            currentPalette[i] = (a<<24) | (r << 16) | (g << 8) | b;
+        }
+        refreshPalette(currentPalette);
+    } else if (selectPos == 6) {
+        int *currentPalette = getCurrentPalette();
+        for (int i = 0; i < 256; i++) {
+            int dd = palette[i];
+            int a = (dd & 0xFF000000) >> 24;
+            int b = (dd & 0x00FF0000) >> 16;
+            int g = (dd & 0x0000FF00) >> 8;
+            int r = (dd & 0x000000FF) >> 0;
+            currentPalette[i] = (a<<24) | (r << 16) | (g << 8) | b;
+        }
+        refreshPalette(currentPalette);
+    } else if (selectPos == 7) {
         pop();
     }
 }
 
 byte *DebugRender::render(byte *screenBuffer) {
-    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.5", 10, 10);
-    renderZhText(screenBuffer, chinese_demo, 4, 10, 34);
+    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.7", 10, 10);
+    renderZhText(screenBuffer, chinese_demo, 4, 10, 24);
     char info[30];
     sprintf(info, "MUSIC %d, MAP %d", getAudioIdx(), getCurrentMap());
-    renderAsciText(screenBuffer, info, 10, 46);
+    renderAsciText(screenBuffer, info, 10, 36);
+    sprintf(info, "POS X=%d, Y=%d", getDefaultPlayer()->x, getDefaultPlayer()->y);
+    renderAsciText(screenBuffer, info, 10, 44);
     renderDebugMenu(screenBuffer);
     return screenBuffer;
 }
@@ -92,8 +118,8 @@ void DebugRender::processKeyClick(byte directKey, byte functionKey) {
     }
     if (directKey & down) {
         selectPos++;
-        if (selectPos > 5) {
-            selectPos = 5;
+        if (selectPos > 7) {
+            selectPos = 7;
         }
     }
     if (functionKey & a) {
@@ -111,7 +137,7 @@ void DebugRender::tikLogic() {
 DebugRender::DebugRender() {
     logd("DebugRender", "new");
     selectIcon = (byte *) malloc(8 * 8);
-    __memset_aarch64(selectIcon, 3, 8*8);
+    __memset_aarch64(selectIcon, 3, 8 * 8);
     for (int i = 0; i < 4; i++) {
         __memset_aarch64(selectIcon + (i * 8), 8, i + 1);
     }

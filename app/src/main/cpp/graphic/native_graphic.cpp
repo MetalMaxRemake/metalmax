@@ -63,7 +63,7 @@ volatile int window_height, window_width;
  */
 const int paletteSize = 256;
 
-byte*(*renderBuffer)(byte* screenBuffer);
+byte *(*renderBuffer)(byte *screenBuffer);
 
 byte *currentScreenBuffer;
 
@@ -81,6 +81,7 @@ int positionHandle, textureHandle, paletteHandle, texCoordHandle, mvpMatrixHandl
 unsigned int program;
 unsigned int paletteTextureId;
 unsigned int mainTextureId;
+int * currentPalette;
 
 int getTextureSize() {
     return 256;
@@ -207,7 +208,7 @@ void initTextures() {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //palette!
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, paletteSize, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 palette);
+                 currentPalette);
     glTexParameteri(GL_TEXTURE_2D,
                     GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,
@@ -240,7 +241,7 @@ void onGLSurfaceChange() {
 }
 
 void onGLDraw() {
-    if(currentScreenBuffer == nullptr) {
+    if (currentScreenBuffer == nullptr) {
         return;
     }
     glClear(GL_COLOR_BUFFER_BIT);
@@ -276,7 +277,7 @@ void onGLDraw() {
 
 void onSoftDraw() {
     //direct draw to buffer
-    if(currentScreenBuffer == nullptr) {
+    if (currentScreenBuffer == nullptr) {
         return;
     }
     byte *screenBuffer = (byte *) currentScreenBuffer;
@@ -286,7 +287,7 @@ void onSoftDraw() {
     int dstHeight = mNativeWindowBuffer.height;
     int dstWidth = mNativeWindowBuffer.height;
     int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.height) / 2;
-    if(!graphicRunning) {
+    if (!graphicRunning) {
         return;
     }
     __memset_aarch64(dstBuffer, 0,
@@ -307,7 +308,7 @@ void onSoftDraw() {
     ANativeWindow_unlockAndPost(mANativeWindow);
 }
 
-void setRenderCallback(byte*(*renderScreenBuffer)(byte* screenBuffer)) {
+void setRenderCallback(byte *(*renderScreenBuffer)(byte *screenBuffer)) {
     renderBuffer = renderScreenBuffer;
 }
 
@@ -334,19 +335,14 @@ void releaseEGL() {
     eglTerminate(eglDisplay);
 }
 
-bool paletteInited = false;
-
 void initPalette() {
-    if (paletteInited) {
-        return;
-    }
-    paletteInited = true;
+    currentPalette = (int  *) malloc(sizeof (int) * 256);
     for (int i = 0; i < paletteSize; i++) {
         int dd = palette[i];
         int b = (dd & 0x00FF0000) >> 16;
         int g = (dd & 0x0000FF00) >> 8;
         int r = (dd & 0x000000FF) >> 0;
-        palette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
+        currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
 }
 
@@ -393,6 +389,8 @@ void software() {
     }
 }
 
+volatile bool needRefreshPalette = false;
+
 void openGL() {
     logd("native_graphic", "use opengl");
     initEGL(mANativeWindow);
@@ -404,6 +402,10 @@ void openGL() {
     int count = 0;
     while (graphicRunning) {
         calculateFps(first, totalDuration, count);
+        if (needRefreshPalette) {
+            needRefreshPalette = false;
+            initGL();
+        }
         onGLDraw();
         renderBuffer(currentScreenBuffer);
     }
@@ -452,9 +454,19 @@ void initGraphic(ANativeWindow *window) {
     pthread_create(&id, nullptr, gl_thread, mANativeWindow);
 }
 
+int* getCurrentPalette() {
+    return currentPalette;
+}
+
+void refreshPalette(int *newPalette) {
+    needRefreshPalette = true;
+    currentPalette = newPalette;
+}
+
 void releaseGraphic() {
     logd("native_gl", "releaseGraphic");
     graphicRunning = false;
     free(config);
     free(currentScreenBuffer);
+    free(currentPalette);
 }
