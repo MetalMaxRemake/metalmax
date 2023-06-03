@@ -13,6 +13,7 @@ unsigned short map_97[10][12]={
 11,233,233,233,11,11,11,11,11,11,11,11,
 
 };
-unsigned char entrances_97[1*3]={
-3,2,220,};
+unsigned char entrances_97[1*5]={
+5,2,3,2,220,
+};
 unsigned char entrance_count_97=1;

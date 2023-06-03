@@ -22,6 +22,7 @@ unsigned short map_29[19][16]={
 3,233,233,233,233,233,3,3,3,3,3,3,3,3,3,3,
 
 };
-unsigned char entrances_29[1*3]={
-1,2,222,};
+unsigned char entrances_29[1*5]={
+2,3,1,2,222,
+};
 unsigned char entrance_count_29=1;

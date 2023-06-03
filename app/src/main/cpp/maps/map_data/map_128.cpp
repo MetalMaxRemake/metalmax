@@ -28,6 +28,7 @@ unsigned short map_128[25][28]={
 3,3,3,3,3,3,3,3,86,57,181,57,181,155,148,155,181,57,181,57,86,57,3,3,3,3,3,3,
 
 };
-unsigned char entrances_128[1*3]={
-10,6,129,};
+unsigned char entrances_128[1*5]={
+15,7,10,6,129,
+};
 unsigned char entrance_count_128=1;

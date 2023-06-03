@@ -25,6 +25,6 @@ unsigned short map_55[22][25]={
 3,3,3,3,3,3,408,408,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
 
 };
-unsigned char entrances_55[0*3]={
+unsigned char entrances_55[0*5]={
 };
 unsigned char entrance_count_55=0;

@@ -23,6 +23,8 @@ unsigned short map_38[20][15]={
 474,479,479,479,479,479,479,479,486,11,11,491,479,479,494,
 
 };
-unsigned char entrances_38[2*3]={
-8,3,39,13,2,37,};
+unsigned char entrances_38[2*5]={
+8,3,8,3,39,
+13,2,13,2,37,
+};
 unsigned char entrance_count_38=2;

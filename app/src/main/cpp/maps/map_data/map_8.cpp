@@ -14,6 +14,6 @@ unsigned short map_8[11][14]={
 42,42,42,42,42,42,233,233,233,42,42,42,42,3,
 
 };
-unsigned char entrances_8[0*3]={
+unsigned char entrances_8[0*5]={
 };
 unsigned char entrance_count_8=0;

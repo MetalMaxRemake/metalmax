@@ -15,6 +15,6 @@ unsigned short map_95[12][13]={
 42,98,102,102,102,105,11,98,102,102,102,105,42,
 
 };
-unsigned char entrances_95[0*3]={
+unsigned char entrances_95[0*5]={
 };
 unsigned char entrance_count_95=0;

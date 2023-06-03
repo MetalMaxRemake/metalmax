@@ -26,6 +26,7 @@ unsigned short map_148[23][15]={
 474,479,479,479,479,479,479,479,479,479,494,4,4,4,4,
 
 };
-unsigned char entrances_148[1*3]={
-13,10,147,};
+unsigned char entrances_148[1*5]={
+13,10,13,10,147,
+};
 unsigned char entrance_count_148=1;

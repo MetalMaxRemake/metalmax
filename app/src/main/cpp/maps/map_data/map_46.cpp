@@ -16,6 +16,6 @@ unsigned short map_46[13][17]={
 11,11,11,11,11,11,11,11,11,11,11,98,102,102,102,105,152,
 
 };
-unsigned char entrances_46[0*3]={
+unsigned char entrances_46[0*5]={
 };
 unsigned char entrance_count_46=0;

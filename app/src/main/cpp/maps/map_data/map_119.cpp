@@ -19,6 +19,6 @@ unsigned short map_119[16][23]={
 232,232,232,232,232,232,232,539,539,539,539,539,539,539,539,539,539,539,539,539,539,539,539,
 
 };
-unsigned char entrances_119[0*3]={
+unsigned char entrances_119[0*5]={
 };
 unsigned char entrance_count_119=0;

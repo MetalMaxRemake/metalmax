@@ -15,6 +15,7 @@ unsigned short map_200[12][20]={
 255,255,255,255,255,255,255,255,328,330,330,330,330,330,330,330,330,330,355,255,
 
 };
-unsigned char entrances_200[1*3]={
-2,2,201,};
+unsigned char entrances_200[1*5]={
+9,2,2,2,201,
+};
 unsigned char entrance_count_200=1;

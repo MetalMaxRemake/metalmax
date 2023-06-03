@@ -18,6 +18,8 @@ unsigned short map_124[15][18]={
 4,4,4,4,4,4,4,328,330,330,330,330,330,330,330,330,330,355,
 
 };
-unsigned char entrances_124[2*3]={
-16,2,123,2,2,123,};
+unsigned char entrances_124[2*5]={
+16,2,16,2,123,
+1,2,2,2,123,
+};
 unsigned char entrance_count_124=2;

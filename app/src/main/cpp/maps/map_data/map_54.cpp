@@ -24,6 +24,6 @@ unsigned short map_54[21][13]={
 416,416,416,416,416,327,416,416,416,416,416,416,416,
 
 };
-unsigned char entrances_54[0*3]={
+unsigned char entrances_54[0*5]={
 };
 unsigned char entrance_count_54=0;

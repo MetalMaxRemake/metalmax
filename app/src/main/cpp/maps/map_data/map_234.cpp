@@ -10,6 +10,8 @@ unsigned short map_234[7][10]={
 328,330,330,330,330,330,330,330,330,355,
 
 };
-unsigned char entrances_234[2*3]={
-44,12,197,3,2,217,};
+unsigned char entrances_234[2*5]={
+3,3,44,12,197,
+7,3,3,2,217,
+};
 unsigned char entrance_count_234=2;
