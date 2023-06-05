@@ -245,12 +245,14 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
 }
 
 bool MapRender::checkOutOfMap(Character *player, int targetX, int targetY) {
-    int map_height = map_size[mapId * 2];
-    int map_width = map_size[mapId * 2 + 1];
-    if (targetX < 0
-        || targetY < 0
-        || targetX > map_width
-        || targetY > map_height) {
+    byte startX = movable_offset[mapId*2];
+    byte startY = movable_offset[mapId*2+1];
+    byte endX = startX+movable_size[mapId*2];
+    byte endY = startY+movable_size[mapId*2+1];
+    if (targetX < startX
+        || targetY < startY
+        || targetX > endX
+        || targetY > endY) {
         entranceAnimation = ANIMATION_DURATION;
         pthread_mutex_lock(&changeMapMutex);
         --lastPosStackTop;
