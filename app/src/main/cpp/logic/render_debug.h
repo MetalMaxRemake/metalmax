@@ -11,6 +11,9 @@
 class DebugRender : public BaseRender {
 private:
     int pos;
+    int selectPos = 0;
+    void processSelection();
+    void renderDebugMenu(byte *screenBuffer);
 public:
     DebugRender();
     ~DebugRender();

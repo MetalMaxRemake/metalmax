@@ -21,8 +21,6 @@ const char chinese_demo[4] = {0, 1, 2, 3};
 
 byte *selectIcon;
 
-int selectPos = 0;
-
 void renderSelectPos(byte *screenBuffer, int x, int y) {
     int img_width = 256;
     int offset = y * img_width + x;
@@ -34,7 +32,7 @@ void renderSelectPos(byte *screenBuffer, int x, int y) {
     }
 }
 
-void renderDebugMenu(byte *screenBuffer) {
+inline void DebugRender::renderDebugMenu(byte *screenBuffer) {
     int start = 70;
     renderAsciText(screenBuffer, "  ENTER BATTLE   ", 10, start + 8 * 0);
     renderAsciText(screenBuffer, "  >NEXT MUSIC    ", 10, start + 8 * 1);
@@ -47,7 +45,7 @@ void renderDebugMenu(byte *screenBuffer) {
     renderSelectPos(screenBuffer, 13, start + (8 * selectPos));
 }
 
-void processSelection() {
+inline void DebugRender::processSelection() {
     Character *player = getDefaultPlayer();
     if (selectPos == 0) {
         pop();
@@ -75,7 +73,7 @@ void processSelection() {
             unsigned int dd = currentPalette[i];
             unsigned int a = (dd & 0xFF000000) >> 24;
             unsigned int r = (dd & 0x00FF0000) >> 16;
-            unsigned int g = (dd & 0x0000FF00) >> 8;
+            unsigned int g = 0;
             unsigned int b = (dd & 0x000000FF) >> 0;
             currentPalette[i] = (a<<24) | (r << 16) | (g << 8) | b;
         }

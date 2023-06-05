@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:extractNativeLibs="true"
         android:allowBackup="true"
         android:label="MetalMax"
         android:supportsRtl="true"
