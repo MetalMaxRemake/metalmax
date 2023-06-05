@@ -16,6 +16,7 @@
 #include "../audio/mm_sound.h"
 #include "../graphic/native_graphic.h"
 #include "../graphic/palette_data.h"
+#include "../monster/monster_data/monster_data.h"
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
@@ -49,7 +50,7 @@ inline void DebugRender::processSelection() {
     Character *player = getDefaultPlayer();
     if (selectPos == 0) {
         pop();
-        BattleRender *battleRender = new BattleRender;
+        BattleRender *battleRender = new BattleRender(rand() % monster_count);
         push(battleRender);
     } else if (selectPos == 1) {
         changeAudio(getAudioIdx() + 1);

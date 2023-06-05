@@ -9,6 +9,7 @@
 
 extern int monster_count;
 extern int monster_size[];
+extern unsigned char monster_group[930];
 extern byte *monster_model[];
 
 #endif //METALMAX_MONSTER_DATA_H

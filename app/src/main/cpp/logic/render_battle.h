@@ -13,8 +13,9 @@ private:
     volatile bool enterBattle = false;
     volatile int splashClk = 0;
     volatile int splashCount = 0;
+    int monsterIdx = 0;
 public:
-    BattleRender();
+    BattleRender(int monsterId);
     byte * render(byte *screenBuffer);
     void tikLogic();
     void processKeyClick(byte directKey, byte functionKey);

@@ -27,8 +27,8 @@ void renderInfoMenu(byte *screenBuffer) {
     __memset_aarch64(screenBuffer, 3, 256 * 256);
 }
 
-BattleRender::BattleRender() {
-
+BattleRender::BattleRender(int monsterId) {
+    monsterIdx = monsterId;
 }
 
 void BattleRender::tikLogic() {
@@ -49,8 +49,6 @@ void BattleRender::tikLogic() {
         }
     }
 }
-
-int monsterIdx = 0;
 
 byte * BattleRender::render(byte *screenBuffer) {
     if(enterBattle) {

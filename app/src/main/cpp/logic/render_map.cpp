@@ -19,6 +19,7 @@
 #include "../graphic/palette_data.h"
 #include "../audio/mm_sound.h"
 #include "../graphic/native_graphic.h"
+#include "../monster/monster_data/monster_data.h"
 
 #define ANIMATION_DURATION 20
 
@@ -43,6 +44,7 @@ void MapRender::updateMap(int newMapId, int x, int y) {
 
 MapRender::MapRender() {
     logd("MapRender", "new!");
+    srand((unsigned)time(nullptr));
 }
 
 int MapRender::getMapId() {
@@ -237,6 +239,7 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
         } else {
             player->x = targetX;
             player->y = targetY;
+            triggerMonster();
         }
     } else {
         player->direct = nextDirect;
@@ -244,11 +247,36 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
     return functionKey == 0;
 }
 
+void MapRender::triggerMonster() const {
+    //fixme this is only test for world map!!!
+    //todo impl all maps
+    if (mapId == 0) {
+        if (rand() % 100 > 10) {
+            return;
+        }
+        int monsterArea = (getDefaultPlayer()->y / 16) * 16 + (getDefaultPlayer()->x / 16);
+        char info[10];
+        sprintf(info, "%d", monsterArea);
+        logd("monsterArea", info);
+        int monsterGroupId = monster_distribution_0[monsterArea];
+        if (monsterGroupId == 0) {
+            return;
+        }
+        int hitMonsterIdx = rand() % 0x0A;
+        int monsterId = monster_group[monsterGroupId * 0x0A + hitMonsterIdx];
+        if (monsterId == 0) {
+            return;
+        }
+        BattleRender *battleRender = new BattleRender(monsterId);
+        push(battleRender);
+    }
+}
+
 bool MapRender::checkOutOfMap(Character *player, int targetX, int targetY) {
-    byte startX = movable_offset[mapId*2];
-    byte startY = movable_offset[mapId*2+1];
-    byte endX = startX+movable_size[mapId*2];
-    byte endY = startY+movable_size[mapId*2+1];
+    byte startX = movable_offset[mapId * 2];
+    byte startY = movable_offset[mapId * 2 + 1];
+    byte endX = startX + movable_size[mapId * 2];
+    byte endY = startY + movable_size[mapId * 2 + 1];
     if (targetX < startX
         || targetY < startY
         || targetX > endX

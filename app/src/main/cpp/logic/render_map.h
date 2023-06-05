@@ -19,6 +19,7 @@ private:
     void fadeOut() const;
     void fadeIn() const;
     void refreshMusic() const;
+    void triggerMonster() const;
 public:
     MapRender();
     void updateMap(int newMapId, int x, int y);
