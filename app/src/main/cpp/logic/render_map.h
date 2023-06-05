@@ -18,6 +18,7 @@ private:
     bool checkOutOfMap(Character *player, int targetX, int targetY);
     void fadeOut() const;
     void fadeIn() const;
+    void refreshMusic() const;
 public:
     MapRender();
     void updateMap(int newMapId, int x, int y);

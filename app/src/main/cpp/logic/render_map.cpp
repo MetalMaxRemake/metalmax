@@ -32,9 +32,10 @@ void MapRender::updateMap(int newMapId, int x, int y) {
     if (newMapId < 0) {
         newMapId = 0;
     }
-    renderEffect(ENTER_ENTRANCE);
     mapId = newMapId;
     mapId = mapId % 240;
+    renderEffect(ENTER_ENTRANCE);
+    refreshMusic();
     posX = x * 16;
     posY = y * 16;
     refreshCurrentMap(mapId);
@@ -158,11 +159,16 @@ void MapRender::onUnFocus() {
     showDebug = false;
 }
 
+void MapRender::refreshMusic() const {
+    byte currentMusic = map_music[mapId] - 3;
+    if (getAudioIdx() != currentMusic) {
+        changeAudio(currentMusic);
+    }
+}
+
 void MapRender::onFocus() {
     showDebug = true;
-    if (getAudioIdx() != 2) {
-        changeAudio(2);
-    }
+    refreshMusic();
 }
 
 void MapRender::processKeyClick(byte directKey, byte functionKey) {

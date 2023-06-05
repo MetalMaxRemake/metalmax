@@ -1,6 +1,7 @@
 #ifndef METALMAX_MAP_DATA_H
 #define METALMAX_MAP_DATA_H
 #define MAP_COUNT 240
+
 #include "map_0.h"
 #include "map_1.h"
 #include "map_2.h"
@@ -241,9 +242,15 @@
 #include "map_237.h"
 #include "map_238.h"
 #include "map_239.h"
+#include "../../global.h"
+
 extern "C" unsigned short *short_map_data[MAP_COUNT];
 extern "C" unsigned short map_size[MAP_COUNT * 2];
 extern "C" unsigned short map_fill[MAP_COUNT];
 extern "C" unsigned short entrance_count[MAP_COUNT];
 extern "C" unsigned char *entrances[MAP_COUNT];
+extern "C" unsigned char map_music[MAP_COUNT];
+extern "C" unsigned char movable_size[MAP_COUNT * 2];
+extern "C" unsigned char movable_offset[MAP_COUNT * 2];
+extern "C" unsigned char map_head[MAP_COUNT];
 #endif //METALMAX_MAP_DATA_H
