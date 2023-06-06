@@ -24,27 +24,6 @@ void onFuncKeyEvent(JNIEnv *env, jclass clazz, jint key) {
     updateFunctionKey(key);
 }
 
-jboolean nativeCharToJavaBmp(JNIEnv *env, jclass clazz, jobject bitmap, jstring text) {
-    const char *textInChar = env->GetStringUTFChars(text, JNI_FALSE);
-    byte * nativeBmp = getStringImg(textInChar);
-    AndroidBitmapInfo bitmapInfo;
-    AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
-    void *pixels;
-    if (AndroidBitmap_lockPixels(env, bitmap, &pixels) < 0) {
-        return false;
-    }
-    int *data = (int *)pixels;
-    int dataIdx = 0;
-    for(int i = 0;i<bitmapInfo.height;i++) {
-        for(int j = 0;j<bitmapInfo.width;j++) {
-            data[dataIdx] = palette[nativeBmp[dataIdx]];
-            dataIdx++;
-        }
-    }
-    AndroidBitmap_unlockPixels(env, bitmap);
-    return true;
-}
-
 void slInit(JNIEnv *env, jclass clazz) {
     initSL();
 }
@@ -70,7 +49,6 @@ static JNINativeMethod methods[] = {
         {"slRelease", "()V",   (void *) &slRelease},
         {"initNativeWindow", "(Landroid/view/Surface;)V",   (void *) &initNativeWindow},
         {"releaseNativeWindow", "()V",   (void *) &releaseNativeWindow},
-        {"getCharImg", "(Landroid/graphics/Bitmap;Ljava/lang/String;)Z",   (void *) &nativeCharToJavaBmp},
 };
 
 extern "C"

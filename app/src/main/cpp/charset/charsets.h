@@ -7,8 +7,6 @@
 
 #include "../logic/logic.h"
 
-unsigned char *getCharImg(int ascii);
-unsigned char *getStringImg(const char *str);
 unsigned char *getZhStringImg(const char *str, int len);
 
 void renderAsciText(byte* screenBuffer, const char *str, int x, int y);

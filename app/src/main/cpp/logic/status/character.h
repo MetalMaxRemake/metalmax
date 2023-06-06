@@ -15,10 +15,11 @@ extern byte direct_right;
 class Character {
 public:
     Character();
-    volatile int hp;
     int name;
-    volatile int x, y;
-    volatile int renderX, renderY;
+    bool godMode = false;
+    int hp;
+    int x, y;
+    int renderX, renderY;
     bool steping;
     byte direct;//0-up 1-down 2-left 3-right
     int halfStep;

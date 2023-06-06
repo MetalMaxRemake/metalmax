@@ -131,31 +131,16 @@ unsigned char *getZhStringImg(const char *str, int len) {
     return res;
 }
 
-unsigned char *getStringImg(const char *str) {
-    int len = strlen(str);
-    unsigned char *res = (unsigned char *) malloc(sizeof(char) * 8 * 8 * len);
-    int img_width = 8 * len;
-    for (int charIdx = 0; charIdx < len; charIdx++) {
-        int ascii = str[charIdx] - 32;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                res[i * img_width + j + charIdx * 8] = (asci[ascii][i] & (1 << (8 - j))) ? WHITE : BLACK;
-            }
-        }
-    }
-    return res;
-}
-
 void renderAsciText(byte* screenBuffer, const char *str, int x, int y) {
     int len = strlen(str);
     int img_width = 256;
     int offset = y*img_width + x;
     for (int charIdx = 0; charIdx < len; charIdx++) {
-        int ascii = str[charIdx] - 32;
+        int asciiCode = str[charIdx] - 32;
         for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                int currentPos = i * img_width + j + charIdx * 8;
-                screenBuffer[currentPos + offset] = (asci[ascii][i] & (1 << (8 - j))) ? WHITE : BLACK;
+            for (int j = 0; j < 6; j++) {
+                int currentPos = i * img_width + j + charIdx * 6;
+                screenBuffer[currentPos + offset] = (asci[asciiCode][i] & (1 << (8-j))) ? WHITE : BLACK;
             }
         }
     }

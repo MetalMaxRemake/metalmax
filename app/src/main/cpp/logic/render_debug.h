@@ -10,10 +10,10 @@
 
 class DebugRender : public BaseRender {
 private:
-    int pos;
     int selectPos = 0;
     void processSelection();
     void renderDebugMenu(byte *screenBuffer);
+    void renderDebugInfo(byte *screenBuffer) const;
 public:
     DebugRender();
     ~DebugRender();

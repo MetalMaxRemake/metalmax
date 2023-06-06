@@ -60,26 +60,15 @@ public class KeyView extends View {
         canvas.drawRect(key, mPaint);
     }
 
-    private Bitmap getKeyBmp(String text) {
-        Bitmap bitmapScale = bitmapMap.get(text);
-        if(bitmapScale == null) {
-            int scale = MainActivity.dpToPx(getContext(), 50) / 30;
-            bitmapScale = Bitmap.createScaledBitmap(NativeBridge.getPxImg(text), scale * 8 * text.length(), scale * 8, false);
-            bitmapMap.put(text, bitmapScale);
-        }
-        return bitmapScale;
-    }
-
     protected void drawKey(Canvas canvas, Rect key, boolean color, String text) {
         drawKey(canvas, key, color);
         mPaint.setColor(Color.BLACK);
         mPaint.setTextSize(30);
         mPaint.setTypeface(Typeface.MONOSPACE);
-        Bitmap bitmap = getKeyBmp(text);
-        canvas.drawBitmap(bitmap,
-                (key.left + key.right) / 2 - bitmap.getWidth()/2,
-                (key.top + key.bottom) / 2,
-                null);
+        canvas.drawText(text,
+                (key.left + key.right) / 2 - text.length() * 20/2,
+                (key.top + key.bottom) / 2 + 10,
+                mPaint);
     }
 
 }

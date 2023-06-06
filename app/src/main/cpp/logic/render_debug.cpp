@@ -35,15 +35,17 @@ void renderSelectPos(byte *screenBuffer, int x, int y) {
 
 inline void DebugRender::renderDebugMenu(byte *screenBuffer) {
     int start = 70;
-    renderAsciText(screenBuffer, "  ENTER BATTLE   ", 10, start + 8 * 0);
-    renderAsciText(screenBuffer, "  >NEXT MUSIC    ", 10, start + 8 * 1);
-    renderAsciText(screenBuffer, "  <PRE MUSIC     ", 10, start + 8 * 2);
-    renderAsciText(screenBuffer, "  >NEXT MAP      ", 10, start + 8 * 3);
-    renderAsciText(screenBuffer, "  <PRE MAP       ", 10, start + 8 * 4);
-    renderAsciText(screenBuffer, "  CHANGE PALETTE ", 10, start + 8 * 5);
-    renderAsciText(screenBuffer, "  RESET PALETTE  ", 10, start + 8 * 6);
-    renderAsciText(screenBuffer, "  EXIT", 10, start + 8 * 7);
-    renderSelectPos(screenBuffer, 13, start + (8 * selectPos));
+    int textHeight = 7;
+    renderAsciText(screenBuffer, "  ENTER BATTLE   ", 10, start + textHeight * 0);
+    renderAsciText(screenBuffer, "  >NEXT MUSIC    ", 10, start + textHeight * 1);
+    renderAsciText(screenBuffer, "  <PRE MUSIC     ", 10, start + textHeight * 2);
+    renderAsciText(screenBuffer, "  >NEXT MAP      ", 10, start + textHeight * 3);
+    renderAsciText(screenBuffer, "  <PRE MAP       ", 10, start + textHeight * 4);
+    renderAsciText(screenBuffer, "  CHANGE PALETTE ", 10, start + textHeight * 5);
+    renderAsciText(screenBuffer, "  RESET PALETTE  ", 10, start + textHeight * 6);
+    renderAsciText(screenBuffer, "  GOD MODE       ", 10, start + textHeight * 7);
+    renderAsciText(screenBuffer, "  EXIT           ",10, start + textHeight * 8);
+    renderSelectPos(screenBuffer, 13, start + (textHeight * selectPos));
 }
 
 inline void DebugRender::processSelection() {
@@ -91,20 +93,29 @@ inline void DebugRender::processSelection() {
         }
         refreshPalette(currentPalette);
     } else if (selectPos == 7) {
+        getDefaultPlayer()->godMode = !getDefaultPlayer()->godMode;
+    } else if (selectPos == 8) {
         pop();
     }
 }
 
 byte *DebugRender::render(byte *screenBuffer) {
+    renderDebugInfo(screenBuffer);
+    renderDebugMenu(screenBuffer);
+    return screenBuffer;
+}
+
+void DebugRender::renderDebugInfo(byte *screenBuffer) const {
     renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.7", 10, 10);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 24);
     char info[30];
-    sprintf(info, "MUSIC %d, MAP %d", getAudioIdx(), getCurrentMap());
+    sprintf(info, "MUSIC=%d, MAP=%d, GOD MODE=%s",
+            getAudioIdx(),
+            getCurrentMap(),
+            getDefaultPlayer()->godMode?"T":"F");
     renderAsciText(screenBuffer, info, 10, 36);
     sprintf(info, "POS X=%d, Y=%d", getDefaultPlayer()->x, getDefaultPlayer()->y);
     renderAsciText(screenBuffer, info, 10, 44);
-    renderDebugMenu(screenBuffer);
-    return screenBuffer;
 }
 
 void DebugRender::processKeyClick(byte directKey, byte functionKey) {

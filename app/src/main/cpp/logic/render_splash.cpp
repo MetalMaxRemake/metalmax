@@ -103,10 +103,10 @@ byte *SplashRender::render(byte *screenBuffer) {
             screenBuffer = renderBitmap((byte *) logo, 208, 32,
                                         128 - 208 / 2 + 4, 52, screenBuffer);
         }
-        renderAsciText(screenBuffer, "PUSH START", 90, 150);
-        renderAsciText(screenBuffer, "1996 DATA EAST", 74, 180);
-        renderAsciText(screenBuffer, "1996 CREA-TECH", 74, 190);
-        renderAsciText(screenBuffer, "2023 PARK REMAKE", 66, 200);
+        renderAsciText(screenBuffer, "PUSH START", 98, 150);
+        renderAsciText(screenBuffer, "1996 DATA EAST", 86, 180);
+        renderAsciText(screenBuffer, "1996 CREA-TECH", 86, 190);
+        renderAsciText(screenBuffer, "2023 PARK REMAKE", 80, 200);
         return renderBitmap((byte *) logo_2, width, percent,
                             128 - width / 2, 10, screenBuffer);
     } else {

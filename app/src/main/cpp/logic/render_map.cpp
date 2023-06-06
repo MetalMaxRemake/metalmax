@@ -208,6 +208,9 @@ int lastPosStackTop = 0;
 
 bool MapRender::processKey(byte directKey, byte functionKey) {
     Character *player = getDefaultPlayer();
+    if (entranceAnimation) {
+        return true;
+    }
     if (player->steping || directKey == 0 || entranceAnimation) {
         return functionKey == 0;
     }
@@ -248,7 +251,7 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
 }
 
 void MapRender::triggerMonster() const {
-    if (rand() % 100 > 10) {
+    if (getDefaultPlayer()->godMode || rand() % 100 > 10) {
         return;
     }
     int monsterGroupId = 0;
