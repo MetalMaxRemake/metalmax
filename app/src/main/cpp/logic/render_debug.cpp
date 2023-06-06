@@ -123,13 +123,13 @@ void DebugRender::processKeyClick(byte directKey, byte functionKey) {
     if (directKey & up) {
         selectPos--;
         if (selectPos < 0) {
-            selectPos = 0;
+            selectPos = 8;
         }
     }
     if (directKey & down) {
         selectPos++;
-        if (selectPos > 7) {
-            selectPos = 7;
+        if (selectPos > 8) {
+            selectPos = 0;
         }
     }
     if (functionKey & a) {
