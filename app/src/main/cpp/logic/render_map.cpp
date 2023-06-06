@@ -44,7 +44,7 @@ void MapRender::updateMap(int newMapId, int x, int y) {
 
 MapRender::MapRender() {
     logd("MapRender", "new!");
-    srand((unsigned)time(nullptr));
+    srand((unsigned) time(nullptr));
 }
 
 int MapRender::getMapId() {
@@ -248,28 +248,26 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
 }
 
 void MapRender::triggerMonster() const {
-    //fixme this is only test for world map!!!
-    //todo impl all maps
-    if (mapId == 0) {
-        if (rand() % 100 > 10) {
-            return;
-        }
-        int monsterArea = (getDefaultPlayer()->y / 16) * 16 + (getDefaultPlayer()->x / 16);
-        char info[10];
-        sprintf(info, "%d", monsterArea);
-        logd("monsterArea", info);
-        int monsterGroupId = monster_distribution_0[monsterArea];
-        if (monsterGroupId == 0) {
-            return;
-        }
-        int hitMonsterIdx = rand() % 0x0A;
-        int monsterId = monster_group[monsterGroupId * 0x0A + hitMonsterIdx];
-        if (monsterId == 0) {
-            return;
-        }
-        BattleRender *battleRender = new BattleRender(monsterId);
-        push(battleRender);
+    if (rand() % 100 > 10) {
+        return;
     }
+    int monsterGroupId = 0;
+    if (mapId == 0) {
+        int monsterArea = (getDefaultPlayer()->y / 16) * 16 + (getDefaultPlayer()->x / 16);
+        monsterGroupId = monster_distribution_world[monsterArea];
+    } else if (mapId >= 0x80) {
+        monsterGroupId = monster_distribution_4_samll_maps[mapId - 0x80];
+    }
+    if (monsterGroupId == 0) {
+        return;
+    }
+    int hitMonsterIdx = rand() % 0x0A;
+    int monsterId = monster_group[monsterGroupId * 0x0A + hitMonsterIdx];
+    if (monsterId == 0) {
+        return;
+    }
+    BattleRender *battleRender = new BattleRender(monsterId);
+    push(battleRender);
 }
 
 bool MapRender::checkOutOfMap(Character *player, int targetX, int targetY) {
