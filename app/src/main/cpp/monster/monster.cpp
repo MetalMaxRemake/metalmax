@@ -15,3 +15,11 @@ byte *renderMonster(int monsterId, int rawIdx, int columnIdx, byte *result) {
                         monster_width, monster_height,
                         columnIdx, rawIdx, result);
 }
+
+//health	attack	defense	armor护甲	speed	hitRate	battleLevel	experience	gold	dropsItem	attribute	resistance	ability	attackMode
+//stride = 14
+
+
+byte getMonsterProperty(int monsterId, int type) {
+    return monster_properties[monsterId * MONSTER_PROPERTY_STRIDE + type];
+}

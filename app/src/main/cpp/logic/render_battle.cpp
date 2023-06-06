@@ -54,11 +54,18 @@ byte * BattleRender::render(byte *screenBuffer) {
     if(enterBattle) {
         renderBackground(screenBuffer);
         renderMonster(monsterIdx, 10, 20, screenBuffer);
-        char info[110];
-        sprintf(info, "CURRENT MONSTER:%d", monsterIdx);
         renderAsciText(screenBuffer, R"(PUSH "UP" OR "DOWN" TO SWITCH)", 10, 138);
         renderAsciText(screenBuffer, R"(PRESS "B" TO EXIT)", 10, 146);
+        char info[110];
+        sprintf(info, "CURRENT MONSTER:%d", monsterIdx);
         renderAsciText(screenBuffer, info, 10, 154);
+
+        sprintf(info, "HP:%d ATTACK:%d DEFENSE:%d",
+                getMonsterProperty(monsterIdx, HP),
+                getMonsterProperty(monsterIdx, ATTACK),
+                getMonsterProperty(monsterIdx, DEFENSE)
+                );
+        renderAsciText(screenBuffer, info, 10, 162);
     } else {
         if(splashClk % 3 == 0 && splashCount < 5) {
             __memset_aarch64(screenBuffer, 8, 256 * 256);

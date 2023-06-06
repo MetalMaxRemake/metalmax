@@ -7,7 +7,8 @@
 
 #include "../../global.h"
 
-#define MONSTER_DATA_EMPTY 255
+#define MONSTER_PROPERTY_EMPTY 255
+#define MONSTER_PROPERTY_STRIDE 14
 
 extern int monster_count;
 extern int monster_size[];

@@ -438,7 +438,9 @@ byte monster_distribution_4_samll_maps[112] = {
 0, 0, 0, 0, 0, 0, 0, 0, 77, 77,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
 
-byte monster_properties[131]={
+//health	attack	defense	armor护甲	speed	hitRate	battleLevel	experience	gold	dropsItem	attribute	resistance	ability	attackMode
+//stride = 14
+byte monster_properties[131 * MONSTER_PROPERTY_STRIDE]={
         255,200,250,255,200,255,183,0,0,255,133,42,224,96,
         60,54,30,255,48,10,25,45,110,255,69,12,1,0,
         110,90,25,25,24,30,35,80,189,255,71,28,96,1,
