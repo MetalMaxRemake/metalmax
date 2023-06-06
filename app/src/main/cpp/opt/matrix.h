@@ -7,8 +7,6 @@
 
 #include "../global.h"
 
-byte reverse(byte x);
-
 void orthoM(float m[], int mOffset,
             float left, float right, float bottom, float top,
             float near, float far);

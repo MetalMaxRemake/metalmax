@@ -8,12 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned char reverse(unsigned char x) {
-    x = (((x & 0xaa) >> 1) | ((x & 0x55) << 1));
-    x = (((x & 0xcc) >> 2) | ((x & 0x33) << 2));
-    return ((x >> 4) | (x << 4));
-}
-
 void orthoM(float m[], int mOffset,
             float left, float right, float bottom, float top,
             float near, float far) {
