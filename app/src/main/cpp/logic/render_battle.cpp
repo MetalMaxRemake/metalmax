@@ -10,21 +10,22 @@
 #include "../audio/native_sound.h"
 #include "../monster/monster_data/monster_data.h"
 #include "../graphic/graphic_process.h"
+#include "../graphic/palette_data.h"
 
 void renderBackground(byte *screenBuffer) {
-    __memset_aarch64(screenBuffer, 3, 256 * 256);
+    __memset_aarch64(screenBuffer, BLACK, 256 * 256);
 }
 
 void renderHumanMenu(byte *screenBuffer) {
-    __memset_aarch64(screenBuffer, 3, 256 * 256);
+
 }
 
 void renderCarMenu(byte *screenBuffer) {
-    __memset_aarch64(screenBuffer, 3, 256 * 256);
+
 }
 
 void renderInfoMenu(byte *screenBuffer) {
-    __memset_aarch64(screenBuffer, 3, 256 * 256);
+
 }
 
 BattleRender::BattleRender(int monsterId) {

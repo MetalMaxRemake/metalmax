@@ -161,13 +161,21 @@ extern "C" void changeAudio(int audioIdx) {
     pthread_mutex_unlock(&soundMutex);
 }
 
-extern "C" void renderEffect(int effectAudioId) {
+void *renderEffectThread(void *) {
     pthread_mutex_lock(&soundMutex);
-    player2AudioId = effectAudioId;
     player2.SetSong(player2AudioId);
     player2.Reset();
     mixCache = true;
     pthread_mutex_unlock(&soundMutex);
+    return nullptr;
+}
+
+extern "C" void renderEffect(int effectAudioId) {
+    player2AudioId = effectAudioId;
+    pthread_t id;
+    //创建函数线程，并且指定函数线程要执行的函数
+    pthread_create(&id, nullptr, renderEffectThread, nullptr);
+
 }
 
 extern "C" int getAudioIdx() {

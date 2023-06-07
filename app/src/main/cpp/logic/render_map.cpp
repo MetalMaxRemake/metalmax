@@ -20,6 +20,7 @@
 #include "../audio/mm_sound.h"
 #include "../graphic/native_graphic.h"
 #include "../monster/monster_data/monster_data.h"
+#include "render_menu.h"
 
 #define ANIMATION_DURATION 20
 
@@ -35,7 +36,7 @@ void MapRender::updateMap(int newMapId, int x, int y) {
     }
     mapId = newMapId;
     mapId = mapId % 240;
-    renderEffect(ENTER_ENTRANCE);
+    renderEffect(EFFECT_ENTER_ENTRANCE);
     refreshMusic();
     posX = x * 16;
     posY = y * 16;
@@ -67,14 +68,42 @@ byte *MapRender::render(byte *screenBuffer) {
     posX = player->renderX - 127;
     posY = player->renderY - 127;
     screenBuffer = renderMap(posX, posY, screenBuffer);
+    renderDoor(screenBuffer, player);
+    renderPlayers(screenBuffer, player);
+    pthread_mutex_unlock(&changeMapMutex);
+    return screenBuffer;
+}
+
+void MapRender::renderPlayers(byte *screenBuffer, Character *player) const {
     renderBitmapColorOffset(player->currentBitmap, 0,
                             16, 16,
                             127, 127, screenBuffer);
-    pthread_mutex_unlock(&changeMapMutex);
-    if (showDebug) {
-        drawCopyRight(screenBuffer);
+}
+
+void MapRender::renderDoor(byte *screenBuffer, const Character *player) const {
+    if(player->inDoor) {
+        int map_width = map_size[mapId * 2 + 1];
+        int x = player->x;
+        int y = player->y;
+        unsigned short fillTileId = -1;
+        for(int i = y-2;i<=y+2;i++) {
+            unsigned short tileId = short_map_data[mapId][i * map_width + x];
+            if(tileId == 37 || tileId == 128 || tileId == 162) {
+                fillTileId = short_map_data[mapId][(i-1) * map_width + x];
+            }
+        }
+        for(int i = y-1;i<=y+1;i++) {
+            unsigned short tileId = short_map_data[mapId][i * map_width + x];
+            if(tileId == 37 || tileId == 72
+               || tileId == 128 || tileId == 137
+               || tileId == 162 || tileId == 193) {
+                int renderY = i * 16;
+                int renderX = x * 16;
+                fillOneTileInScreen(renderX - posX, renderY - posY, fillTileId, screenBuffer);
+            }
+        }
+
     }
-    return screenBuffer;
 }
 
 void MapRender::resetPalette() const {
@@ -152,13 +181,7 @@ void MapRender::tikLogic() {
     }
 }
 
-void MapRender::drawCopyRight(byte *screenBuffer) const {
-    renderAsciText(screenBuffer, "REMAKE: PARK-671", 10, 216);
-    renderAsciText(screenBuffer, "THANKS: AFOOLLOVE", 10, 224);
-}
-
 void MapRender::onUnFocus() {
-    showDebug = false;
 }
 
 void MapRender::refreshMusic() const {
@@ -169,15 +192,14 @@ void MapRender::refreshMusic() const {
 }
 
 void MapRender::onFocus() {
-    showDebug = true;
     refreshMusic();
 }
 
 void MapRender::processKeyClick(byte directKey, byte functionKey) {
-    renderEffect(PUSH_BUTTON_EFFECT);
+    renderEffect(EFFECT_PUSH_BUTTON);
     if (functionKey & a) {
-        DebugRender *debugRender = new DebugRender;
-        push(debugRender);
+        MenuRender *menuRender = new MenuRender(MAP_MENU);
+        push(menuRender);
     }
     if (functionKey & ta) {
         mapId++;
@@ -189,6 +211,10 @@ void MapRender::processKeyClick(byte directKey, byte functionKey) {
     }
     if (functionKey & tb) {
         changeAudio(getAudioIdx() + 1);
+    }
+    if(functionKey & keyX) {
+        DebugRender *debugRender = new DebugRender;
+        push(debugRender);
     }
 }
 
@@ -243,11 +269,28 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
             player->x = targetX;
             player->y = targetY;
             triggerMonster();
+            triggerDoor(player);
         }
     } else {
         player->direct = nextDirect;
     }
     return functionKey == 0;
+}
+
+void MapRender::triggerDoor(Character *player) const {
+    int map_width = map_size[mapId * 2 + 1];
+    unsigned short tileId = short_map_data[mapId][getDefaultPlayer()->y * map_width + getDefaultPlayer()->x];
+    if ((tileId == 37 || tileId == 72
+         || tileId == 128 || tileId == 137
+         || tileId == 162 || tileId == 193
+        )
+        && (!player->inDoor)) {
+        renderEffect(EFFECT_DOOR);
+        player->inDoor = true;
+    } else if(player->inDoor) {
+        renderEffect(EFFECT_DOOR);
+        player->inDoor = false;
+    }
 }
 
 void MapRender::triggerMonster() const {

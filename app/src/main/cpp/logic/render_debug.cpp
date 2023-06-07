@@ -20,19 +20,6 @@
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
-byte *selectIcon;
-
-void renderSelectPos(byte *screenBuffer, int x, int y) {
-    int img_width = 256;
-    int offset = y * img_width + x;
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            int currentPos = i * img_width + j;
-            screenBuffer[currentPos + offset] = selectIcon[i * 8 + j];
-        }
-    }
-}
-
 inline void DebugRender::renderDebugMenu(byte *screenBuffer) {
     int start = 70;
     int textHeight = 7;
@@ -119,12 +106,12 @@ void DebugRender::renderDebugInfo(byte *screenBuffer) const {
     sprintf(info, "POS X=%d, Y=%d, TILE=%d ",
             getDefaultPlayer()->x,
             getDefaultPlayer()->y,
-            short_map_data[mapId][getDefaultPlayer()->x * map_width + getDefaultPlayer()->y]);
+            short_map_data[mapId][getDefaultPlayer()->y * map_width + getDefaultPlayer()->x]);
     renderAsciText(screenBuffer, info, 10, 44);
 }
 
 void DebugRender::processKeyClick(byte directKey, byte functionKey) {
-    renderEffect(PUSH_BUTTON_EFFECT);
+    renderEffect(EFFECT_PUSH_BUTTON);
     if (directKey & up) {
         selectPos--;
         if (selectPos < 0) {
@@ -151,17 +138,9 @@ void DebugRender::tikLogic() {
 
 DebugRender::DebugRender() {
     logd("DebugRender", "new");
-    selectIcon = (byte *) malloc(8 * 8);
-    __memset_aarch64(selectIcon, 3, 8 * 8);
-    for (int i = 0; i < 4; i++) {
-        __memset_aarch64(selectIcon + (i * 8), 8, i + 1);
-    }
-    for (int i = 4; i < 8; i++) {
-        __memset_aarch64(selectIcon + (i * 8), 8, 8 - i);
-    }
+    BaseMenuRender();
 }
 
 DebugRender::~DebugRender() {
     logd("DebugRender", "delete");
-    free(selectIcon);
 }

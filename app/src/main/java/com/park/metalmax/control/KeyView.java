@@ -1,23 +1,23 @@
 package com.park.metalmax.control;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.park.metalmax.MainActivity;
-import com.park.metalmax.NativeBridge;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class KeyView extends View {
+
+    private static final int radio = 20;
     public KeyView(Context context) {
         super(context);
     }
@@ -51,20 +51,43 @@ public class KeyView extends View {
         setMeasuredDimension(size, size);
     }
 
-    protected void drawKey(Canvas canvas, Rect key, boolean color) {
-        if (color) {
+    protected void drawKey(Canvas canvas, RectF key, boolean pushed) {
+        if (pushed) {
             mPaint.setColor(colorA);
         } else {
             mPaint.setColor(colorB);
         }
-        canvas.drawRect(key, mPaint);
+        canvas.drawRoundRect(key,radio, radio, mPaint);
     }
 
-    protected void drawKey(Canvas canvas, Rect key, boolean color, String text) {
-        drawKey(canvas, key, color);
+    @SuppressLint("NewApi")
+    protected void drawKey(Canvas canvas, RectF key, boolean pushed, int color) {
+        if (pushed) {
+            mPaint.setColor(colorA);
+        } else {
+            mPaint.setColor(color);
+        }
+        canvas.drawRoundRect(key,radio, radio, mPaint);
+    }
+
+    protected void drawKey(Canvas canvas, RectF key, boolean pushed, String text) {
+        drawKey(canvas, key, pushed);
         mPaint.setColor(Color.BLACK);
         mPaint.setTextSize(30);
         mPaint.setTypeface(Typeface.MONOSPACE);
+        canvas.drawText(text,
+                (key.left + key.right) / 2 - text.length() * 20/2,
+                (key.top + key.bottom) / 2 + 10,
+                mPaint);
+    }
+
+    protected void drawKey(Canvas canvas, RectF key, boolean pushed, String text, int color) {
+        drawKey(canvas, key, pushed, color);
+        mPaint.setColor(Color.WHITE);
+        mPaint.setTextSize(30);
+        Typeface font = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD);
+        mPaint.setTypeface(font);
+        mPaint.setStrokeWidth(10);
         canvas.drawText(text,
                 (key.left + key.right) / 2 - text.length() * 20/2,
                 (key.top + key.bottom) / 2 + 10,

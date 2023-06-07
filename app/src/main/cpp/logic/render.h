@@ -18,9 +18,11 @@ protected:
     const byte b = 0b0010;
     const byte ta = 0b0100;
     const byte tb = 0b1000;
+    const byte keyX = 0b00010000;
+    const byte keyY = 0b00100000;
 public:
-    virtual byte * render(byte *screenBuffer) = 0;
-    virtual void tikLogic() = 0;
+    virtual byte * render(byte *screenBuffer) {};
+    virtual void tikLogic() {};
     virtual bool processKey(byte directKey, byte functionKey) {return false;};
     virtual void processKeyClick(byte directKey, byte functionKey) {}
     virtual void onFocus() {};

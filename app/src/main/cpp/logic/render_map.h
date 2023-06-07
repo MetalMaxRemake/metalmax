@@ -10,16 +10,18 @@
 
 class MapRender : public BaseRender {
 private:
-    bool showDebug = true;
     volatile int entranceAnimation = 0;
     volatile bool isOriginPalette = true;
-    void drawCopyRight(byte *screenBuffer) const;
     bool checkEntrance(Character *player, int targetX, int targetY);
     bool checkOutOfMap(Character *player, int targetX, int targetY);
     void fadeOut() const;
     void fadeIn() const;
     void refreshMusic() const;
     void triggerMonster() const;
+    void triggerDoor(Character *player) const;
+    void renderDoor(byte *screenBuffer, const Character *player) const;
+    void resetPalette() const;
+    void renderPlayers(byte *screenBuffer, Character *player) const;
 public:
     MapRender();
     void updateMap(int newMapId, int x, int y);
@@ -35,8 +37,6 @@ public:
     void onUnFocus();
 
     ~MapRender();
-
-    void resetPalette() const;
 };
 
 #endif //METALMAX_RENDER_MAP_H

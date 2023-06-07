@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
     }
 
     private View initView() {
-        int margin = dpToPx(this, 40);
+        int margin = dpToPx(this, 30);
         //root
         FrameLayout rootLayout = new FrameLayout(MainActivity.this);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
         DirectKeyView directKeyView = new DirectKeyView(MainActivity.this);
         directKeyView.setLayoutParams(directKeyParams);
 
-        LinearLayout.LayoutParams functionKeyParams = new LinearLayout.LayoutParams(dpToPx(this, 140), ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams functionKeyParams = new LinearLayout.LayoutParams(dpToPx(this, 120), ViewGroup.LayoutParams.WRAP_CONTENT);
         functionKeyParams.setMargins(margin, margin, margin, margin);
         functionKeyParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
         FunctionKeyView functionKeyView = new FunctionKeyView(MainActivity.this);
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
         startKeyParams.setMargins(margin, margin, margin, margin);
         startKeyParams.gravity = Gravity.CENTER | Gravity.BOTTOM;
         startKeyParams.weight = 1;
-        View startSelectKeyView = new View(MainActivity.this);
+        LinearLayout startSelectKeyView = new LinearLayout(MainActivity.this);
         startSelectKeyView.setLayoutParams(startKeyParams);
         //todo impl start/select key
         keyViewLayout.addView(directKeyView);

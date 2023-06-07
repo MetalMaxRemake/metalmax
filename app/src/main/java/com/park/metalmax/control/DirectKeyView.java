@@ -3,7 +3,7 @@ package com.park.metalmax.control;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -24,7 +24,7 @@ public class DirectKeyView extends KeyView {
 
     private int keyWidth;
 
-    private Rect leftRect, rightRect, upRect, downRect;
+    private RectF leftRect, rightRect, upRect, downRect;
 
     @SuppressLint("DrawAllocation")
     @Override
@@ -32,10 +32,10 @@ public class DirectKeyView extends KeyView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         keyWidth = (size / 5);
         int keyLength = keyWidth * 2;
-        leftRect = new Rect(0, keyLength, keyLength, keyLength + keyWidth);
-        rightRect = new Rect(keyLength + keyWidth, keyLength, size, keyLength + keyWidth);
-        upRect = new Rect(keyLength, 0, keyLength + keyWidth, keyLength);
-        downRect = new Rect(keyLength, keyLength + keyWidth, keyLength + keyWidth, size);
+        leftRect = new RectF(0, keyLength, keyLength, keyLength + keyWidth);
+        rightRect = new RectF(keyLength + keyWidth, keyLength, size, keyLength + keyWidth);
+        upRect = new RectF(keyLength, 0, keyLength + keyWidth, keyLength);
+        downRect = new RectF(keyLength, keyLength + keyWidth, keyLength + keyWidth, size);
     }
     
     int key = 0;

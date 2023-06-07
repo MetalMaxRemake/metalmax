@@ -5,7 +5,8 @@
 extern const long int all_sound_size;
 extern const unsigned char all_sound[36992];
 
-#define PUSH_BUTTON_EFFECT 63
-#define ENTER_ENTRANCE 59
+#define EFFECT_PUSH_BUTTON 63
+#define EFFECT_ENTER_ENTRANCE 59
+#define EFFECT_DOOR 62
 
 #endif    /* __mm_sound_h_included */

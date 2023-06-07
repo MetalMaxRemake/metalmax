@@ -18,6 +18,32 @@
 volatile int map_width = 256,map_height = 256;
 pthread_mutex_t mapRefreshMutex;
 
+void fillOneTileInScreen(int posX, int posY, int bmpIdx, byte *result) {
+    int map_raw_width = 256;
+    int map_column_offset = posX;
+    int map_raw_offset = posY;
+    for (int x = 0; x < 4; x++) {
+        int block_start = x * 4;
+        //循环展开 + simd_memcpy
+        __memcpy_aarch64_simd(
+                result + ((block_start + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + (block_start * 16),
+                16);
+        __memcpy_aarch64_simd(
+                result + ((block_start + 1 + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + ((block_start + 1) * 16),
+                16);
+        __memcpy_aarch64_simd(
+                result + ((block_start + 2 + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + ((block_start + 2) * 16),
+                16);
+        __memcpy_aarch64_simd(
+                result + ((block_start + 3 + map_raw_offset) * map_raw_width + map_column_offset),
+                bitmaps[bmpIdx] + ((block_start + 3) * 16),
+                16);
+    }
+}
+
 inline void fill(int i, int j, int bmpIdx, byte *result) {
     int map_raw_width = ((map_width + 2 * MAP_FILL_SIZE) * 16);
     int map_column_offset = j * 16;

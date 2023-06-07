@@ -22,6 +22,7 @@ public:
     int renderX, renderY;
     bool steping;
     byte direct;//0-up 1-down 2-left 3-right
+    bool inDoor = false;
     int halfStep;
     int bitmapId;
     byte* bitmap[4][2];

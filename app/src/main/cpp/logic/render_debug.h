@@ -7,8 +7,9 @@
 
 #include "logic.h"
 #include "render.h"
+#include "render_base_menu.h"
 
-class DebugRender : public BaseRender {
+class DebugRender : public BaseMenuRender {
 private:
     int selectPos = 0;
     void processSelection();

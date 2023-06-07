@@ -1,8 +1,10 @@
 package com.park.metalmax.control;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.Color;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -21,22 +23,36 @@ public class FunctionKeyView extends KeyView {
         super(context, attrs, defStyleAttr);
     }
 
-    private Rect TARect, TBRect, ARect, BRect;
-    private boolean TA, TB, A, B;
+    private RectF TARect, TBRect, ARect, BRect, XRect, YRect;
+    private boolean TA, TB, A, B, X, Y;
+    private int colorA, colorB, colorTA, colorTB, colorX, colorY;
 
     int key = 0;
     final int aVal = 0b0001;
     final int bVal = 0b0010;
     final int taVal = 0b0100;
     final int tbVal = 0b1000;
+    final int xVal = 0b0001_0000;
+    final int yVal = 0b0010_0000;
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        TARect = new Rect(margin, margin, (size / 2) - margin, (size / 2) - margin);
-        TBRect = new Rect((size / 2) + margin, margin, size - margin, (size / 2) - margin);
-        ARect = new Rect(margin, (size / 2) + margin, (size / 2) - margin, size - margin);
-        BRect = new Rect((size / 2) + margin, (size / 2) + margin, size - margin, size - margin);
+        size = MeasureSpec.getSize(widthMeasureSpec);
+        setMeasuredDimension(size, size * 3 / 2);
+        XRect = new RectF(margin, margin, (size / 2) - margin, (size / 2) - margin);
+        YRect = new RectF((size / 2) + margin, margin, size - margin, (size / 2) - margin);
+        TARect = new RectF(margin, (size / 2) + margin, (size / 2) - margin, size - margin);
+        TBRect = new RectF((size / 2) + margin, (size / 2) + margin, size - margin, size - margin);
+        ARect = new RectF(margin, (size) + margin, (size / 2) - margin, size * 3 / 2 - margin);
+        BRect = new RectF((size / 2) + margin, (size) + margin, size - margin, size * 3 / 2 - margin);
+
+        colorA = Color.parseColor("#AA7DBC5F");
+        colorB = Color.parseColor("#AAE75F5B");
+        colorX = Color.parseColor("#AA4BA7EA");
+        colorY = Color.parseColor("#AAEADB54");
+        colorTA = Color.parseColor("#AA622E72");
+        colorTB = Color.argb(170, 230, 230, 230);
     }
 
     @Override
@@ -57,6 +73,12 @@ public class FunctionKeyView extends KeyView {
                 if (BRect.contains(x, y)) {
                     B = true;
                 }
+                if (XRect.contains(x, y)) {
+                    X = true;
+                }
+                if (YRect.contains(x, y)) {
+                    Y = true;
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 if (TARect.contains(x, y)) {
@@ -71,20 +93,32 @@ public class FunctionKeyView extends KeyView {
                 if (BRect.contains(x, y)) {
                     B = false;
                 }
+                if (XRect.contains(x, y)) {
+                    X = false;
+                }
+                if (YRect.contains(x, y)) {
+                    Y = false;
+                }
                 break;
         }
         key = 0;
-        if(A) {
+        if (A) {
             key |= aVal;
         }
-        if(B) {
+        if (B) {
             key |= bVal;
         }
-        if(TA) {
+        if (TA) {
             key |= taVal;
         }
-        if(TB) {
+        if (TB) {
             key |= tbVal;
+        }
+        if (X) {
+            key |= xVal;
+        }
+        if (Y) {
+            key |= yVal;
         }
         NativeBridge.onFuncKeyEvent(key);
         invalidate();
@@ -95,9 +129,11 @@ public class FunctionKeyView extends KeyView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        drawKey(canvas, TARect, TA, "TR A");
-        drawKey(canvas, TBRect, TB, "TR B");
-        drawKey(canvas, ARect, A, "A");
-        drawKey(canvas, BRect, B, "B");
+        drawKey(canvas, TARect, TA, "TR A", colorTA);
+        drawKey(canvas, TBRect, TB, "TR B", colorTB);
+        drawKey(canvas, ARect, A, "A", colorA);
+        drawKey(canvas, BRect, B, "B", colorB);
+        drawKey(canvas, XRect, X, "X", colorX);
+        drawKey(canvas, YRect, Y, "Y", colorY);
     }
 }
