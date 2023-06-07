@@ -109,12 +109,17 @@ void DebugRender::renderDebugInfo(byte *screenBuffer) const {
     renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.7", 10, 10);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 24);
     char info[30];
-    sprintf(info, "MUSIC=%d, MAP=%d, GOD MODE=%s",
+    sprintf(info, "MUSIC=%d, MAP=%d, GOD MODE=%s ",
             getAudioIdx(),
             getCurrentMap(),
             getDefaultPlayer()->godMode?"T":"F");
     renderAsciText(screenBuffer, info, 10, 36);
-    sprintf(info, "POS X=%d, Y=%d", getDefaultPlayer()->x, getDefaultPlayer()->y);
+    int mapId = getCurrentMap();
+    int map_width = map_size[mapId * 2 + 1];
+    sprintf(info, "POS X=%d, Y=%d, TILE=%d ",
+            getDefaultPlayer()->x,
+            getDefaultPlayer()->y,
+            short_map_data[mapId][getDefaultPlayer()->x * map_width + getDefaultPlayer()->y]);
     renderAsciText(screenBuffer, info, 10, 44);
 }
 

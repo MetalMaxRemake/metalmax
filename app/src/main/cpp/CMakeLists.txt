@@ -14,6 +14,7 @@ file(GLOB_RECURSE LOGIC_SRC "logic/*.cpp" "logic/*.c" "logic/status/character.cp
 file(GLOB_RECURSE CHARSET_SRC "charset/*.cpp" "charset/*.c")
 file(GLOB_RECURSE GRAPHIC_SRC "graphic/*.cpp" "graphic/*.c")
 file(GLOB_RECURSE SPLASH_SRC "splash/*.cpp" "splash/*.c")
+file(GLOB_RECURSE DATA_SRCS "computer/*.cpp" "store/*.cpp" "tank/*.cpp" "item/*.cpp")
 
 file(GLOB_RECURSE NSF_PLAYER_SRC
         "audio/*.cpp" "audio/*.c"
