@@ -11,11 +11,11 @@ byte *renderBitmap(byte *originData,
                    int width, int height,
                    int x, int y,
                    byte *result);
-byte *renderBitmapColorOffset(byte *originData, int colorOffset,
-                              int width, int height,
-                              int x, int y,
-                              byte *result);
-byte *renderBitmapWithScroll(byte *originData,
+byte *renderBitmapWithTrans(byte *originData,
+                            int width, int height,
+                            int x, int y,
+                            byte *result);
+byte *renderBitmapWithScroll(byte *originData, byte direct,
                              int width, int height,
                              int x, int y,
                              byte *result);

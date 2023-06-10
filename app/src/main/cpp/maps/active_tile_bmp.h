@@ -17,4 +17,8 @@ extern byte water[3][16 * 16];
 
 extern void renderWave(byte direct, byte status, byte *screenBuffer, int x, int y);
 
+bool isWater(unsigned short tileId);
+
+bool isPureWater(unsigned short tileId);
+
 #endif //METALMAX_ACTIVE_TILE_BMP_H

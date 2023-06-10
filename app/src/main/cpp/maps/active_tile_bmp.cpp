@@ -6,6 +6,7 @@
 #include "../logic/status/character.h"
 #include "../graphic/bitmap_render.h"
 #include "../logic/logic.h"
+#include "../graphic/palette_data.h"
 
 unsigned short water_block_id[WATER_BLOCK_COUNT] = {
         13,15,31,35,39,47,85,112,154,190,
@@ -22,26 +23,33 @@ unsigned short pure_water_block_id[32] = {
         1864,1881,
 };
 
+bool isWater(unsigned short tileId) {
+        for(int i = 0;i<WATER_BLOCK_COUNT;i++) {
+                if (tileId == water_block_id[i]) {
+                        return true;
+                }
+        }
+        return false;
+}
+
+bool isPureWater(unsigned short tileId) {
+        for(int i = 0;i<32;i++) {
+                if (tileId == pure_water_block_id[i]) {
+                        return true;
+                }
+        }
+        return false;
+}
+
 /**
  * @param direct 复用一下方向键的方向吧
  * @param screenBuffer
  */
 void renderWave(byte direct, byte status, byte *screenBuffer, int x, int y) {
-        if (direct & up) {
-                renderBitmapColorOffset(wave[status],0,
-                                        16, 4,
-                                        x, y,
-                                        screenBuffer);
-        }
-        if(direct & down) {
-
-        }
-        if(direct & left) {
-
-        }
-        if(direct & right) {
-
-        }
+        renderBitmapWithScroll(wave[status], direct,
+                               16, 4,
+                               x, y,
+                               screenBuffer);
 }
 
 //upper side, need to scroll & use

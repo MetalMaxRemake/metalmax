@@ -143,6 +143,12 @@ void refreshCurrentMap(int mapId) {
 }
 
 unsigned short getTileIdx(int x, int y) {
+    if (y >= map_height
+        || y < 0
+        || x >= map_width
+        || x < 0) {
+        return current_fill;
+    }
     return short_current_map[y * (map_width) + x];
 }
 

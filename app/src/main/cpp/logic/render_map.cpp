@@ -66,10 +66,10 @@ byte *MapRender::render(byte *screenBuffer) {
     }
     pthread_mutex_lock(&changeMapMutex);
     Character *player = getDefaultPlayer();
-    posX = player->renderX - 127;
-    posY = player->renderY - 127;
+    posX = player->renderX - 128;
+    posY = player->renderY - 128;
     screenBuffer = renderMap(posX, posY, screenBuffer);
-//    renderWater(screenBuffer);
+    renderWater(screenBuffer);
     renderDoor(screenBuffer);
     renderSprite(screenBuffer);
     renderPlayers(screenBuffer, player);
@@ -78,54 +78,45 @@ byte *MapRender::render(byte *screenBuffer) {
 }
 
 void MapRender::renderPlayers(byte *screenBuffer, Character *player) const {
-    renderBitmapColorOffset(player->currentBitmap, 0,
-                            16, 16,
-                            127, 127, screenBuffer);
+    renderBitmapWithTrans(player->currentBitmap,
+                          16, 16,
+                          128, 128, screenBuffer);
 }
 
-int water_status_map[4] = {1,2,3,2};
+int water_status_map[4] = {1, 2, 3, 2};
 
 byte water_status = 0;
 int water_status_clk = 0;
 
-bool isTileWater(unsigned short tileId) {
-    for(int i = 0;i<WATER_BLOCK_COUNT;i++) {
-        if (tileId == water_block_id[i]) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void MapRender::renderWater(byte *screenBuffer) const {
-    int map_width = map_size[mapId * 2 + 1];
     int startX = posX / 16;
     int startY = posY / 16;
-    for (int x = startX; x < startX + 16; x++) {
-        for (int y = startY; y < startY + 16; y++) {
-            if(isTileWater(short_map_data[mapId][y * map_width + x])) {
+    for (int x = startX - 1; x < startX + 17; x++) {
+        for (int y = startY - 1; y < startY + 17; y++) {
+            if (isPureWater(getTileIdx(x, y))) {
                 int renderY = y * 16 - posY;
                 int renderX = x * 16 - posX;
-                if (renderX > 0 && renderX < 240 && renderY > 0 && renderY < 224) {
-                    renderBitmapColorOffset(water[water_status_map[water_status] - 1],0,
-                                            16, 16,
-                                            renderX, renderY,
-                                            screenBuffer);
+                if (renderX > -16 && renderX < 272 && renderY > -16 && renderY < 256) {
+                    renderBitmap(water[water_status_map[water_status] - 1],
+                                 16, 16,
+                                 renderX, renderY,
+                                 screenBuffer);
+                    byte direct = 0;
+                    if (!isWater(getTileIdx(x, y - 1))) {
+                        direct |= up;
+                    }
+                    if (!isWater(getTileIdx(x, y + 1))) {
+                        direct |= down;
+                    }
+                    if (!isWater(getTileIdx(x - 1, y))) {
+                        direct |= left;
+                    }
+                    if (!isWater(getTileIdx(x + 1, y))) {
+                        direct |= right;
+                    }
+                    renderWave(direct, water_status_map[water_status] - 1, screenBuffer, renderX,
+                               renderY);
                 }
-                byte direct = 0;
-                if (!isTileWater(short_map_data[mapId][(y - 1) * map_width + (x)])) {
-                    direct |= up;
-                }
-                if (!isTileWater(short_map_data[mapId][(y + 1) * map_width + (x)])) {
-                    direct |= down;
-                }
-                if (!isTileWater(short_map_data[mapId][(y) * map_width + (x - 1)])) {
-                    direct |= left;
-                }
-                if (!isTileWater(short_map_data[mapId][(y) * map_width + (x + 1)])) {
-                    direct |= right;
-                }
-                renderWave(direct, water_status_map[water_status] - 1, screenBuffer, renderX, renderY);
             }
         }
     }
@@ -138,12 +129,12 @@ void MapRender::renderSprite(byte *screenBuffer) const {
         byte y = map_sprite[mapId][i * 3 + 1] - 1;
         int renderY = y * 16 - posY;
         int renderX = x * 16 - posX;
-        if (renderX > 0 && renderX < 240 && renderY > 0 && renderY < 224) {
+        if (renderX > -16 && renderX < 272 && renderY > -16 && renderY < 256) {
             byte spriteBmpId = map_sprite[mapId][i * 3 + 2];
-            renderBitmapColorOffset(sprites[spriteBmpId], 0,
-                                    16, 16,
-                                    renderX, renderY,
-                                    screenBuffer);
+            renderBitmapWithTrans(sprites[spriteBmpId],
+                                  16, 16,
+                                  renderX, renderY,
+                                  screenBuffer);
         }
     }
 }
@@ -249,7 +240,7 @@ void MapRender::tikLogic() {
         entranceAnimation--;
     }
     water_status_clk++;
-    if(water_status_clk > 60) {
+    if (water_status_clk > 60) {
         water_status_clk = 0;
         water_status++;
         water_status %= 4;

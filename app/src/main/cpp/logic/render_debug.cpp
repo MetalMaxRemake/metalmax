@@ -102,11 +102,11 @@ void DebugRender::renderDebugInfo(byte *screenBuffer) const {
             getDefaultPlayer()->godMode?"T":"F");
     renderAsciText(screenBuffer, info, 10, 36);
     int mapId = getCurrentMap();
-    int map_width = map_size[mapId * 2 + 1];
     sprintf(info, "POS X=%d, Y=%d, TILE=%d ",
             getDefaultPlayer()->x,
             getDefaultPlayer()->y,
-            short_map_data[mapId][getDefaultPlayer()->y * map_width + getDefaultPlayer()->x]);
+            getTileIdx(getDefaultPlayer()->x,
+                       getDefaultPlayer()->y));
     renderAsciText(screenBuffer, info, 10, 44);
 }
 
