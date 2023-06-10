@@ -68,7 +68,8 @@ byte *MapRender::render(byte *screenBuffer) {
     posX = player->renderX - 127;
     posY = player->renderY - 127;
     screenBuffer = renderMap(posX, posY, screenBuffer);
-    renderDoor(screenBuffer, player);
+    renderDoor(screenBuffer);
+    renderSprite(screenBuffer);
     renderPlayers(screenBuffer, player);
     pthread_mutex_unlock(&changeMapMutex);
     return screenBuffer;
@@ -80,7 +81,25 @@ void MapRender::renderPlayers(byte *screenBuffer, Character *player) const {
                             127, 127, screenBuffer);
 }
 
-void MapRender::renderDoor(byte *screenBuffer, const Character *player) const {
+void MapRender::renderSprite(byte *screenBuffer) const {
+    int spriteCount = map_sprite_count[mapId];
+    for (int i = 0; i < spriteCount; i++) {
+        byte x = map_sprite[mapId][i * 3];
+        byte y = map_sprite[mapId][i * 3 + 1] - 1;
+        int renderY = y * 16 - posY;
+        int renderX = x * 16 - posX;
+        if (renderX > 0 && renderX < 240 && renderY > 0 && renderY < 224) {
+            byte spriteBmpId = map_sprite[mapId][i * 3 + 2];
+            renderBitmapColorOffset(sprites[spriteBmpId], 0,
+                                    16, 16,
+                                    renderX, renderY,
+                                    screenBuffer);
+        }
+    }
+}
+
+void MapRender::renderDoor(byte *screenBuffer) const {
+    Character *player = getDefaultPlayer();
     if(player->inDoor) {
         int map_width = map_size[mapId * 2 + 1];
         int x = player->x;

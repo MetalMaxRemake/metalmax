@@ -4,8 +4,8 @@
 
 #include "sprite.h"
 #include "../global.h"
-#include "sprite_1.h"
+#include "sprite_player.h"
 
 byte *getSpriteImage(int spriteId, int status, byte *result) {
-    return (byte *) sprite_1[status];
+    return (byte *) sprite_player[status];
 }

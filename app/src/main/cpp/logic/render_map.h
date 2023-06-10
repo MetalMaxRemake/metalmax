@@ -19,7 +19,8 @@ private:
     void refreshMusic() const;
     void triggerMonster() const;
     void triggerDoor(Character *player) const;
-    void renderDoor(byte *screenBuffer, const Character *player) const;
+    void renderDoor(byte *screenBuffer) const;
+    void renderSprite(byte *screenBuffer) const;
     void resetPalette() const;
     void renderPlayers(byte *screenBuffer, Character *player) const;
 public:

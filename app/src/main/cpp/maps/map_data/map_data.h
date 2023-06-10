@@ -253,4 +253,6 @@ extern "C" unsigned char map_music[MAP_COUNT];
 extern "C" unsigned char movable_size[MAP_COUNT * 2];
 extern "C" unsigned char movable_offset[MAP_COUNT * 2];
 extern "C" unsigned char map_head[MAP_COUNT];
+extern "C" unsigned char* map_sprite[MAP_COUNT];
+extern "C" unsigned char map_sprite_count[MAP_COUNT];
 #endif //METALMAX_MAP_DATA_H
