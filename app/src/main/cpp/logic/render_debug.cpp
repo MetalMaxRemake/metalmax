@@ -93,7 +93,7 @@ byte *DebugRender::render(byte *screenBuffer) {
 }
 
 void DebugRender::renderDebugInfo(byte *screenBuffer) const {
-    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.7", 10, 10);
+    renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.10", 10, 10);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 24);
     char info[30];
     sprintf(info, "MUSIC=%d, MAP=%d, GOD MODE=%s ",

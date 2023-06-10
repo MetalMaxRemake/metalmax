@@ -10,8 +10,8 @@ android {
         applicationId "com.park.metalmax"
         minSdk 23
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.10"
         externalNativeBuild {
             cmake {
                 abiFilters "arm64-v8a"
