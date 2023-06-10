@@ -15,4 +15,6 @@ extern byte wave[3][16 * 4];
 
 extern byte water[3][16 * 16];
 
+extern void renderWave(byte direct, byte status, byte *screenBuffer, int x, int y);
+
 #endif //METALMAX_ACTIVE_TILE_BMP_H

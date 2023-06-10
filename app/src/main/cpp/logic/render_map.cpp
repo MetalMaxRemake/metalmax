@@ -21,6 +21,7 @@
 #include "../graphic/native_graphic.h"
 #include "../monster/monster_data/monster_data.h"
 #include "render_menu.h"
+#include "../maps/active_tile_bmp.h"
 
 #define ANIMATION_DURATION 20
 
@@ -68,6 +69,7 @@ byte *MapRender::render(byte *screenBuffer) {
     posX = player->renderX - 127;
     posY = player->renderY - 127;
     screenBuffer = renderMap(posX, posY, screenBuffer);
+//    renderWater(screenBuffer);
     renderDoor(screenBuffer);
     renderSprite(screenBuffer);
     renderPlayers(screenBuffer, player);
@@ -79,6 +81,54 @@ void MapRender::renderPlayers(byte *screenBuffer, Character *player) const {
     renderBitmapColorOffset(player->currentBitmap, 0,
                             16, 16,
                             127, 127, screenBuffer);
+}
+
+int water_status_map[4] = {1,2,3,2};
+
+byte water_status = 0;
+int water_status_clk = 0;
+
+bool isTileWater(unsigned short tileId) {
+    for(int i = 0;i<WATER_BLOCK_COUNT;i++) {
+        if (tileId == water_block_id[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void MapRender::renderWater(byte *screenBuffer) const {
+    int map_width = map_size[mapId * 2 + 1];
+    int startX = posX / 16;
+    int startY = posY / 16;
+    for (int x = startX; x < startX + 16; x++) {
+        for (int y = startY; y < startY + 16; y++) {
+            if(isTileWater(short_map_data[mapId][y * map_width + x])) {
+                int renderY = y * 16 - posY;
+                int renderX = x * 16 - posX;
+                if (renderX > 0 && renderX < 240 && renderY > 0 && renderY < 224) {
+                    renderBitmapColorOffset(water[water_status_map[water_status] - 1],0,
+                                            16, 16,
+                                            renderX, renderY,
+                                            screenBuffer);
+                }
+                byte direct = 0;
+                if (!isTileWater(short_map_data[mapId][(y - 1) * map_width + (x)])) {
+                    direct |= up;
+                }
+                if (!isTileWater(short_map_data[mapId][(y + 1) * map_width + (x)])) {
+                    direct |= down;
+                }
+                if (!isTileWater(short_map_data[mapId][(y) * map_width + (x - 1)])) {
+                    direct |= left;
+                }
+                if (!isTileWater(short_map_data[mapId][(y) * map_width + (x + 1)])) {
+                    direct |= right;
+                }
+                renderWave(direct, water_status_map[water_status] - 1, screenBuffer, renderX, renderY);
+            }
+        }
+    }
 }
 
 void MapRender::renderSprite(byte *screenBuffer) const {
@@ -100,22 +150,22 @@ void MapRender::renderSprite(byte *screenBuffer) const {
 
 void MapRender::renderDoor(byte *screenBuffer) const {
     Character *player = getDefaultPlayer();
-    if(player->inDoor) {
+    if (player->inDoor) {
         int map_width = map_size[mapId * 2 + 1];
         int x = player->x;
         int y = player->y;
         unsigned short fillTileId = -1;
-        for(int i = y-2;i<=y+2;i++) {
+        for (int i = y - 2; i <= y + 2; i++) {
             unsigned short tileId = short_map_data[mapId][i * map_width + x];
-            if(tileId == 37 || tileId == 128 || tileId == 162) {
-                fillTileId = short_map_data[mapId][(i-1) * map_width + x];
+            if (tileId == 37 || tileId == 128 || tileId == 162) {
+                fillTileId = short_map_data[mapId][(i - 1) * map_width + x];
             }
         }
-        for(int i = y-1;i<=y+1;i++) {
+        for (int i = y - 1; i <= y + 1; i++) {
             unsigned short tileId = short_map_data[mapId][i * map_width + x];
-            if(tileId == 37 || tileId == 72
-               || tileId == 128 || tileId == 137
-               || tileId == 162 || tileId == 193) {
+            if (tileId == 37 || tileId == 72
+                || tileId == 128 || tileId == 137
+                || tileId == 162 || tileId == 193) {
                 int renderY = i * 16;
                 int renderX = x * 16;
                 fillOneTileInScreen(renderX - posX, renderY - posY, fillTileId, screenBuffer);
@@ -198,6 +248,12 @@ void MapRender::tikLogic() {
         isOriginPalette = false;
         entranceAnimation--;
     }
+    water_status_clk++;
+    if(water_status_clk > 60) {
+        water_status_clk = 0;
+        water_status++;
+        water_status %= 4;
+    }
 }
 
 void MapRender::onUnFocus() {
@@ -231,7 +287,7 @@ void MapRender::processKeyClick(byte directKey, byte functionKey) {
     if (functionKey & tb) {
         changeAudio(getAudioIdx() + 1);
     }
-    if(functionKey & keyX) {
+    if (functionKey & keyX) {
         DebugRender *debugRender = new DebugRender;
         push(debugRender);
     }
@@ -298,7 +354,8 @@ bool MapRender::processKey(byte directKey, byte functionKey) {
 
 void MapRender::triggerDoor(Character *player) const {
     int map_width = map_size[mapId * 2 + 1];
-    unsigned short tileId = short_map_data[mapId][getDefaultPlayer()->y * map_width + getDefaultPlayer()->x];
+    unsigned short tileId = short_map_data[mapId][getDefaultPlayer()->y * map_width +
+                                                  getDefaultPlayer()->x];
     if ((tileId == 37 || tileId == 72
          || tileId == 128 || tileId == 137
          || tileId == 162 || tileId == 193
@@ -306,7 +363,7 @@ void MapRender::triggerDoor(Character *player) const {
         && (!player->inDoor)) {
         renderEffect(EFFECT_DOOR);
         player->inDoor = true;
-    } else if(player->inDoor) {
+    } else if (player->inDoor) {
         renderEffect(EFFECT_DOOR);
         player->inDoor = false;
     }

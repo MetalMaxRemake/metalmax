@@ -58,3 +58,21 @@ byte *renderBitmapColorOffset(byte *originData, int colorOffset,
     }
     return result;
 }
+
+byte *renderBitmapWithScroll(byte *originData,
+                              int width, int height,
+                              int x, int y,
+                              byte *result) {
+    int offset = y * 256 + x;
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            if(originData[i * width + j] == TRANSPARENT) {
+                //skip trans color!
+                continue;
+            } else {
+                result[i * 256 + offset + j] = originData[j * width + i];
+            }
+        }
+    }
+    return result;
+}

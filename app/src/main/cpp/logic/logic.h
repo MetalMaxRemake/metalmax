@@ -7,6 +7,11 @@
 
 #include "../global.h"
 
+extern "C" const byte up;
+extern "C" const byte down;
+extern "C" const byte left;
+extern "C" const byte right;
+
 void initLogic();
 void releaseLogicThread();
 void updateDirectKey(byte key);

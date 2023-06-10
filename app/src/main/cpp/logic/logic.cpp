@@ -14,6 +14,11 @@
 #include "render.h"
 #include "render_splash.h"
 
+const byte up = 0b0001;
+const byte down = 0b0010;
+const byte left = 0b0100;
+const byte right = 0b1000;
+
 byte tik_clk = 16;
 
 BaseRender *renderStack[10];

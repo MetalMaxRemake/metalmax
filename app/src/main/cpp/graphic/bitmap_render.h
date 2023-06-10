@@ -15,5 +15,9 @@ byte *renderBitmapColorOffset(byte *originData, int colorOffset,
                               int width, int height,
                               int x, int y,
                               byte *result);
+byte *renderBitmapWithScroll(byte *originData,
+                             int width, int height,
+                             int x, int y,
+                             byte *result);
 
 #endif //METALMAX_BITMAP_RENDER_H
