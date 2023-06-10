@@ -18,3 +18,12 @@ unsigned char entrances_103[1*5]={
 0,0,15,24,100,
 };
 unsigned char entrance_count_103=1;
+
+unsigned char sprite_103[5*3]={
+6,3,38,
+8,5,25,
+1,4,3,
+3,4,13,
+1,7,41,
+};
+unsigned char sprite_count_103=5;

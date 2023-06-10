@@ -28,3 +28,10 @@ unsigned short map_55[22][25]={
 unsigned char entrances_55[0*5]={
 };
 unsigned char entrance_count_55=0;
+
+unsigned char sprite_55[3*3]={
+7,10,24,
+7,16,40,
+4,13,41,
+};
+unsigned char sprite_count_55=3;

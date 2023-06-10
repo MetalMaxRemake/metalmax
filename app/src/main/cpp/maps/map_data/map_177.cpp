@@ -37,3 +37,8 @@ unsigned char entrances_177[16*5]={
 9,10,10,11,176,
 };
 unsigned char entrance_count_177=16;
+
+unsigned char sprite_177[1*3]={
+9,4,0,
+};
+unsigned char sprite_count_177=1;

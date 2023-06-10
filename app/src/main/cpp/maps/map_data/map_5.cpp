@@ -23,3 +23,11 @@ unsigned char entrances_5[1*5]={
 12,7,10,6,6,
 };
 unsigned char entrance_count_5=1;
+
+unsigned char sprite_5[4*3]={
+4,9,15,
+5,11,16,
+10,12,17,
+1,14,18,
+};
+unsigned char sprite_count_5=4;

@@ -29,3 +29,13 @@ unsigned char entrances_30[3*5]={
 7,11,6,11,31,
 };
 unsigned char entrance_count_30=3;
+
+unsigned char sprite_30[6*3]={
+7,17,24,
+3,8,51,
+6,3,9,
+10,4,50,
+12,11,42,
+9,11,24,
+};
+unsigned char sprite_count_30=6;

@@ -4,4 +4,7 @@ extern "C" unsigned short map_232[11][80];
 extern "C" unsigned short fill_232;
 extern "C" unsigned char entrances_232[];
 extern "C" unsigned char entrance_count_232;
+extern "C" unsigned char sprite_232[];
+extern "C" unsigned char sprite_count_232;
+
 #endif

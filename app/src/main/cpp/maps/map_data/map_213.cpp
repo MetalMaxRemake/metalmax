@@ -23,3 +23,7 @@ unsigned char entrances_213[1*5]={
 20,8,31,24,211,
 };
 unsigned char entrance_count_213=1;
+
+unsigned char sprite_213[0*3]={
+};
+unsigned char sprite_count_213=0;

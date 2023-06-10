@@ -20,3 +20,10 @@ unsigned char entrances_99[1*5]={
 0,8,4,11,239,
 };
 unsigned char entrance_count_99=1;
+
+unsigned char sprite_99[3*3]={
+9,8,25,
+10,6,15,
+1,13,93,
+};
+unsigned char sprite_count_99=3;

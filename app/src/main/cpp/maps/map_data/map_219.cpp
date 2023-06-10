@@ -19,3 +19,15 @@ unsigned char entrances_219[5*5]={
 3,6,15,14,1,
 };
 unsigned char entrance_count_219=5;
+
+unsigned char sprite_219[8*3]={
+3,3,86,
+5,5,85,
+18,4,85,
+20,3,92,
+17,5,96,
+34,3,86,
+50,5,85,
+63,4,85,
+};
+unsigned char sprite_count_219=8;

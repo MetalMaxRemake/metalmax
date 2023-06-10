@@ -21,3 +21,9 @@ unsigned char entrances_31[1*5]={
 6,11,7,11,30,
 };
 unsigned char entrance_count_31=1;
+
+unsigned char sprite_31[2*3]={
+2,11,20,
+6,7,35,
+};
+unsigned char sprite_count_31=2;

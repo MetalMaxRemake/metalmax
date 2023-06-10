@@ -17,3 +17,10 @@ unsigned short map_14[11][13]={
 unsigned char entrances_14[0*5]={
 };
 unsigned char entrance_count_14=0;
+
+unsigned char sprite_14[3*3]={
+4,5,38,
+1,9,39,
+3,9,18,
+};
+unsigned char sprite_count_14=3;

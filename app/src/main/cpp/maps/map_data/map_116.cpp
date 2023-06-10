@@ -28,3 +28,10 @@ unsigned char entrances_116[2*5]={
 12,4,11,7,117,
 };
 unsigned char entrance_count_116=2;
+
+unsigned char sprite_116[3*3]={
+11,15,15,
+9,7,94,
+10,6,99,
+};
+unsigned char sprite_count_116=3;

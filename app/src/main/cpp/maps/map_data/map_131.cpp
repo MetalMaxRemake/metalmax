@@ -17,3 +17,7 @@ unsigned short map_131[11][10]={
 unsigned char entrances_131[0*5]={
 };
 unsigned char entrance_count_131=0;
+
+unsigned char sprite_131[0*3]={
+};
+unsigned char sprite_count_131=0;

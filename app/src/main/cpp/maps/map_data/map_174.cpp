@@ -25,3 +25,9 @@ unsigned char entrances_174[3*5]={
 9,10,9,10,173,
 };
 unsigned char entrance_count_174=3;
+
+unsigned char sprite_174[2*3]={
+5,10,6,
+9,4,0,
+};
+unsigned char sprite_count_174=2;

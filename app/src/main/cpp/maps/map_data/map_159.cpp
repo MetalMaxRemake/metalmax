@@ -56,3 +56,7 @@ unsigned char entrances_159[2*5]={
 4,39,4,11,160,
 };
 unsigned char entrance_count_159=2;
+
+unsigned char sprite_159[0*3]={
+};
+unsigned char sprite_count_159=0;

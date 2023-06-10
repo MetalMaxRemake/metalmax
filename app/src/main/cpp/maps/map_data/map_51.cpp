@@ -26,3 +26,15 @@ unsigned char entrances_51[2*5]={
 29,2,29,2,50,
 };
 unsigned char entrance_count_51=2;
+
+unsigned char sprite_51[8*3]={
+13,15,38,
+16,15,4,
+14,17,25,
+21,15,18,
+24,17,71,
+16,4,38,
+15,7,39,
+9,5,26,
+};
+unsigned char sprite_count_51=8;

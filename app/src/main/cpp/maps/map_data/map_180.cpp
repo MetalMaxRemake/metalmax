@@ -29,3 +29,8 @@ unsigned short map_180[23][15]={
 unsigned char entrances_180[0*5]={
 };
 unsigned char entrance_count_180=0;
+
+unsigned char sprite_180[1*3]={
+11,14,60,
+};
+unsigned char sprite_count_180=1;

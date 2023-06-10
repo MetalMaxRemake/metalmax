@@ -23,3 +23,16 @@ unsigned char entrances_232[6*5]={
 70,8,35,14,84,
 };
 unsigned char entrance_count_232=6;
+
+unsigned char sprite_232[9*3]={
+60,4,38,
+55,4,17,
+33,4,61,
+35,4,13,
+38,6,18,
+42,5,44,
+14,4,28,
+13,5,41,
+10,4,24,
+};
+unsigned char sprite_count_232=9;

@@ -17,3 +17,10 @@ unsigned char entrances_87[3*5]={
 3,6,3,5,84,
 };
 unsigned char entrance_count_87=3;
+
+unsigned char sprite_87[3*3]={
+3,3,28,
+18,4,85,
+34,3,86,
+};
+unsigned char sprite_count_87=3;

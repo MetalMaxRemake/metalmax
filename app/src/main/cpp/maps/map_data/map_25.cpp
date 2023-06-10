@@ -18,3 +18,15 @@ unsigned short map_25[12][32]={
 unsigned char entrances_25[0*5]={
 };
 unsigned char entrance_count_25=0;
+
+unsigned char sprite_25[8*3]={
+3,6,48,
+8,3,24,
+10,6,51,
+8,7,52,
+23,4,51,
+29,4,9,
+24,9,52,
+28,10,53,
+};
+unsigned char sprite_count_25=8;

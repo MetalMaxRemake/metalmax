@@ -60,3 +60,7 @@ unsigned char entrances_228[6*5]={
 9,10,11,40,228,
 };
 unsigned char entrance_count_228=6;
+
+unsigned char sprite_228[0*3]={
+};
+unsigned char sprite_count_228=0;

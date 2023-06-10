@@ -20,3 +20,8 @@ unsigned char entrances_44[1*5]={
 19,8,19,9,43,
 };
 unsigned char entrance_count_44=1;
+
+unsigned char sprite_44[1*3]={
+18,8,38,
+};
+unsigned char sprite_count_44=1;

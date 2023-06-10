@@ -4,4 +4,7 @@ extern "C" unsigned short map_171[16][22];
 extern "C" unsigned short fill_171;
 extern "C" unsigned char entrances_171[];
 extern "C" unsigned char entrance_count_171;
+extern "C" unsigned char sprite_171[];
+extern "C" unsigned char sprite_count_171;
+
 #endif

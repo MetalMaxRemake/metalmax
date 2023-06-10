@@ -41,3 +41,7 @@ unsigned char entrances_154[5*5]={
 2,7,1,10,153,
 };
 unsigned char entrance_count_154=5;
+
+unsigned char sprite_154[0*3]={
+};
+unsigned char sprite_count_154=0;

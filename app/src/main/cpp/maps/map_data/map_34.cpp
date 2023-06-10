@@ -24,3 +24,10 @@ unsigned char entrances_34[2*5]={
 12,3,13,3,36,
 };
 unsigned char entrance_count_34=2;
+
+unsigned char sprite_34[3*3]={
+9,11,60,
+3,4,38,
+10,6,0,
+};
+unsigned char sprite_count_34=3;

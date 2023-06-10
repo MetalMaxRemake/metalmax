@@ -20,3 +20,12 @@ unsigned char entrances_33[1*5]={
 3,7,4,6,32,
 };
 unsigned char entrance_count_33=1;
+
+unsigned char sprite_33[5*3]={
+6,4,8,
+9,3,53,
+7,9,35,
+6,9,6,
+3,12,5,
+};
+unsigned char sprite_count_33=5;

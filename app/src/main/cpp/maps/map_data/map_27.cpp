@@ -19,3 +19,8 @@ unsigned short map_27[13][12]={
 unsigned char entrances_27[0*5]={
 };
 unsigned char entrance_count_27=0;
+
+unsigned char sprite_27[1*3]={
+8,11,57,
+};
+unsigned char sprite_count_27=1;

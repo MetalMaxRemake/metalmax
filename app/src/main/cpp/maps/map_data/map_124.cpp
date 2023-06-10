@@ -23,3 +23,8 @@ unsigned char entrances_124[2*5]={
 1,2,2,2,123,
 };
 unsigned char entrance_count_124=2;
+
+unsigned char sprite_124[1*3]={
+9,10,102,
+};
+unsigned char sprite_count_124=1;

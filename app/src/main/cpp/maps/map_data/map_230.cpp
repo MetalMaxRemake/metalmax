@@ -21,3 +21,10 @@ unsigned short map_230[15][47]={
 unsigned char entrances_230[0*5]={
 };
 unsigned char entrance_count_230=0;
+
+unsigned char sprite_230[3*3]={
+4,9,132,
+34,6,125,
+30,11,132,
+};
+unsigned char sprite_count_230=3;

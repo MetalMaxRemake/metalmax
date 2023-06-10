@@ -22,3 +22,7 @@ unsigned short map_75[16][19]={
 unsigned char entrances_75[0*5]={
 };
 unsigned char entrance_count_75=0;
+
+unsigned char sprite_75[0*3]={
+};
+unsigned char sprite_count_75=0;

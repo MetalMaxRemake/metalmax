@@ -44,3 +44,12 @@ unsigned char entrances_17[15*5]={
 7,10,7,14,22,
 };
 unsigned char entrance_count_17=15;
+
+unsigned char sprite_17[5*3]={
+6,6,43,
+15,16,11,
+27,17,36,
+2,12,24,
+10,9,44,
+};
+unsigned char sprite_count_17=5;

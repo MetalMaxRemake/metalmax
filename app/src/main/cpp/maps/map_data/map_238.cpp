@@ -26,3 +26,9 @@ unsigned char entrances_238[4*5]={
 6,11,39,7,98,
 };
 unsigned char entrance_count_238=4;
+
+unsigned char sprite_238[2*3]={
+6,6,85,
+9,10,86,
+};
+unsigned char sprite_count_238=2;

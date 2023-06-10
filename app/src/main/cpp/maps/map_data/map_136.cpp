@@ -35,3 +35,14 @@ unsigned char entrances_136[1*5]={
 5,14,3,4,135,
 };
 unsigned char entrance_count_136=1;
+
+unsigned char sprite_136[7*3]={
+16,20,6,
+17,18,42,
+20,18,20,
+33,16,93,
+37,16,111,
+35,14,112,
+38,10,6,
+};
+unsigned char sprite_count_136=7;

@@ -17,3 +17,8 @@ unsigned short map_68[11][13]={
 unsigned char entrances_68[0*5]={
 };
 unsigned char entrance_count_68=0;
+
+unsigned char sprite_68[1*3]={
+5,5,25,
+};
+unsigned char sprite_count_68=1;

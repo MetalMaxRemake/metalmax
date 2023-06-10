@@ -20,3 +20,10 @@ unsigned char entrances_91[1*5]={
 4,1,6,2,90,
 };
 unsigned char entrance_count_91=1;
+
+unsigned char sprite_91[3*3]={
+5,6,88,
+5,7,88,
+5,8,88,
+};
+unsigned char sprite_count_91=3;

@@ -29,3 +29,7 @@ unsigned char entrances_194[2*5]={
 29,4,31,2,193,
 };
 unsigned char entrance_count_194=2;
+
+unsigned char sprite_194[0*3]={
+};
+unsigned char sprite_count_194=0;

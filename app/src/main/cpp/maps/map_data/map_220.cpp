@@ -18,3 +18,8 @@ unsigned char entrances_220[3*5]={
 1,2,20,2,220,
 };
 unsigned char entrance_count_220=3;
+
+unsigned char sprite_220[1*3]={
+2,4,45,
+};
+unsigned char sprite_count_220=1;

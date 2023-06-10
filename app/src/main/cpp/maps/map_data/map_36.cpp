@@ -28,3 +28,20 @@ unsigned char entrances_36[1*5]={
 13,3,12,3,34,
 };
 unsigned char entrance_count_36=1;
+
+unsigned char sprite_36[13*3]={
+2,7,61,
+12,9,5,
+10,4,24,
+6,6,62,
+10,9,3,
+11,5,12,
+6,3,63,
+6,4,63,
+6,5,63,
+5,7,45,
+4,7,63,
+4,8,63,
+4,9,63,
+};
+unsigned char sprite_count_36=13;

@@ -20,3 +20,7 @@ unsigned char entrances_77[2*5]={
 1,2,1,2,78,
 };
 unsigned char entrance_count_77=2;
+
+unsigned char sprite_77[0*3]={
+};
+unsigned char sprite_count_77=0;

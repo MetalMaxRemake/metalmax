@@ -20,3 +20,9 @@ unsigned char entrances_35[1*5]={
 6,2,6,2,34,
 };
 unsigned char entrance_count_35=1;
+
+unsigned char sprite_35[2*3]={
+6,7,46,
+2,4,56,
+};
+unsigned char sprite_count_35=2;

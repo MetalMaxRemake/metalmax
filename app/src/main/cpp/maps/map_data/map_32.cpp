@@ -21,3 +21,11 @@ unsigned char entrances_32[1*5]={
 4,6,3,7,33,
 };
 unsigned char entrance_count_32=1;
+
+unsigned char sprite_32[4*3]={
+2,12,3,
+12,10,8,
+8,4,9,
+4,4,51,
+};
+unsigned char sprite_count_32=4;

@@ -30,3 +30,9 @@ unsigned char entrances_148[1*5]={
 13,10,13,10,147,
 };
 unsigned char entrance_count_148=1;
+
+unsigned char sprite_148[2*3]={
+6,19,78,
+4,20,66,
+};
+unsigned char sprite_count_148=2;

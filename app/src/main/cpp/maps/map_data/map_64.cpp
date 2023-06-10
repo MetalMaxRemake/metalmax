@@ -44,3 +44,9 @@ unsigned char entrances_64[6*5]={
 16,17,8,13,69,
 };
 unsigned char entrance_count_64=6;
+
+unsigned char sprite_64[2*3]={
+12,23,5,
+17,14,4,
+};
+unsigned char sprite_count_64=2;

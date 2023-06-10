@@ -342,3 +342,13 @@ unsigned char entrances_0[79*5]={
 };
 
 unsigned char entrance_count_0=79;
+
+
+unsigned char sprite_0[5*3]={
+0,1,0,
+0,1,0,
+0,1,1,
+0,1,0,
+0,1,2,
+};
+unsigned char sprite_count_0=5;

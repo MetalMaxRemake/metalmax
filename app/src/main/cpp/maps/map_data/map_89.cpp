@@ -22,3 +22,11 @@ unsigned short map_89[16][16]={
 unsigned char entrances_89[0*5]={
 };
 unsigned char entrance_count_89=0;
+
+unsigned char sprite_89[4*3]={
+11,12,70,
+12,9,63,
+5,4,42,
+12,5,87,
+};
+unsigned char sprite_count_89=4;

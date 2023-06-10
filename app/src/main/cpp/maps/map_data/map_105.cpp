@@ -20,3 +20,12 @@ unsigned short map_105[14][20]={
 unsigned char entrances_105[0*5]={
 };
 unsigned char entrance_count_105=0;
+
+unsigned char sprite_105[5*3]={
+16,12,45,
+13,4,33,
+17,10,17,
+12,8,38,
+8,12,16,
+};
+unsigned char sprite_count_105=5;

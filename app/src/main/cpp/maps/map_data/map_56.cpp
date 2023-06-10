@@ -43,3 +43,13 @@ unsigned char entrances_56[11*5]={
 5,6,7,9,226,
 };
 unsigned char entrance_count_56=11;
+
+unsigned char sprite_56[6*3]={
+8,25,75,
+10,25,66,
+8,14,4,
+6,10,42,
+7,9,13,
+13,9,66,
+};
+unsigned char sprite_count_56=6;
