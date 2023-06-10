@@ -7,6 +7,10 @@
 
 #include "../global.h"
 
+#define WATER_BLOCK_COUNT 49
+
+extern unsigned short water_block_id[WATER_BLOCK_COUNT];
+
 extern byte wave[3][16 * 4];
 
 extern byte water[3][16 * 16];
