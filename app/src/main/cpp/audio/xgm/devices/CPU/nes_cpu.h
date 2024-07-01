@@ -3,13 +3,8 @@
 #include "../device.h"
 
 #define ILLEGAL_OPCODES 1
-#define DISABLE_DECIMAL 1
-#define USE_DIRECT_ZEROPAGE 0
-#define USE_CALLBACK	1
-#define USE_INLINEMMC 0
-#define USE_USERPOINTER	1
 #define External __inline
-#include "km6502/km6502m.h"
+#include "km6502m.h"
 
 namespace xgm
 {
