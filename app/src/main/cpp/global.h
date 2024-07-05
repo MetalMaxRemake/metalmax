@@ -7,7 +7,8 @@
 
 typedef unsigned char byte;
 
-void logd(char *tag, char *msg);
-void loge(char *tag, char *msg);
+void logd(char *tag, const char *fmt, ...);
+
+void loge(char *tag, const char *fmt, ...);
 
 #endif //METALMAX_GLOBAL_H

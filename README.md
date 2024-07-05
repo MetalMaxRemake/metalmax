@@ -8,3 +8,10 @@ Full C / C ++ / arm-v8 assembly remake metalmax
 # 游戏原始数据
 thanks：AFoolLove提供数据支持，欢迎关注MetalMaxRe https://github.com/AFoolLove/MetalMaxRe
 使用数据请遵守以上工程作者的协议，详细请查看上述链接
+
+# 游戏音频数据
+## version 1: 
+使用nsfplayer加载nsf生成pcm
+## version 2: 
+使用完全自建的midi引擎，音频格式为自定义格式（参考standard midi format 1），生成pcm。
+原始数据为通过修改的nsfplayer生成midi，再二次转为自定义格式。
