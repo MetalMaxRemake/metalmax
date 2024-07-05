@@ -2,10 +2,9 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/app/src/main/cpp/audio/vcm/vcm_ui.h" charset="Shift_JIS" />
-    <file url="file://$PROJECT_DIR$/app/src/main/cpp/audio/vcm/vcm_ui.h" charset="Shift_JIS" />
-    <file url="file://$PROJECT_DIR$/app/src/main/cpp/audio/xgm/player/nsf/nsfplay.cpp" charset="Shift_JIS" />
+    <file url="file://$PROJECT_DIR$/app/src/main/cpp/audio/xgm/devices/device.h" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/cpp/audio/xgm/player/nsf/nsfplay.cpp" charset="Shift_JIS" />
     <file url="file://$PROJECT_DIR$/app/src/main/cpp/audio/xgm/xtypes.h" charset="Shift_JIS" />
-    <file url="file://$PROJECT_DIR$/app/src/main/cpp/audio/xgm/xtypes.h" charset="Shift_JIS" />
+    <file url="mock:///device.h" charset="Shift_JIS" />
   </component>
 </project>
