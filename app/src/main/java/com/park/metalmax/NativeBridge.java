@@ -12,7 +12,7 @@ public class NativeBridge {
     public static native void releaseNativeWindow();
     public static native void slInit();
     public static native void slRelease();
-    public static native void commonTest();
+    public static native void initLogic();
     public static native void onKeyEvent(int key);
     public static native void onFuncKeyEvent(int key);
 

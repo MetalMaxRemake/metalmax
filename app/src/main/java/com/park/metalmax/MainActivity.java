@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
         );
         super.onCreate(savedInstanceState);
         setContentView(createSurfaceView());
-        NativeBridge.commonTest();
+        NativeBridge.initLogic();
     }
 
     @Override
