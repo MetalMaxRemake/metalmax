@@ -14,12 +14,12 @@
 #include "render.h"
 #include "render_splash.h"
 
-const byte up = 0b0001;
-const byte down = 0b0010;
-const byte left = 0b0100;
-const byte right = 0b1000;
+const uint8_t up = 0b0001;
+const uint8_t down = 0b0010;
+const uint8_t left = 0b0100;
+const uint8_t right = 0b1000;
 
-byte tik_clk = 16;
+uint8_t tik_clk = 16;
 
 BaseRender *renderStack[10];
 MapRender *mapRender;
@@ -82,7 +82,7 @@ void processLogic();
 
 void initLogicThread();
 
-byte *renderScreen(byte *buffer);
+uint8_t *renderScreen(uint8_t *buffer);
 
 void initLogic() {
     if (!logicRunning) {
@@ -103,13 +103,13 @@ void tikLogic() {
     processLogic();
 }
 
-void renderFps(byte *currentBuffer) {
+void renderFps(uint8_t *currentBuffer) {
     char fpsInfo[110];
     sprintf(fpsInfo, "FPS %d", getFps());
     renderAsciText(currentBuffer, fpsInfo, 0, 0);
 }
 
-byte *renderScreen(byte *screenBuffer) {
+uint8_t *renderScreen(uint8_t *screenBuffer) {
     for (int i = 0; i < stackIdx; i++) {
         if (renderStack[i] != nullptr) {
             screenBuffer = renderStack[i]->render(screenBuffer);
@@ -119,17 +119,17 @@ byte *renderScreen(byte *screenBuffer) {
     return screenBuffer;
 }
 
-byte directKey = 0;
-byte functionKey = 0;
+uint8_t directKey = 0;
+uint8_t functionKey = 0;
 
-byte last_directKey = 0;
-byte last_functionKey = 0;
+uint8_t last_directKey = 0;
+uint8_t last_functionKey = 0;
 
-void updateDirectKey(byte key) {
+void updateDirectKey(uint8_t key) {
     directKey = key;
 }
 
-void updateFunctionKey(byte key) {
+void updateFunctionKey(uint8_t key) {
     functionKey = key;
 }
 
@@ -143,8 +143,8 @@ void processKey() {
         last_functionKey = functionKey;
         return;
     }
-    byte diff_directKey = 0;
-    byte diff_functionKey = 0;
+    uint8_t diff_directKey = 0;
+    uint8_t diff_functionKey = 0;
     if (directKey > last_directKey) {
         diff_directKey = (directKey | last_directKey) & ~(directKey & last_directKey);
     }

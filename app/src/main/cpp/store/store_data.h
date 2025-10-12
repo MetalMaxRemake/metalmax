@@ -9,6 +9,6 @@
 
 #endif //METALMAX_STORE_DATA_H
 
-extern byte *stores_data[16];
-extern byte stores_size[16];
-extern byte vendor_data[18][6 * 2 + 1];
+extern uint8_t *stores_data[16];
+extern uint8_t stores_size[16];
+extern uint8_t vendor_data[18][6 * 2 + 1];

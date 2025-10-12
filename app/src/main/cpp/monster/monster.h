@@ -22,7 +22,7 @@
 #define ABILITY 12
 #define ATK_MODE    13
 
-byte *renderMonster(int monsterId, int rawIdx, int columnIdx, byte *result);
-byte getMonsterProperty(int monsterId, int type);
+uint8_t *renderMonster(int monsterId, int rawIdx, int columnIdx, uint8_t *result);
+uint8_t getMonsterProperty(int monsterId, int type);
 
 #endif //METALMAX_MONSTER_H

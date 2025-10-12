@@ -12,19 +12,19 @@
 #include "../graphic/graphic_process.h"
 #include "../graphic/palette_data.h"
 
-void renderBackground(byte *screenBuffer) {
-    __memset_aarch64(screenBuffer, BLACK, 256 * 256);
+void renderBackground(uint8_t *screenBuffer) {
+    __memset_aarch64(screenBuffer, BLACK, global_config::k_screen_width * global_config::k_screen_height);
 }
 
-void renderHumanMenu(byte *screenBuffer) {
-
-}
-
-void renderCarMenu(byte *screenBuffer) {
+void renderHumanMenu(uint8_t *screenBuffer) {
 
 }
 
-void renderInfoMenu(byte *screenBuffer) {
+void renderCarMenu(uint8_t *screenBuffer) {
+
+}
+
+void renderInfoMenu(uint8_t *screenBuffer) {
 
 }
 
@@ -51,7 +51,7 @@ void BattleRender::tikLogic() {
     }
 }
 
-byte * BattleRender::render(byte *screenBuffer) {
+uint8_t * BattleRender::render(uint8_t *screenBuffer) {
     if(enterBattle) {
         renderBackground(screenBuffer);
         renderMonster(monsterIdx, 10, 20, screenBuffer);
@@ -69,13 +69,13 @@ byte * BattleRender::render(byte *screenBuffer) {
         renderAsciText(screenBuffer, info, 10, 162);
     } else {
         if(splashClk % 3 == 0 && splashCount < 5) {
-            __memset_aarch64(screenBuffer, 8, 256 * 256);
+            __memset_aarch64(screenBuffer, 8, global_config::k_screen_width * global_config::k_screen_height);
         }
     }
     return screenBuffer;
 }
 
-void BattleRender::processKeyClick(byte directKey, byte functionKey) {
+void BattleRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
     if(!enterBattle) {
         return;
     }

@@ -131,9 +131,9 @@ unsigned char *getZhStringImg(const char *str, int len) {
     return res;
 }
 
-void renderAsciText(byte* screenBuffer, const char *str, int x, int y) {
+void renderAsciText(uint8_t* screenBuffer, const char *str, int x, int y) {
     int len = strlen(str);
-    int img_width = 256;
+    int img_width = global_config::k_screen_width;
     int offset = y*img_width + x;
     for (int charIdx = 0; charIdx < len; charIdx++) {
         int asciiCode = str[charIdx] - 32;
@@ -146,8 +146,8 @@ void renderAsciText(byte* screenBuffer, const char *str, int x, int y) {
     }
 }
 
-void renderZhText(byte* screenBuffer, const char *str, int len, int x, int y) {
-    int img_width = 256;
+void renderZhText(uint8_t* screenBuffer, const char *str, int len, int x, int y) {
+    int img_width = global_config::k_screen_width;
     int offset = y*img_width + x;
     for (int charIdx = 0; charIdx < len; charIdx++) {
         for (int i = 0; i < 12; i++) {

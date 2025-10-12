@@ -9,7 +9,7 @@
 
 unsigned char *getZhStringImg(const char *str, int len);
 
-void renderAsciText(byte* screenBuffer, const char *str, int x, int y);
-void renderZhText(byte* screenBuffer, const char *str, int len, int x, int y);
+void renderAsciText(uint8_t* screenBuffer, const char *str, int x, int y);
+void renderZhText(uint8_t* screenBuffer, const char *str, int len, int x, int y);
 
 #endif //METALMAX_CHARSETS_H

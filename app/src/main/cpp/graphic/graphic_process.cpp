@@ -6,8 +6,8 @@
 #include "graphic_process.h"
 #include "../opt/mem_opt.h"
 
-byte *horizontalFlip(byte *source, int width, int height) {
-    byte tmp;
+uint8_t *horizontalFlip(uint8_t *source, int width, int height) {
+    uint8_t tmp;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width / 2; j++) {
             tmp = source[i * width + j];
@@ -18,8 +18,8 @@ byte *horizontalFlip(byte *source, int width, int height) {
     return source;
 }
 
-byte *verticalFlip(byte *source, int width, int height) {
-    byte *line = (byte *) malloc(width);
+uint8_t *verticalFlip(uint8_t *source, int width, int height) {
+    uint8_t *line = (uint8_t *) malloc(width);
     for (int i = 0; i < height / 2; ++i) {
         __memcpy_aarch64_simd(line, source + i * width, width);
         __memcpy_aarch64_simd(source + i * width, source + (height - i - 1) * width, width);

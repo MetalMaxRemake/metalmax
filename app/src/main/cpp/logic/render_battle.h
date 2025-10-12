@@ -16,9 +16,9 @@ private:
     int monsterIdx = 0;
 public:
     BattleRender(int monsterId);
-    byte * render(byte *screenBuffer);
+    uint8_t * render(uint8_t *screenBuffer);
     void tikLogic();
-    void processKeyClick(byte directKey, byte functionKey);
+    void processKeyClick(uint8_t directKey, uint8_t functionKey);
 };
 
 #endif //METALMAX_RENDER_BATTLE_H

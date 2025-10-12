@@ -11,11 +11,11 @@
 
 extern unsigned short water_block_id[WATER_BLOCK_COUNT];
 
-extern byte wave[3][16 * 4];
+extern uint8_t wave[3][16 * 4];
 
-extern byte water[3][16 * 16];
+extern uint8_t water[3][16 * 16];
 
-extern void renderWave(byte direct, byte status, byte *screenBuffer, int x, int y);
+extern void renderWave(uint8_t direct, uint8_t status, uint8_t *screenBuffer, int x, int y);
 
 bool isWater(unsigned short tileId);
 

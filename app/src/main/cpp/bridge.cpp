@@ -1,5 +1,4 @@
 #include <jni.h>
-#include <__threading_support>
 #include <unistd.h>
 #include <android/bitmap.h>
 #include <android/log.h>
@@ -7,7 +6,6 @@
 #include "graphic/native_graphic.h"
 #include "audio/native_sound.h"
 #include "charset/charsets.h"
-#include "graphic/palette_data.h"
 #include "opt/mem_opt.h"
 #include "logic/logic.h"
 

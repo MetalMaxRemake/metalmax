@@ -8,17 +8,17 @@
 #include "../../opt/mem_opt.h"
 #include "../../graphic/graphic_process.h"
 
-byte direct_up = 0;
-byte direct_down = 1;
-byte direct_left = 2;
-byte direct_right = 3;
+uint8_t direct_up = 0;
+uint8_t direct_down = 1;
+uint8_t direct_left = 2;
+uint8_t direct_right = 3;
 
 static Character *warrior;
 
 Character::Character() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 2; j++) {
-            bitmap[i][j] = (byte *) malloc(16 * 16);
+            bitmap[i][j] = (uint8_t *) malloc(16 * 16);
         }
     }
     __memcpy_aarch64_simd(bitmap[direct_up][0], getSpriteImage(0, 3, nullptr), 256);//up1

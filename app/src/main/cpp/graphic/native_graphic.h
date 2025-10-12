@@ -12,7 +12,7 @@
 #include "GLES2/gl2platform.h"
 #include "../global.h"
 
-void setRenderCallback(byte*(*getBuffer)(byte* screenBuffer));
+void setRenderCallback(uint8_t*(*getBuffer)(uint8_t* screenBuffer));
 void initGraphic(ANativeWindow* window);
 int* getCurrentPalette();
 void refreshPalette(int *currentPalette);

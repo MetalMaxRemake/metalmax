@@ -19,21 +19,21 @@ private:
     void refreshMusic() const;
     void triggerMonster() const;
     void triggerDoor(Character *player) const;
-    void renderDoor(byte *screenBuffer) const;
-    void renderSprite(byte *screenBuffer) const;
-    void renderWater(byte *screenBuffer) const;
+    void renderDoor(uint8_t *screenBuffer) const;
+    void renderSprite(uint8_t *screenBuffer) const;
+    void renderWater(uint8_t *screenBuffer) const;
     void resetPalette() const;
-    void renderPlayers(byte *screenBuffer, Character *player) const;
+    void renderPlayers(uint8_t *screenBuffer, Character *player) const;
 public:
     MapRender();
     void updateMap(int newMapId, int x, int y);
     int getMapId();
-    byte * render(byte *screenBuffer);
+    uint8_t * render(uint8_t *screenBuffer);
     void tikLogic();
 
-    bool processKey(byte directKey, byte functionKey);
+    bool processKey(uint8_t directKey, uint8_t functionKey);
 
-    void processKeyClick(byte directKey, byte functionKey);
+    void processKeyClick(uint8_t directKey, uint8_t functionKey);
 
     void onFocus();
     void onUnFocus();

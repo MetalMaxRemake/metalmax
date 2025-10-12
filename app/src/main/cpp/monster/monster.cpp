@@ -8,7 +8,7 @@
 #include "../graphic/graphic_process.h"
 #include "../graphic/bitmap_render.h"
 
-byte *renderMonster(int monsterId, int rawIdx, int columnIdx, byte *result) {
+uint8_t *renderMonster(int monsterId, int rawIdx, int columnIdx, uint8_t *result) {
     int monster_width = monster_size[monsterId * 2 + 1];
     int monster_height = monster_size[monsterId * 2];
     return renderBitmap(monster_model[monsterId],
@@ -20,6 +20,6 @@ byte *renderMonster(int monsterId, int rawIdx, int columnIdx, byte *result) {
 //stride = 14
 
 
-byte getMonsterProperty(int monsterId, int type) {
+uint8_t getMonsterProperty(int monsterId, int type) {
     return monster_properties[monsterId * MONSTER_PROPERTY_STRIDE + type];
 }

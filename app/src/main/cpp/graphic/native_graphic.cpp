@@ -10,9 +10,7 @@
 #include <string.h>
 #include <android/log.h>
 #include <__threading_support>
-
-#define WIDTH 256
-#define HEIGHT_PAL 240
+#include "../global.h"
 
 #include "../maps/map.h"
 #include "../charset/charsets.h"
@@ -58,14 +56,16 @@ static ANativeWindow *mANativeWindow;
 static ANativeWindow_Buffer nwBuffer;
 
 volatile int window_height, window_width;
+
+constexpr int k_screen_width = 455;
 /**
  * OpenGL
  */
-const int paletteSize = 256;
+const int palette_texture_size = 256;
 
-byte *(*renderBuffer)(byte *screenBuffer);
+uint8_t *(*renderBuffer)(uint8_t *screenBuffer);
 
-byte *currentScreenBuffer;
+uint8_t *currentScreenBuffer;
 
 extern volatile bool graphicRunning;
 
@@ -81,11 +81,7 @@ int positionHandle, textureHandle, paletteHandle, texCoordHandle, mvpMatrixHandl
 unsigned int program;
 unsigned int paletteTextureId;
 unsigned int mainTextureId;
-int * currentPalette;
-
-int getTextureSize() {
-    return 256;
-}
+int *palette_texture_pixels;
 
 const char *FRAGMENT_SHADER = "precision mediump float;"
                               "varying vec2 v_texCoord;"
@@ -95,7 +91,7 @@ const char *FRAGMENT_SHADER = "precision mediump float;"
                               "{           "
                               "		 float a = texture2D(s_texture, v_texCoord).a;"
                               "	     float c = floor((a * 256.0) / 127.5);"
-                              "      float x = a - c * 0.001953;"
+                              "      float x = a - c * 0.001953;"// = 1 / (screen_width * 2) //0.001953
                               "      vec2 curPt = vec2(x, 0);"
                               "      gl_FragColor.rgb = texture2D(s_palette, curPt).rgb;"
                               "}";
@@ -115,9 +111,9 @@ float textureCoords[8];
 short drawOrder[] = {0, 1, 2, 0, 2, 3};
 
 void initQuadCoordinates(int width, int height) {
-    int maxTexX = WIDTH;
-    int maxTexY = HEIGHT_PAL;
-    int textureSize = getTextureSize();
+    int maxTexX = global_config::k_screen_width;
+    int maxTexY = global_config::k_screen_height;
+    int textureSize = global_config::k_screen_height;
     float tempQuadCoords[] = {
             -width / 2.0f, -height / 2.0f, 0,
             -width / 2.0f, height / 2.0f, 0,
@@ -184,8 +180,8 @@ unsigned int loadProgram(const char *VShaderCode, const char *FShaderCode) {
 void initTextures() {
     GLsizei numTextures = 2;
     GLuint textureIds[2];
-    int textureWidth = 256;
-    int textureHeight = 256;
+    int textureWidth = global_config::k_screen_width;
+    int textureHeight = global_config::k_screen_height;
     glGenTextures(numTextures, textureIds);
     glBindTexture(GL_TEXTURE_2D, textureIds[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureWidth,
@@ -207,8 +203,8 @@ void initTextures() {
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //palette!
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, paletteSize, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 currentPalette);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, palette_texture_size, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 palette_texture_pixels);
     glTexParameteri(GL_TEXTURE_2D,
                     GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,
@@ -264,7 +260,7 @@ void onGLDraw() {
 
     glActiveTexture(GL_TEXTURE0);
     checkGlError("uniforms");
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT_PAL, GL_ALPHA,
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, global_config::k_screen_width, global_config::k_screen_height, GL_ALPHA,
                     GL_UNSIGNED_BYTE, currentScreenBuffer);
     checkGlError("emu render");
     glDrawElements(GL_TRIANGLES, 6,
@@ -280,7 +276,7 @@ void onSoftDraw() {
     if (currentScreenBuffer == nullptr) {
         return;
     }
-    byte *screenBuffer = (byte *) currentScreenBuffer;
+    uint8_t *screenBuffer = (uint8_t *) currentScreenBuffer;
     ANativeWindow_Buffer mNativeWindowBuffer;
     ANativeWindow_lock(mANativeWindow, &mNativeWindowBuffer, nullptr);
     int *dstBuffer = static_cast<int *>(mNativeWindowBuffer.bits);
@@ -292,7 +288,7 @@ void onSoftDraw() {
     }
     __memset_aarch64(dstBuffer, 0,
                      mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
-    float scale = (float) mNativeWindowBuffer.height / 256.0f; //计算图像宽度缩放比例
+    float scale = (float) mNativeWindowBuffer.height / (global_config::k_screen_height * 1.f); //计算图像宽度缩放比例
     float scaleLeft = scale - (int) scale; //求出缩放比例的小数部分
     int addArg = (scaleLeft > 0.5) ? 1 : 0;
     int x, y;
@@ -301,14 +297,14 @@ void onSoftDraw() {
         y = (int) (hnum / scale) + addArg;   //计算当前临近坐标的y值
         for (int wnum = 0; wnum < dstWidth; ++wnum) {
             x = (int) (wnum / scale) + addArg; //计算当前临近坐标的x值
-            dstBuffer[hnum * mNativeWindowBuffer.stride + wnum + offset] = palette[screenBuffer[
-                    y * 256 + x]];
+            dstBuffer[hnum * mNativeWindowBuffer.stride + wnum + offset] = palette_texture_pixels[screenBuffer[
+                    y * global_config::k_screen_width + x]];
         }
     }
     ANativeWindow_unlockAndPost(mANativeWindow);
 }
 
-void setRenderCallback(byte *(*renderScreenBuffer)(byte *screenBuffer)) {
+void setRenderCallback(uint8_t *(*renderScreenBuffer)(uint8_t *screenBuffer)) {
     renderBuffer = renderScreenBuffer;
 }
 
@@ -336,13 +332,13 @@ void releaseEGL() {
 }
 
 void initPalette() {
-    currentPalette = (int  *) malloc(sizeof (int) * 256);
-    for (int i = 0; i < paletteSize; i++) {
-        int dd = palette[i];
+    palette_texture_pixels = (int *) malloc(sizeof(int) * palette_texture_size);
+    for (int i = 0; i < palette::palette_size; i++) {
+        int dd = palette::palette_rgb[i];
         int b = (dd & 0x00FF0000) >> 16;
         int g = (dd & 0x0000FF00) >> 8;
         int r = (dd & 0x000000FF) >> 0;
-        currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
+        palette_texture_pixels[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
 }
 
@@ -424,9 +420,9 @@ void vulkan() {
  */
 volatile bool graphicRunning = true;
 
-const static byte SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
+const static uint8_t SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
 
-volatile byte renderMode = OPEN_GL;
+
 
 //定义线程函数
 void *gl_thread(void *arg) {
@@ -436,11 +432,11 @@ void *gl_thread(void *arg) {
                                      window_width,
                                      window_height,
                                      WINDOW_FORMAT_RGBA_8888);
-    if (renderMode == SOFTWARE) {
+    if (global_config::k_render_mode == SOFTWARE) {
         software();
-    } else if (renderMode == OPEN_GL) {
+    } else if (global_config::k_render_mode == OPEN_GL) {
         openGL();
-    } else if (renderMode == VULKAN) {
+    } else if (global_config::k_render_mode == VULKAN) {
         vulkan();
     }
     return nullptr;
@@ -450,17 +446,17 @@ void initGraphic(ANativeWindow *window) {
     mANativeWindow = window;
     pthread_t id;
     initPalette();
-    currentScreenBuffer = (byte *) malloc(sizeof(char) * (256 * 256));
+    currentScreenBuffer = (uint8_t *) malloc(sizeof(char) * (global_config::k_screen_width * global_config::k_screen_height));
     pthread_create(&id, nullptr, gl_thread, mANativeWindow);
 }
 
-int* getCurrentPalette() {
-    return currentPalette;
+int *getCurrentPalette() {
+    return palette_texture_pixels;
 }
 
 void refreshPalette(int *newPalette) {
     needRefreshPalette = true;
-    currentPalette = newPalette;
+    palette_texture_pixels = newPalette;
 }
 
 void releaseGraphic() {
@@ -468,5 +464,5 @@ void releaseGraphic() {
     graphicRunning = false;
     free(config);
     free(currentScreenBuffer);
-    free(currentPalette);
+    free(palette_texture_pixels);
 }

@@ -6,7 +6,7 @@
 #include "render_computer.h"
 #include "../charset/charsets.h"
 
-byte *ComputerRender::render(byte *screenBuffer) {
+uint8_t *ComputerRender::render(uint8_t *screenBuffer) {
     char info[100];
     if(type == -1) {
         sprintf(info, "NOTHING WAS FOUND!");
@@ -19,7 +19,7 @@ byte *ComputerRender::render(byte *screenBuffer) {
     return screenBuffer;
 }
 
-void ComputerRender::processKeyClick(byte directKey, byte functionKey) {
+void ComputerRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
     if (functionKey != 0) {
         pop();
     }

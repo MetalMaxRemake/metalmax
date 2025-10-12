@@ -9,10 +9,10 @@
 
 class BaseMenuRender : public BaseRender {
 private:
-    byte *selectIcon;
+    uint8_t *selectIcon;
 protected:
-    virtual void renderSelectPos(byte *screenBuffer, int x, int y) {
-        int img_width = 256;
+    virtual void renderSelectPos(uint8_t *screenBuffer, int x, int y) {
+        int img_width = global_config::k_screen_width;
         int offset = y * img_width + x;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {

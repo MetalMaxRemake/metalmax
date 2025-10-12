@@ -7,14 +7,14 @@
 
 #include "../global.h"
 
-extern "C" const byte up;
-extern "C" const byte down;
-extern "C" const byte left;
-extern "C" const byte right;
+extern "C" const uint8_t up;
+extern "C" const uint8_t down;
+extern "C" const uint8_t left;
+extern "C" const uint8_t right;
 
 void initLogic();
 void releaseLogicThread();
-void updateDirectKey(byte key);
-void updateFunctionKey(byte key);
+void updateDirectKey(uint8_t key);
+void updateFunctionKey(uint8_t key);
 
 #endif //METALMAX_LOGIC_H

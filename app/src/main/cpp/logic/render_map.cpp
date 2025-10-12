@@ -25,8 +25,8 @@
 
 #define ANIMATION_DURATION 20
 
-static const byte HUMAN_PASS = 0b0001;
-static const byte CAR_PASS = 0b0010;
+static const uint8_t HUMAN_PASS = 0b0001;
+static const uint8_t CAR_PASS = 0b0010;
 
 static volatile int posX, posY;
 static volatile int mapId;
@@ -55,7 +55,7 @@ int MapRender::getMapId() {
 
 pthread_mutex_t changeMapMutex;
 
-byte *MapRender::render(byte *screenBuffer) {
+uint8_t *MapRender::render(uint8_t *screenBuffer) {
     if (entranceAnimation > ANIMATION_DURATION / 2) {
         fadeOut();
     } else if (entranceAnimation) {
@@ -77,7 +77,7 @@ byte *MapRender::render(byte *screenBuffer) {
     return screenBuffer;
 }
 
-void MapRender::renderPlayers(byte *screenBuffer, Character *player) const {
+void MapRender::renderPlayers(uint8_t *screenBuffer, Character *player) const {
     renderBitmapWithTrans(player->currentBitmap,
                           16, 16,
                           128, 128, screenBuffer);
@@ -85,10 +85,10 @@ void MapRender::renderPlayers(byte *screenBuffer, Character *player) const {
 
 int water_status_map[4] = {1, 2, 3, 2};
 
-byte water_status = 0;
+uint8_t water_status = 0;
 int water_status_clk = 0;
 
-void MapRender::renderWater(byte *screenBuffer) const {
+void MapRender::renderWater(uint8_t *screenBuffer) const {
     int startX = posX / 16;
     int startY = posY / 16;
     for (int x = startX - 1; x < startX + 17; x++) {
@@ -96,12 +96,12 @@ void MapRender::renderWater(byte *screenBuffer) const {
             if (isPureWater(getTileIdx(x, y))) {
                 int renderY = y * 16 - posY;
                 int renderX = x * 16 - posX;
-                if (renderX > -16 && renderX < 272 && renderY > -16 && renderY < 256) {
+                if (renderX > -16 && renderX < global_config::k_screen_width + 16 && renderY > -16 && renderY < global_config::k_screen_width + 16) {
                     renderBitmap(water[water_status_map[water_status] - 1],
                                  16, 16,
                                  renderX, renderY,
                                  screenBuffer);
-                    byte direct = 0;
+                    uint8_t direct = 0;
                     if (!isWater(getTileIdx(x, y - 1))) {
                         direct |= up;
                     }
@@ -122,15 +122,15 @@ void MapRender::renderWater(byte *screenBuffer) const {
     }
 }
 
-void MapRender::renderSprite(byte *screenBuffer) const {
+void MapRender::renderSprite(uint8_t *screenBuffer) const {
     int spriteCount = map_sprite_count[mapId];
     for (int i = 0; i < spriteCount; i++) {
-        byte x = map_sprite[mapId][i * 3];
-        byte y = map_sprite[mapId][i * 3 + 1] - 1;
+        uint8_t x = map_sprite[mapId][i * 3];
+        uint8_t y = map_sprite[mapId][i * 3 + 1] - 1;
         int renderY = y * 16 - posY;
         int renderX = x * 16 - posX;
-        if (renderX > -16 && renderX < 272 && renderY > -16 && renderY < 256) {
-            byte spriteBmpId = map_sprite[mapId][i * 3 + 2];
+        if (renderX > -16 && renderX < global_config::k_screen_width + 16 && renderY > -16 && renderY < global_config::k_screen_height + 16) {
+            uint8_t spriteBmpId = map_sprite[mapId][i * 3 + 2];
             renderBitmapWithTrans(sprites[spriteBmpId],
                                   16, 16,
                                   renderX, renderY,
@@ -139,7 +139,7 @@ void MapRender::renderSprite(byte *screenBuffer) const {
     }
 }
 
-void MapRender::renderDoor(byte *screenBuffer) const {
+void MapRender::renderDoor(uint8_t *screenBuffer) const {
     Character *player = getDefaultPlayer();
     if (player->inDoor) {
         int map_width = map_size[mapId * 2 + 1];
@@ -168,8 +168,8 @@ void MapRender::renderDoor(byte *screenBuffer) const {
 
 void MapRender::resetPalette() const {
     int *currentPalette = getCurrentPalette();
-    for (int i = 0; i < 256; i++) {
-        int dd = palette[i];
+    for (int i = 0; i < palette::palette_size; i++) {
+        int dd = palette::palette_rgb[i];
         int b = (dd & 0x00FF0000) >> 16;
         int g = (dd & 0x0000FF00) >> 8;
         int r = (dd & 0x000000FF) >> 0;
@@ -180,8 +180,8 @@ void MapRender::resetPalette() const {
 
 void MapRender::fadeIn() const {
     int *currentPalette = getCurrentPalette();
-    for (int i = 0; i < 256; i++) {
-        unsigned int origindd = palette[i];
+    for (int i = 0; i < palette::palette_size; i++) {
+        unsigned int origindd = palette::palette_rgb[i];
         unsigned int o_b = (origindd & 0x00FF0000) >> 16;
         unsigned int o_g = (origindd & 0x0000FF00) >> 8;
         unsigned int o_r = (origindd & 0x000000FF) >> 0;
@@ -206,7 +206,7 @@ void MapRender::fadeIn() const {
 
 void MapRender::fadeOut() const {
     int *currentPalette = getCurrentPalette();
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < palette::palette_size; i++) {
         unsigned int dd = currentPalette[i];
         unsigned int b = (dd & 0x00FF0000) >> 16;
         unsigned int g = (dd & 0x0000FF00) >> 8;
@@ -251,7 +251,7 @@ void MapRender::onUnFocus() {
 }
 
 void MapRender::refreshMusic() const {
-    byte currentMusic = map_music[mapId] - 3;
+    uint8_t currentMusic = map_music[mapId] - 3;
     if (getAudioIdx() != currentMusic) {
         changeAudio(currentMusic);
     }
@@ -261,7 +261,7 @@ void MapRender::onFocus() {
     refreshMusic();
 }
 
-void MapRender::processKeyClick(byte directKey, byte functionKey) {
+void MapRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
     renderEffect(EFFECT_PUSH_BUTTON);
     if (functionKey & a) {
         MenuRender *menuRender = new MenuRender(MAP_MENU);
@@ -286,7 +286,7 @@ void MapRender::processKeyClick(byte directKey, byte functionKey) {
 
 bool canHumanPass(int targetX, int targetY) {
     unsigned short tileIdx = getTileIdx(targetX, targetY);
-    byte currentTileFeature = feature[tileIdx];
+    uint8_t currentTileFeature = feature[tileIdx];
     return currentTileFeature & HUMAN_PASS;
 }
 
@@ -298,7 +298,7 @@ struct Pos {
 Pos lastPosStack[10];
 int lastPosStackTop = 0;
 
-bool MapRender::processKey(byte directKey, byte functionKey) {
+bool MapRender::processKey(uint8_t directKey, uint8_t functionKey) {
     Character *player = getDefaultPlayer();
     if (entranceAnimation) {
         return true;
@@ -384,10 +384,10 @@ void MapRender::triggerMonster() const {
 }
 
 bool MapRender::checkOutOfMap(Character *player, int targetX, int targetY) {
-    byte startX = movable_offset[mapId * 2];
-    byte startY = movable_offset[mapId * 2 + 1];
-    byte endX = startX + movable_size[mapId * 2];
-    byte endY = startY + movable_size[mapId * 2 + 1];
+    uint8_t startX = movable_offset[mapId * 2];
+    uint8_t startY = movable_offset[mapId * 2 + 1];
+    uint8_t endX = startX + movable_size[mapId * 2];
+    uint8_t endY = startY + movable_size[mapId * 2 + 1];
     if (targetX < startX
         || targetY < startY
         || targetX > endX
@@ -408,8 +408,8 @@ bool MapRender::checkEntrance(Character *player, int targetX, int targetY) {
     int nextMapId = -1;
     int matchedIdx = -1;
     for (int i = 0; i < entrance_count[mapId]; i++) {
-        byte entrance_x = entrances[mapId][i * 5];
-        byte entrance_y = entrances[mapId][i * 5 + 1];
+        uint8_t entrance_x = entrances[mapId][i * 5];
+        uint8_t entrance_y = entrances[mapId][i * 5 + 1];
         if (player->x == entrance_x && player->y == entrance_y) {
             currentOnEntranceMapId = entrances[mapId][i * 5 + 4];
         }

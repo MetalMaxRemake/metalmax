@@ -6,7 +6,7 @@
 #define METALMAX_GRAPHIC_PROCESS_H
 #include "../global.h"
 
-byte *horizontalFlip(byte *source, int width, int height);
-byte *verticalFlip(byte *source, int width, int height);
+uint8_t *horizontalFlip(uint8_t *source, int width, int height);
+uint8_t *verticalFlip(uint8_t *source, int width, int height);
 
 #endif //METALMAX_GRAPHIC_PROCESS_H

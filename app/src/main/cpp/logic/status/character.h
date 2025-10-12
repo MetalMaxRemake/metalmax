@@ -7,10 +7,10 @@
 
 #include "../../global.h"
 
-extern byte direct_up;
-extern byte direct_down;
-extern byte direct_left;
-extern byte direct_right;
+extern uint8_t direct_up;
+extern uint8_t direct_down;
+extern uint8_t direct_left;
+extern uint8_t direct_right;
 
 class Character {
 public:
@@ -21,12 +21,12 @@ public:
     int x, y;
     int renderX, renderY;
     bool steping;
-    byte direct;//0-up 1-down 2-left 3-right
+    uint8_t direct;//0-up 1-down 2-left 3-right
     bool inDoor = false;
     int halfStep;
     int bitmapId;
-    byte* bitmap[4][2];
-    byte* currentBitmap;
+    uint8_t* bitmap[4][2];
+    uint8_t* currentBitmap;
     void tik();
     void setPos(int x, int y);
 };

@@ -45,7 +45,7 @@ bool isPureWater(unsigned short tileId) {
  * @param direct 复用一下方向键的方向吧
  * @param screenBuffer
  */
-void renderWave(byte direct, byte status, byte *screenBuffer, int x, int y) {
+void renderWave(uint8_t direct, uint8_t status, uint8_t *screenBuffer, int x, int y) {
         renderBitmapWithScroll(wave[status], direct,
                                16, 4,
                                x, y,
@@ -54,7 +54,7 @@ void renderWave(byte direct, byte status, byte *screenBuffer, int x, int y) {
 
 //upper side, need to scroll & use
 //8 / 0
-byte wave[3][16 * 4] = {
+uint8_t wave[3][16 * 4] = {
         {
                 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                 35, 8, 35, 35, 8, 8, 35, 8, 8, 35, 8, 8, 35, 8, 35, 8,
@@ -75,7 +75,7 @@ byte wave[3][16 * 4] = {
         }
 };
 
-byte water[3][16 * 16] = {
+uint8_t water[3][16 * 16] = {
         {
                 11, 11, 11, 11, 11, 11, 11, 11, 11, 10, 11, 11, 11, 11, 11, 10,
                 11, 11, 11, 11, 11, 11, 11, 11, 10, 10, 11, 11, 11, 11, 11, 10,

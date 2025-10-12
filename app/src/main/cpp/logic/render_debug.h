@@ -13,14 +13,14 @@ class DebugRender : public BaseMenuRender {
 private:
     int selectPos = 0;
     void processSelection();
-    void renderDebugMenu(byte *screenBuffer);
-    void renderDebugInfo(byte *screenBuffer) const;
+    void renderDebugMenu(uint8_t *screenBuffer);
+    void renderDebugInfo(uint8_t *screenBuffer) const;
 public:
     DebugRender();
     ~DebugRender();
-    byte * render(byte *screenBuffer);
+    uint8_t * render(uint8_t *screenBuffer);
     void tikLogic();
-    void processKeyClick(byte directKey, byte functionKey);
+    void processKeyClick(uint8_t directKey, uint8_t functionKey);
 };
 
 #endif //METALMAX_RENDER_DEBUG_H

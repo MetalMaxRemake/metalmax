@@ -24,17 +24,17 @@ file(GLOB_RECURSE NSF_PLAYER_SRC
 
 message(STATUS "MAP_DATA_SRC = ${MAP_DATA_SRC}")
 
-add_library( metalmax
-             SHARED
-            bridge.cpp perf.cpp
-            opt/matrix.cpp opt/memcpy-advsimd.S opt/memset.S
-            ${MAIN_SRC}
-            ${MONSTER}
-            ${LOGIC_SRC}
-            ${CHARSET_SRC}
-            ${GRAPHIC_SRC}
-            ${MAP_DATA_SRC}
-            ${SOUND_DATA_SRC}
-            ${NSF_PLAYER_SRC})
+add_library(metalmax
+        SHARED
+        bridge.cpp perf.cpp
+        opt/matrix.cpp opt/memcpy-advsimd.S opt/memset.S
+        ${MAIN_SRC}
+        ${MONSTER}
+        ${LOGIC_SRC}
+        ${CHARSET_SRC}
+        ${GRAPHIC_SRC}
+        ${MAP_DATA_SRC}
+        ${SOUND_DATA_SRC}
+        ${NSF_PLAYER_SRC})
 target_link_libraries(metalmax
         log android EGL GLESv2 OpenSLES jnigraphics)

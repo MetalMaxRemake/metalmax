@@ -6,6 +6,6 @@
 #include "../global.h"
 #include "sprite_player.h"
 
-byte *getSpriteImage(int spriteId, int status, byte *result) {
-    return (byte *) sprite_player[status];
+uint8_t *getSpriteImage(int spriteId, int status, uint8_t *result) {
+    return (uint8_t *) sprite_player[status];
 }

@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         );
         super.onCreate(savedInstanceState);
-        setContentView(initView());
+        setContentView(createSurfaceView());
         NativeBridge.initNativeMethod();
         NativeBridge.commonTest();
     }
@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
         NativeBridge.slRelease();
     }
 
-    private View initView() {
+    private View createSurfaceView() {
         int margin = dpToPx(this, 30);
         //root
         FrameLayout rootLayout = new FrameLayout(MainActivity.this);

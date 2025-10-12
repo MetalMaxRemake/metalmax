@@ -8,18 +8,22 @@
 #include "map_data/map_data.h"
 #include "../global.h"
 #include "map_pos.h"
+#include "../graphic/palette_data.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <__threading_support>
 
-#define MAP_FILL_SIZE 16
+#define MAP_MARGIN_SIZE 16
 
-volatile int map_width = 256,map_height = 256;
+//one tile is 16*16 size
+constexpr size_t k_map_tile_pixel_count = 16 * 16;
+
+volatile int map_width = global_config::k_screen_width, map_height = global_config::k_screen_height;
 pthread_mutex_t mapRefreshMutex;
 
-void fillOneTileInScreen(int posX, int posY, int bmpIdx, byte *result) {
-    int map_raw_width = 256;
+void fillOneTileInScreen(int posX, int posY, int bmpIdx, uint8_t *result) {
+    int map_raw_width = global_config::k_screen_width;
     int map_column_offset = posX;
     int map_raw_offset = posY;
     for (int x = 0; x < 4; x++) {
@@ -44,8 +48,8 @@ void fillOneTileInScreen(int posX, int posY, int bmpIdx, byte *result) {
     }
 }
 
-inline void fill(int i, int j, int bmpIdx, byte *result) {
-    int map_raw_width = ((map_width + 2 * MAP_FILL_SIZE) * 16);
+inline void fill(int i, int j, int bmpIdx, uint8_t *result) {
+    int map_raw_width = ((map_width + 2 * MAP_MARGIN_SIZE) * 16);
     int map_column_offset = j * 16;
     int map_raw_offset = i * 16;
     for (int x = 0; x < 4; x++) {
@@ -70,43 +74,45 @@ inline void fill(int i, int j, int bmpIdx, byte *result) {
     }
 }
 
-byte *fullMap = nullptr;
+uint8_t *fullMap = nullptr;
 unsigned short *short_current_map;
 unsigned short current_fill;
 
 void initAllTilesMap() {
-    fullMap = (byte *) malloc(
-            sizeof(char) * ((map_width + 2*MAP_FILL_SIZE) * (map_height + 2*MAP_FILL_SIZE) * 256));
+    fullMap = (uint8_t *) malloc(
+            sizeof(char) * ((map_width + 2 * MAP_MARGIN_SIZE) * (map_height + 2 * MAP_MARGIN_SIZE) * k_map_tile_pixel_count));
     int bmpIdx = 0;
     for (int i = 0; i < map_height; i++) {
         for (int j = 0; j < map_width; j++) {
-            fill(i + MAP_FILL_SIZE, j + MAP_FILL_SIZE, bmpIdx++ % 1904, fullMap);
+            fill(i + MAP_MARGIN_SIZE, j + MAP_MARGIN_SIZE, bmpIdx++ % 1904, fullMap);
         }
     }
 }
 
+//when we load a map, we load the whole map.
+//we only copy a part of the whole map when we render
 void initFullMap() {
     if (fullMap == nullptr) {
-        fullMap = (byte *) malloc(
-                sizeof(char) * ((map_width + 2*MAP_FILL_SIZE) * (map_height + 2*MAP_FILL_SIZE) * 256));
+        fullMap = (uint8_t *) malloc(
+                sizeof(char) * ((map_width + 2 * MAP_MARGIN_SIZE) * (map_height + 2 * MAP_MARGIN_SIZE) * k_map_tile_pixel_count));
         int bmpIdx = 0;
         for (int i = 0; i < map_height; i++) {
             for (int j = 0; j < map_width; j++) {
                 bmpIdx = short_current_map[i * (map_width) + j];
-                fill(i + MAP_FILL_SIZE, j + MAP_FILL_SIZE, bmpIdx, fullMap);
+                fill(i + MAP_MARGIN_SIZE, j + MAP_MARGIN_SIZE, bmpIdx, fullMap);
             }
         }
         // fill
-        for (int i = 0; i < MAP_FILL_SIZE; i++) {
-            for (int j = 0; j < map_width + 2*MAP_FILL_SIZE; j++) {
+        for (int i = 0; i < MAP_MARGIN_SIZE; i++) {
+            for (int j = 0; j < map_width + 2 * MAP_MARGIN_SIZE; j++) {
                 fill(i, j, current_fill, fullMap);
-                fill(i + map_height + MAP_FILL_SIZE, j, current_fill, fullMap);
+                fill(i + map_height + MAP_MARGIN_SIZE, j, current_fill, fullMap);
             }
         }
-        for (int i = MAP_FILL_SIZE; i < map_height + MAP_FILL_SIZE; i++) {
-            for (int j = 0; j < MAP_FILL_SIZE; j++) {
+        for (int i = MAP_MARGIN_SIZE; i < map_height + MAP_MARGIN_SIZE; i++) {
+            for (int j = 0; j < MAP_MARGIN_SIZE; j++) {
                 fill(i, j, current_fill, fullMap);
-                fill(i, j + map_width + MAP_FILL_SIZE, current_fill, fullMap);
+                fill(i, j + map_width + MAP_MARGIN_SIZE, current_fill, fullMap);
             }
         }
     }
@@ -158,21 +164,25 @@ MapPos* getEntrance(int x, int y) {
     return nullptr;
 }
 
-byte *renderMap(int y, int x, byte *result) {
-    x += MAP_FILL_SIZE * 16;
-    y += MAP_FILL_SIZE * 16;
+uint8_t *renderMap(int y, int x, uint8_t *result) {
+    x += MAP_MARGIN_SIZE * 16;
+    y += MAP_MARGIN_SIZE * 16;
     if(result == nullptr) {
-        result = (byte *) malloc(sizeof(char) * (16 * 16 * 256));
+        result = (uint8_t *) malloc(sizeof(char) * (16 * 16 * palette::palette_size));
     }
     pthread_mutex_lock(&mapRefreshMutex);
     if(fullMap == nullptr) {
         initFullMap();
     }
-    __memset_aarch64(result, 0, 16 * 16 * 256);
+    __memset_aarch64(result, 0, 16 * 16 * palette::palette_size);
     //这里的逻辑是一大坨屎山
-    int maxX = (map_height + 2 * MAP_FILL_SIZE) * 16, maxY = (map_width + 2 * MAP_FILL_SIZE) * 16;
-    int renderXEnd = x + 255, renderYEnd = y + 255;
+    //fixme help! what's this code mean???
+    int maxX = (map_height + 2 * MAP_MARGIN_SIZE) * 16, maxY = (map_width + 2 * MAP_MARGIN_SIZE) * 16;
+    //render boundary
+    int renderXEnd = x + global_config::k_screen_width - 1;
+    int renderYEnd = y + global_config::k_screen_height - 1;
     int length = 0;
+    //map boundary
     int maxj1 = (maxY - y);
     int maxj2 = (renderYEnd - y) + 1;
     int maxj = min(maxj1, maxj2);
@@ -184,8 +194,8 @@ byte *renderMap(int y, int x, byte *result) {
             || 255 + y < 0) {
             continue;
         }
-        int resultStartIdx = i * 256;
-        int fullMapStartIdx = (i + x) * (16 * (map_width + 2 * MAP_FILL_SIZE)) + y;
+        int resultStartIdx = i * global_config::k_screen_width;
+        int fullMapStartIdx = (i + x) * (16 * (map_width + 2 * MAP_MARGIN_SIZE)) + y;
         if (y < 0) {
             resultStartIdx -= y;
             fullMapStartIdx -= y;

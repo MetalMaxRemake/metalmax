@@ -1,5 +1,4 @@
 #include "monster_data.h"
-#include "../../global.h"
 #include "monster_0.h"
 #include "monster_1.h"
 #include "monster_2.h"
@@ -131,35 +130,35 @@
 #include "monster_128.h"
 #include "monster_129.h"
 #include "monster_130.h"
-byte *monster_model[131] = {
+uint8_t *monster_model[131] = {
 
-(byte*)monster_0,(byte*)monster_1,(byte*)monster_2,(byte*)monster_3,(byte*)monster_4,
-(byte*)monster_5,(byte*)monster_6,(byte*)monster_7,(byte*)monster_8,(byte*)monster_9,
-(byte*)monster_10,(byte*)monster_11,(byte*)monster_12,(byte*)monster_13,(byte*)monster_14,
-(byte*)monster_15,(byte*)monster_16,(byte*)monster_17,(byte*)monster_18,(byte*)monster_19,
-(byte*)monster_20,(byte*)monster_21,(byte*)monster_22,(byte*)monster_23,(byte*)monster_24,
-(byte*)monster_25,(byte*)monster_26,(byte*)monster_27,(byte*)monster_28,(byte*)monster_29,
-(byte*)monster_30,(byte*)monster_31,(byte*)monster_32,(byte*)monster_33,(byte*)monster_34,
-(byte*)monster_35,(byte*)monster_36,(byte*)monster_37,(byte*)monster_38,(byte*)monster_39,
-(byte*)monster_40,(byte*)monster_41,(byte*)monster_42,(byte*)monster_43,(byte*)monster_44,
-(byte*)monster_45,(byte*)monster_46,(byte*)monster_47,(byte*)monster_48,(byte*)monster_49,
-(byte*)monster_50,(byte*)monster_51,(byte*)monster_52,(byte*)monster_53,(byte*)monster_54,
-(byte*)monster_55,(byte*)monster_56,(byte*)monster_57,(byte*)monster_58,(byte*)monster_59,
-(byte*)monster_60,(byte*)monster_61,(byte*)monster_62,(byte*)monster_63,(byte*)monster_64,
-(byte*)monster_65,(byte*)monster_66,(byte*)monster_67,(byte*)monster_68,(byte*)monster_69,
-(byte*)monster_70,(byte*)monster_71,(byte*)monster_72,(byte*)monster_73,(byte*)monster_74,
-(byte*)monster_75,(byte*)monster_76,(byte*)monster_77,(byte*)monster_78,(byte*)monster_79,
-(byte*)monster_80,(byte*)monster_81,(byte*)monster_82,(byte*)monster_83,(byte*)monster_84,
-(byte*)monster_85,(byte*)monster_86,(byte*)monster_87,(byte*)monster_88,(byte*)monster_89,
-(byte*)monster_90,(byte*)monster_91,(byte*)monster_92,(byte*)monster_93,(byte*)monster_94,
-(byte*)monster_95,(byte*)monster_96,(byte*)monster_97,(byte*)monster_98,(byte*)monster_99,
-(byte*)monster_100,(byte*)monster_101,(byte*)monster_102,(byte*)monster_103,(byte*)monster_104,
-(byte*)monster_105,(byte*)monster_106,(byte*)monster_107,(byte*)monster_108,(byte*)monster_109,
-(byte*)monster_110,(byte*)monster_111,(byte*)monster_112,(byte*)monster_113,(byte*)monster_114,
-(byte*)monster_115,(byte*)monster_116,(byte*)monster_117,(byte*)monster_118,(byte*)monster_119,
-(byte*)monster_120,(byte*)monster_121,(byte*)monster_122,(byte*)monster_123,(byte*)monster_124,
-(byte*)monster_125,(byte*)monster_126,(byte*)monster_127,(byte*)monster_128,(byte*)monster_129,
-(byte*)monster_130,};
+(uint8_t*)monster_0,(uint8_t*)monster_1,(uint8_t*)monster_2,(uint8_t*)monster_3,(uint8_t*)monster_4,
+(uint8_t*)monster_5,(uint8_t*)monster_6,(uint8_t*)monster_7,(uint8_t*)monster_8,(uint8_t*)monster_9,
+(uint8_t*)monster_10,(uint8_t*)monster_11,(uint8_t*)monster_12,(uint8_t*)monster_13,(uint8_t*)monster_14,
+(uint8_t*)monster_15,(uint8_t*)monster_16,(uint8_t*)monster_17,(uint8_t*)monster_18,(uint8_t*)monster_19,
+(uint8_t*)monster_20,(uint8_t*)monster_21,(uint8_t*)monster_22,(uint8_t*)monster_23,(uint8_t*)monster_24,
+(uint8_t*)monster_25,(uint8_t*)monster_26,(uint8_t*)monster_27,(uint8_t*)monster_28,(uint8_t*)monster_29,
+(uint8_t*)monster_30,(uint8_t*)monster_31,(uint8_t*)monster_32,(uint8_t*)monster_33,(uint8_t*)monster_34,
+(uint8_t*)monster_35,(uint8_t*)monster_36,(uint8_t*)monster_37,(uint8_t*)monster_38,(uint8_t*)monster_39,
+(uint8_t*)monster_40,(uint8_t*)monster_41,(uint8_t*)monster_42,(uint8_t*)monster_43,(uint8_t*)monster_44,
+(uint8_t*)monster_45,(uint8_t*)monster_46,(uint8_t*)monster_47,(uint8_t*)monster_48,(uint8_t*)monster_49,
+(uint8_t*)monster_50,(uint8_t*)monster_51,(uint8_t*)monster_52,(uint8_t*)monster_53,(uint8_t*)monster_54,
+(uint8_t*)monster_55,(uint8_t*)monster_56,(uint8_t*)monster_57,(uint8_t*)monster_58,(uint8_t*)monster_59,
+(uint8_t*)monster_60,(uint8_t*)monster_61,(uint8_t*)monster_62,(uint8_t*)monster_63,(uint8_t*)monster_64,
+(uint8_t*)monster_65,(uint8_t*)monster_66,(uint8_t*)monster_67,(uint8_t*)monster_68,(uint8_t*)monster_69,
+(uint8_t*)monster_70,(uint8_t*)monster_71,(uint8_t*)monster_72,(uint8_t*)monster_73,(uint8_t*)monster_74,
+(uint8_t*)monster_75,(uint8_t*)monster_76,(uint8_t*)monster_77,(uint8_t*)monster_78,(uint8_t*)monster_79,
+(uint8_t*)monster_80,(uint8_t*)monster_81,(uint8_t*)monster_82,(uint8_t*)monster_83,(uint8_t*)monster_84,
+(uint8_t*)monster_85,(uint8_t*)monster_86,(uint8_t*)monster_87,(uint8_t*)monster_88,(uint8_t*)monster_89,
+(uint8_t*)monster_90,(uint8_t*)monster_91,(uint8_t*)monster_92,(uint8_t*)monster_93,(uint8_t*)monster_94,
+(uint8_t*)monster_95,(uint8_t*)monster_96,(uint8_t*)monster_97,(uint8_t*)monster_98,(uint8_t*)monster_99,
+(uint8_t*)monster_100,(uint8_t*)monster_101,(uint8_t*)monster_102,(uint8_t*)monster_103,(uint8_t*)monster_104,
+(uint8_t*)monster_105,(uint8_t*)monster_106,(uint8_t*)monster_107,(uint8_t*)monster_108,(uint8_t*)monster_109,
+(uint8_t*)monster_110,(uint8_t*)monster_111,(uint8_t*)monster_112,(uint8_t*)monster_113,(uint8_t*)monster_114,
+(uint8_t*)monster_115,(uint8_t*)monster_116,(uint8_t*)monster_117,(uint8_t*)monster_118,(uint8_t*)monster_119,
+(uint8_t*)monster_120,(uint8_t*)monster_121,(uint8_t*)monster_122,(uint8_t*)monster_123,(uint8_t*)monster_124,
+(uint8_t*)monster_125,(uint8_t*)monster_126,(uint8_t*)monster_127,(uint8_t*)monster_128,(uint8_t*)monster_129,
+(uint8_t*)monster_130,};
 int monster_count = 131;
 int monster_size[131*2] = {128,96,
 64,48,
@@ -393,7 +392,7 @@ unsigned char monster_group[930] = {
 /**
  * world map
  */
-byte monster_distribution_world[256] = {
+uint8_t monster_distribution_world[256] = {
         55,55,55,55,55,55,55,56,26,25,
         25,24,24,24,24,24,55,55,55,56,
         58,58,55,56,26,26,25,24,24,24,
@@ -424,7 +423,7 @@ byte monster_distribution_world[256] = {
 /**
  * start from 0x80 (128 弗里东北海滩补给站)
  */
-byte monster_distribution_4_samll_maps[112] = {
+uint8_t monster_distribution_4_samll_maps[112] = {
  0, 0,
  0, 0, 0, 0, 0, 0, 0, 64, 65, 66,
 67, 68, 69, 70, 0, 0, 0, 0, 0, 71,
@@ -440,7 +439,7 @@ byte monster_distribution_4_samll_maps[112] = {
 
 //health	attack	defense	armor护甲	speed	hitRate	battleLevel	experience	gold	dropsItem	attribute	resistance	ability	attackMode
 //stride = 14
-byte monster_properties[131 * MONSTER_PROPERTY_STRIDE]={
+uint8_t monster_properties[131 * MONSTER_PROPERTY_STRIDE]={
         255,200,250,255,200,255,183,0,0,255,133,42,224,96,
         60,54,30,255,48,10,25,45,110,255,69,12,1,0,
         110,90,25,25,24,30,35,80,189,255,71,28,96,1,

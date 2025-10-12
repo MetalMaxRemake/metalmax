@@ -7,7 +7,7 @@
 #include "../opt/mem_opt.h"
 
 BaseMenuRender::BaseMenuRender() {
-    selectIcon = (byte *) malloc(8 * 8);
+    selectIcon = (uint8_t *) malloc(8 * 8);
     __memset_aarch64(selectIcon, 3, 8 * 8);
     for (int i = 0; i < 4; i++) {
         __memset_aarch64(selectIcon + (i * 8), 8, i + 1);

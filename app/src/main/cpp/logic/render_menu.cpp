@@ -60,7 +60,7 @@ inline void MenuRender::processSelection() {
     }
 }
 
-void MenuRender::processKeyClick(byte directKey, byte functionKey) {
+void MenuRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
     renderEffect(EFFECT_PUSH_BUTTON);
     if (directKey & up) {
         selectPos--;
@@ -83,11 +83,11 @@ void MenuRender::processKeyClick(byte directKey, byte functionKey) {
 }
 
 
-byte *MenuRender::render(byte *screenBuffer) {
+uint8_t *MenuRender::render(uint8_t *screenBuffer) {
     int start = 192;
     int textHeight = 8;
-    int total = 256 * 256;
-    __memset_aarch64(screenBuffer + start * 256, BLACK, total - start * 256);
+    int total = global_config::k_screen_width * global_config::k_screen_height;
+    __memset_aarch64(screenBuffer + start * global_config::k_screen_width, BLACK, total - start * global_config::k_screen_width);
     renderAsciText(screenBuffer, "  TALK", 10, start + textHeight * 1);
     renderAsciText(screenBuffer, "  EQUP", 10, start + textHeight * 2);
     renderAsciText(screenBuffer, "  STRE", 10, start + textHeight * 3);

@@ -19,7 +19,7 @@ static volatile int splash_scene = 0;
 static volatile int logo_y = 0;
 static volatile int percent = 0;
 
-void SplashRender::processKeyClick(byte directKey, byte functionKey) {
+void SplashRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
     if (splash_scene >= 5 && (functionKey | directKey)) {
         pop();
         MapRender *mapRender = new MapRender;
@@ -74,43 +74,43 @@ void SplashRender::tikLogic() {
     }
 }
 
-byte *SplashRender::render(byte *screenBuffer) {
-    __memset_aarch64(screenBuffer, 3, 256 * 256);
+uint8_t *SplashRender::render(uint8_t *screenBuffer) {
+    __memset_aarch64(screenBuffer, 3, global_config::k_screen_width * global_config::k_screen_height);
     if (splash_scene == 0) {
         int width = 143;
         int height = 79;
-        return renderBitmap((byte *) splash, width, height,
+        return renderBitmap((uint8_t *) splash, width, height,
                             128 - width / 2, 128 - height / 2, screenBuffer);
     } else if (splash_scene == 1) {
         int width = 208;
         int height = 32;
-        return renderBitmap((byte *) logo, width, percent,
+        return renderBitmap((uint8_t *) logo, width, percent,
                             128 - width / 2 + 4, 128 - height / 2, screenBuffer);
     } else if (splash_scene == 2) {
         int width = 208;
         int height = 32;
-        return renderBitmap((byte *) logo, width, height,
+        return renderBitmap((uint8_t *) logo, width, height,
                             128 - width / 2 + 4, 128 - height / 2, screenBuffer);
     } else if (splash_scene == 3) {
         int width = 208;
         int height = 32;
-        return renderBitmap((byte *) logo, width, height,
+        return renderBitmap((uint8_t *) logo, width, height,
                             128 - width / 2 + 4, logo_y, screenBuffer);
     } else if (splash_scene == 4) {
         int width = 248;
         int height = 106;
         if (percent < height) {
-            screenBuffer = renderBitmap((byte *) logo, 208, 32,
+            screenBuffer = renderBitmap((uint8_t *) logo, 208, 32,
                                         128 - 208 / 2 + 4, 52, screenBuffer);
         }
         renderAsciText(screenBuffer, "PUSH START", 98, 150);
         renderAsciText(screenBuffer, "1996 DATA EAST", 86, 180);
         renderAsciText(screenBuffer, "1996 CREA-TECH", 86, 190);
         renderAsciText(screenBuffer, "2023 PARK REMAKE", 80, 200);
-        return renderBitmap((byte *) logo_2, width, percent,
+        return renderBitmap((uint8_t *) logo_2, width, percent,
                             128 - width / 2, 10, screenBuffer);
     } else {
-        return renderBitmap((byte *) set_name, 236, 221,
+        return renderBitmap((uint8_t *) set_name, 236, 221,
                             0, 0, screenBuffer);
     }
 }

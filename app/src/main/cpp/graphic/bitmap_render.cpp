@@ -17,24 +17,24 @@
  * @param result
  * @return
  */
-byte *renderBitmap(byte *originData,
+uint8_t *renderBitmap(uint8_t *originData,
                    int width, int height,
                    int x, int y,
-                   byte *result) {
-    int offset = y * 256 + x;
+                   uint8_t *result) {
+    int offset = y * global_config::k_screen_width + x;
     int realWidth = width;
     int startX = 0;
     if(x < 0) {
         realWidth += x;
         startX = -x;
-    } else if(x > 240) {
-        realWidth -= (x - 240);
+    } else if(x > global_config::k_screen_height) {
+        realWidth -= (x - global_config::k_screen_height);
     }
     for (int i = 0; i < height; i++) {
-        if (i + y < 0 || i + y > 240) {
+        if (i + y < 0 || i + y > global_config::k_screen_height) {
             continue;
         }
-        __memcpy_aarch64_simd(result + i * 256 + offset + startX,
+        __memcpy_aarch64_simd(result + i * global_config::k_screen_width + offset + startX,
                               originData + i * width + startX,
                               realWidth);
     }
@@ -53,22 +53,22 @@ byte *renderBitmap(byte *originData,
  * @param result
  * @return
  */
-byte *renderBitmapWithTrans(byte *originData,
+uint8_t *renderBitmapWithTrans(uint8_t *originData,
                             int width, int height,
                             int x, int y,
-                            byte *result) {
+                            uint8_t *result) {
     int realWidth = width;//16
     int startX = 0;
     if(x < 0) {
         realWidth += x;//16 + -3 = 13
         startX = -x;//3
-    } else if(x > 240) {
-        realWidth -= (x - 240);
+    } else if(x > global_config::k_screen_height) {
+        realWidth -= (x - global_config::k_screen_height);
     }
 
-    int offset = y * 256 + x;
+    int offset = y * global_config::k_screen_width + x;
     for (int i = 0; i < height; i++) {
-        if (i + y < 0 || i + y > 240) {
+        if (i + y < 0 || i + y > global_config::k_screen_height) {
             continue;
         }
         for (int j = startX; j < startX + realWidth; j++) {
@@ -76,17 +76,17 @@ byte *renderBitmapWithTrans(byte *originData,
                 //skip trans color!
                 continue;
             } else {
-                result[i * 256 + offset + j] = originData[i * width + j];
+                result[i * global_config::k_screen_width + offset + j] = originData[i * width + j];
             }
         }
     }
     return result;
 }
 
-byte *renderBitmapWithScroll(byte *originData, byte direct,
+uint8_t *renderBitmapWithScroll(uint8_t *originData, uint8_t direct,
                              int width, int height,
                              int x, int y,
-                             byte *result) {
+                             uint8_t *result) {
     if (direct & up) {
         renderBitmapWithTrans(originData,
                               width, height,
@@ -99,13 +99,13 @@ byte *renderBitmapWithScroll(byte *originData, byte direct,
         if(x < 0) {
             realWidth += x;//16 + -3 = 13
             startX = -x;//3
-        } else if(x > 240) {
-            realWidth -= (x - 240);
+        } else if(x > global_config::k_screen_height) {
+            realWidth -= (x - global_config::k_screen_height);
         }
 
-        int offset = y * 256 + x;
+        int offset = y * global_config::k_screen_width + x;
         for (int i = 0; i < height; i++) {
-            if ((15 - i) + y < 0 || (15 - i) + y > 240) {
+            if ((15 - i) + y < 0 || (15 - i) + y > global_config::k_screen_height) {
                 continue;
             }
             for (int j = startX; j < startX + realWidth; j++) {
@@ -113,45 +113,45 @@ byte *renderBitmapWithScroll(byte *originData, byte direct,
                     //skip trans color!
                     continue;
                 } else {
-                    result[(15 - i) * 256 + offset + j] = originData[i * width + j];
+                    result[(15 - i) * global_config::k_screen_width + offset + j] = originData[i * width + j];
                 }
             }
         }
     }
     if (direct & left) {
-        int offset = y * 256 + x;
+        int offset = y * global_config::k_screen_width + x;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (j + y < 0 || j + y > 240) {
+                if (j + y < 0 || j + y > global_config::k_screen_height) {
                     continue;
                 }
-                if (i + x < 0 || i + x > 255) {
+                if (i + x < 0 || i + x > (global_config::k_screen_width - 1)) {
                     continue;
                 }
                 if (originData[i * width + j] == TRANSPARENT) {
                     //skip trans color!
                     continue;
                 } else {
-                    result[j * 256 + offset + i] = originData[i * width + j];
+                    result[j * global_config::k_screen_width + offset + i] = originData[i * width + j];
                 }
             }
         }
     }
     if (direct & right) {
-        int offset = y * 256 + x;
+        int offset = y * global_config::k_screen_width + x;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (j + y < 0 || j + y > 240) {
+                if (j + y < 0 || j + y > global_config::k_screen_height) {
                     continue;
                 }
-                if ((width - 1 - i) + x < 0 || (width - 1 - i) + x > 255) {
+                if ((width - 1 - i) + x < 0 || (width - 1 - i) + x > (global_config::k_screen_width - 1)) {
                     continue;
                 }
                 if (originData[i * width + j] == TRANSPARENT) {
                     //skip trans color!
                     continue;
                 } else {
-                    result[j * 256 + offset + (width - 1 - i)] = originData[i * width + j];
+                    result[j * global_config::k_screen_width + offset + (width - 1 - i)] = originData[i * width + j];
                 }
             }
         }

@@ -20,7 +20,7 @@
 
 const char chinese_demo[4] = {0, 1, 2, 3};
 
-inline void DebugRender::renderDebugMenu(byte *screenBuffer) {
+inline void DebugRender::renderDebugMenu(uint8_t *screenBuffer) {
     int start = 70;
     int textHeight = 7;
     renderAsciText(screenBuffer, "  ENTER BATTLE   ", 10, start + textHeight * 0);
@@ -59,7 +59,8 @@ inline void DebugRender::processSelection() {
         changeMap(mapId, 0, 0);
     } else if (selectPos == 5) {
         int *currentPalette = getCurrentPalette();
-        for (int i = 0; i < 256; i++) {
+        //fixme
+        for (int i = 0; i < palette::palette_size; i++) {
             unsigned int dd = currentPalette[i];
             unsigned int a = (dd & 0xFF000000) >> 24;
             unsigned int r = (dd & 0x00FF0000) >> 16;
@@ -70,8 +71,9 @@ inline void DebugRender::processSelection() {
         refreshPalette(currentPalette);
     } else if (selectPos == 6) {
         int *currentPalette = getCurrentPalette();
-        for (int i = 0; i < 256; i++) {
-            int dd = palette[i];
+        //fixme
+        for (int i = 0; i < palette::palette_size; i++) {
+            int dd = palette::palette_rgb[i];
             int a = (dd & 0xFF000000) >> 24;
             int b = (dd & 0x00FF0000) >> 16;
             int g = (dd & 0x0000FF00) >> 8;
@@ -86,13 +88,13 @@ inline void DebugRender::processSelection() {
     }
 }
 
-byte *DebugRender::render(byte *screenBuffer) {
+uint8_t *DebugRender::render(uint8_t *screenBuffer) {
     renderDebugInfo(screenBuffer);
     renderDebugMenu(screenBuffer);
     return screenBuffer;
 }
 
-void DebugRender::renderDebugInfo(byte *screenBuffer) const {
+void DebugRender::renderDebugInfo(uint8_t *screenBuffer) const {
     renderAsciText(screenBuffer, "METAL MAX 1 VERSION 0.10", 10, 10);
     renderZhText(screenBuffer, chinese_demo, 4, 10, 24);
     char info[30];
@@ -110,7 +112,7 @@ void DebugRender::renderDebugInfo(byte *screenBuffer) const {
     renderAsciText(screenBuffer, info, 10, 44);
 }
 
-void DebugRender::processKeyClick(byte directKey, byte functionKey) {
+void DebugRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
     renderEffect(EFFECT_PUSH_BUTTON);
     if (directKey & up) {
         selectPos--;
