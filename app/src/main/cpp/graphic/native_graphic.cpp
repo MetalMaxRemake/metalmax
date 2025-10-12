@@ -260,7 +260,8 @@ void onGLDraw() {
 
     glActiveTexture(GL_TEXTURE0);
     checkGlError("uniforms");
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, global_config::k_screen_width, global_config::k_screen_height, GL_ALPHA,
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, global_config::k_screen_width,
+                    global_config::k_screen_height, GL_ALPHA,
                     GL_UNSIGNED_BYTE, currentScreenBuffer);
     checkGlError("emu render");
     glDrawElements(GL_TRIANGLES, 6,
@@ -281,14 +282,15 @@ void onSoftDraw() {
     ANativeWindow_lock(mANativeWindow, &mNativeWindowBuffer, nullptr);
     int *dstBuffer = static_cast<int *>(mNativeWindowBuffer.bits);
     int dstHeight = mNativeWindowBuffer.height;
-    int dstWidth = mNativeWindowBuffer.height;
-    int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.height) / 2;
+    int dstWidth = dstHeight * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
+    int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.width) / 2;
     if (!graphicRunning) {
         return;
     }
     __memset_aarch64(dstBuffer, 0,
                      mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
-    float scale = (float) mNativeWindowBuffer.height / (global_config::k_screen_height * 1.f); //计算图像宽度缩放比例
+    float scale = (float) mNativeWindowBuffer.height /
+                  (global_config::k_screen_height * 1.f); //计算图像宽度缩放比例
     float scaleLeft = scale - (int) scale; //求出缩放比例的小数部分
     int addArg = (scaleLeft > 0.5) ? 1 : 0;
     int x, y;
@@ -297,7 +299,8 @@ void onSoftDraw() {
         y = (int) (hnum / scale) + addArg;   //计算当前临近坐标的y值
         for (int wnum = 0; wnum < dstWidth; ++wnum) {
             x = (int) (wnum / scale) + addArg; //计算当前临近坐标的x值
-            dstBuffer[hnum * mNativeWindowBuffer.stride + wnum + offset] = palette_texture_pixels[screenBuffer[
+            dstBuffer[hnum * mNativeWindowBuffer.stride + wnum +
+                      offset] = palette_texture_pixels[screenBuffer[
                     y * global_config::k_screen_width + x]];
         }
     }
@@ -423,11 +426,10 @@ volatile bool graphicRunning = true;
 const static uint8_t SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
 
 
-
 //定义线程函数
 void *gl_thread(void *arg) {
-    window_height = ANativeWindow_getHeight(mANativeWindow);
     window_width = ANativeWindow_getWidth(mANativeWindow);
+    window_height = ANativeWindow_getHeight(mANativeWindow);
     ANativeWindow_setBuffersGeometry(mANativeWindow,
                                      window_width,
                                      window_height,
@@ -446,7 +448,8 @@ void initGraphic(ANativeWindow *window) {
     mANativeWindow = window;
     pthread_t id;
     initPalette();
-    currentScreenBuffer = (uint8_t *) malloc(sizeof(char) * (global_config::k_screen_width * global_config::k_screen_height));
+    currentScreenBuffer = (uint8_t *) malloc(
+            sizeof(char) * (global_config::k_screen_width * global_config::k_screen_height));
     pthread_create(&id, nullptr, gl_thread, mANativeWindow);
 }
 

@@ -75,7 +75,7 @@ void SplashRender::tikLogic() {
 }
 
 uint8_t *SplashRender::render(uint8_t *screenBuffer) {
-    __memset_aarch64(screenBuffer, 3, global_config::k_screen_width * global_config::k_screen_height);
+    __memset_aarch64(screenBuffer, 8, global_config::k_screen_width * global_config::k_screen_height);
     if (splash_scene == 0) {
         int width = 143;
         int height = 79;
