@@ -62,8 +62,8 @@ uint8_t *renderBitmapWithTrans(uint8_t *originData,
     if(x < 0) {
         realWidth += x;//16 + -3 = 13
         startX = -x;//3
-    } else if(x > global_config::k_screen_height) {
-        realWidth -= (x - global_config::k_screen_height);
+    } else if(x > global_config::k_screen_width) {
+        realWidth -= (x - global_config::k_screen_width);
     }
 
     int offset = y * global_config::k_screen_width + x;

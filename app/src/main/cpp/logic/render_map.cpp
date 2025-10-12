@@ -135,8 +135,10 @@ void MapRender::renderSprite(uint8_t *screenBuffer) const {
         uint8_t y = map_sprite[mapId][i * 3 + 1] - 1;
         int renderY = y * 16 - posY;
         int renderX = x * 16 - posX;
-        if (renderX > -16 && renderX < global_config::k_screen_width + 16 && renderY > -16 &&
-            renderY < global_config::k_screen_height + 16) {
+        if (renderX > -16
+            && renderX < global_config::k_screen_width + 16
+            && renderY > -16
+            && renderY < global_config::k_screen_height + 16) {
             uint8_t spriteBmpId = map_sprite[mapId][i * 3 + 2];
             renderBitmapWithTrans(sprites[spriteBmpId],
                                   16, 16,
