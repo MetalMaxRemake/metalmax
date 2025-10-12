@@ -13,6 +13,9 @@ namespace global_config {
     constexpr uint16_t k_screen_width = 455;
     constexpr uint16_t k_screen_height = 256;
 
+    constexpr size_t k_screen_pixel_size = sizeof(uint8_t);
+    constexpr size_t k_screen_buffer_size = k_screen_pixel_size * k_screen_width * k_screen_height;
+
     enum RenderMode {
         kSoftware,
         kOpenGL,

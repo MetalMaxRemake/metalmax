@@ -39,6 +39,7 @@ Character::Character() {
     currentBitmap = bitmap[direct][halfStep];
 }
 
+//x is left or right, y is up or down
 void Character::setPos(int nx, int ny) {
     x = nx;
     y = ny;

@@ -18,7 +18,9 @@ public:
     int name;
     bool godMode = false;
     int hp;
+    //x is left or right, y is up or down
     int x, y;
+    //x is left or right, y is up or down
     int renderX, renderY;
     bool steping;
     uint8_t direct;//0-up 1-down 2-left 3-right

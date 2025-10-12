@@ -74,17 +74,17 @@ inline void fill(int i, int j, int bmpIdx, uint8_t *result) {
     }
 }
 
-uint8_t *fullMap = nullptr;
+uint8_t *pre_rendered_map = nullptr;
 unsigned short *short_current_map;
 unsigned short current_fill;
 
 void initAllTilesMap() {
-    fullMap = (uint8_t *) malloc(
+    pre_rendered_map = (uint8_t *) malloc(
             sizeof(char) * ((map_width + 2 * MAP_MARGIN_SIZE) * (map_height + 2 * MAP_MARGIN_SIZE) * k_map_tile_pixel_count));
     int bmpIdx = 0;
     for (int i = 0; i < map_height; i++) {
         for (int j = 0; j < map_width; j++) {
-            fill(i + MAP_MARGIN_SIZE, j + MAP_MARGIN_SIZE, bmpIdx++ % 1904, fullMap);
+            fill(i + MAP_MARGIN_SIZE, j + MAP_MARGIN_SIZE, bmpIdx++ % 1904, pre_rendered_map);
         }
     }
 }
@@ -92,36 +92,36 @@ void initAllTilesMap() {
 //when we load a map, we load the whole map.
 //we only copy a part of the whole map when we render
 void initFullMap() {
-    if (fullMap == nullptr) {
-        fullMap = (uint8_t *) malloc(
+    if (pre_rendered_map == nullptr) {
+        pre_rendered_map = (uint8_t *) malloc(
                 sizeof(char) * ((map_width + 2 * MAP_MARGIN_SIZE) * (map_height + 2 * MAP_MARGIN_SIZE) * k_map_tile_pixel_count));
         int bmpIdx = 0;
         for (int i = 0; i < map_height; i++) {
             for (int j = 0; j < map_width; j++) {
                 bmpIdx = short_current_map[i * (map_width) + j];
-                fill(i + MAP_MARGIN_SIZE, j + MAP_MARGIN_SIZE, bmpIdx, fullMap);
+                fill(i + MAP_MARGIN_SIZE, j + MAP_MARGIN_SIZE, bmpIdx, pre_rendered_map);
             }
         }
         // fill
         for (int i = 0; i < MAP_MARGIN_SIZE; i++) {
             for (int j = 0; j < map_width + 2 * MAP_MARGIN_SIZE; j++) {
-                fill(i, j, current_fill, fullMap);
-                fill(i + map_height + MAP_MARGIN_SIZE, j, current_fill, fullMap);
+                fill(i, j, current_fill, pre_rendered_map);
+                fill(i + map_height + MAP_MARGIN_SIZE, j, current_fill, pre_rendered_map);
             }
         }
         for (int i = MAP_MARGIN_SIZE; i < map_height + MAP_MARGIN_SIZE; i++) {
             for (int j = 0; j < MAP_MARGIN_SIZE; j++) {
-                fill(i, j, current_fill, fullMap);
-                fill(i, j + map_width + MAP_MARGIN_SIZE, current_fill, fullMap);
+                fill(i, j, current_fill, pre_rendered_map);
+                fill(i, j + map_width + MAP_MARGIN_SIZE, current_fill, pre_rendered_map);
             }
         }
     }
 }
 
 void releaseMap() {
-    if(fullMap != nullptr) {
-        free(fullMap);
-        fullMap = nullptr;
+    if(pre_rendered_map != nullptr) {
+        free(pre_rendered_map);
+        pre_rendered_map = nullptr;
     }
 }
 
@@ -164,49 +164,48 @@ MapPos* getEntrance(int x, int y) {
     return nullptr;
 }
 
-uint8_t *renderMap(int y, int x, uint8_t *result) {
-    x += MAP_MARGIN_SIZE * 16;
-    y += MAP_MARGIN_SIZE * 16;
-    if(result == nullptr) {
-        result = (uint8_t *) malloc(sizeof(char) * (16 * 16 * palette::palette_size));
-    }
+//render_x is left or right, render_y is up or down
+uint8_t *renderMap(int render_y, int render_x, uint8_t *screen_buffer) {
+    render_x += MAP_MARGIN_SIZE * 16;
+    render_y += MAP_MARGIN_SIZE * 16;
     pthread_mutex_lock(&mapRefreshMutex);
-    if(fullMap == nullptr) {
+    if(pre_rendered_map == nullptr) {
         initFullMap();
     }
-    __memset_aarch64(result, 0, 16 * 16 * palette::palette_size);
+    __memset_aarch64(screen_buffer, 0, global_config::k_screen_buffer_size);
     //这里的逻辑是一大坨屎山
     //fixme help! what's this code mean???
-    int maxX = (map_height + 2 * MAP_MARGIN_SIZE) * 16, maxY = (map_width + 2 * MAP_MARGIN_SIZE) * 16;
+    int max_map_data_render_x = (map_height + 2 * MAP_MARGIN_SIZE) * (global_config::k_screen_height / 16);
+    int max_map_data_render_y = (map_width + 2 * MAP_MARGIN_SIZE) * (global_config::k_screen_width / 16);
     //render boundary
-    int renderXEnd = x + global_config::k_screen_width - 1;
-    int renderYEnd = y + global_config::k_screen_height - 1;
-    int length = 0;
+    int max_screen_render_x = render_x + global_config::k_screen_height - 1;
+    int max_screen_render_y = render_y + global_config::k_screen_width - 1;
+    int current_line_length = 0;
     //map boundary
-    int maxj1 = (maxY - y);
-    int maxj2 = (renderYEnd - y) + 1;
-    int maxj = min(maxj1, maxj2);
-    int startIdx = x < 0 ? -x : 0;
-    int endIdx = min(min(renderXEnd - x, maxX - x), 255);
-    for (int i = startIdx; i <= endIdx; i++) {
-        if(y >= maxY
-            || y >= renderYEnd
-            || 255 + y < 0) {
+    int render_y_end = min((max_map_data_render_y - render_y), (max_screen_render_y - render_y) + 1);
+    int render_x_start = render_x < 0 ? -render_x : 0;
+    int render_x_end = min(min(max_screen_render_x - render_x, max_map_data_render_x - render_x), global_config::k_screen_height - 1);
+    for (int i = render_x_start; i <= render_x_end; i++) {
+        if(render_y >= max_map_data_render_y
+           || render_y >= max_screen_render_y
+           || global_config::k_screen_width + render_y < 0) {
             continue;
         }
-        int resultStartIdx = i * global_config::k_screen_width;
-        int fullMapStartIdx = (i + x) * (16 * (map_width + 2 * MAP_MARGIN_SIZE)) + y;
-        if (y < 0) {
-            resultStartIdx -= y;
-            fullMapStartIdx -= y;
-            length = maxj + y;
+        int screen_buffer_start_offset = i * global_config::k_screen_width;
+        int pre_rendered_map_start_offset = (i + render_x) * (16 * (map_width + 2 * MAP_MARGIN_SIZE)) + render_y;
+        if (render_y < 0) {
+            screen_buffer_start_offset -= render_y;
+            pre_rendered_map_start_offset -= render_y;
+            current_line_length = render_y_end + render_y;
         } else {
-            length = min(maxj, 256);
+            current_line_length = min(render_y_end, global_config::k_screen_width);
         }
-        __memcpy_aarch64_simd(result + resultStartIdx, fullMap + fullMapStartIdx, length);
+        __memcpy_aarch64_simd(screen_buffer + screen_buffer_start_offset,
+                              pre_rendered_map + pre_rendered_map_start_offset,
+                              current_line_length);
     }
     pthread_mutex_unlock(&mapRefreshMutex);
-    return result;
+    return screen_buffer;
 }
 
 

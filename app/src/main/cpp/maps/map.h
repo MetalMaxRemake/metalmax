@@ -7,7 +7,7 @@
 
 #include "../global.h"
 
-unsigned char *renderMap(int x, int y, unsigned char *result);
+unsigned char *renderMap(int render_y, int render_x, unsigned char *screen_buffer);
 unsigned short getTileIdx(int x, int y);
 void refreshCurrentMap(int mapId);
 void fillOneTileInScreen(int posX, int posY, int bmpIdx, uint8_t *result);

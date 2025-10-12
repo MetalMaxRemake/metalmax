@@ -226,7 +226,8 @@ void onGLSurfaceChange() {
            +window_height / 2.0f, -2.0f, 2.0f);
     glViewport(0, 0, window_width, window_height);
     int gl_height = window_height;
-    int gl_width = gl_height * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
+    int gl_width =
+            gl_height * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
     LOGD("gl_init", "gl_height: %d, gl_width: %d", gl_height, gl_width);
     initQuadCoordinates(gl_width, gl_height);
     glUseProgram(program);
@@ -282,7 +283,8 @@ void onSoftDraw() {
     ANativeWindow_lock(mANativeWindow, &mNativeWindowBuffer, nullptr);
     int *dstBuffer = static_cast<int *>(mNativeWindowBuffer.bits);
     int dstHeight = mNativeWindowBuffer.height;
-    int dstWidth = dstHeight * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
+    int dstWidth =
+            dstHeight * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
     int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.width) / 2;
     if (!graphicRunning) {
         return;
@@ -428,8 +430,12 @@ const static uint8_t SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
 
 //定义线程函数
 void *gl_thread(void *arg) {
-    window_width = ANativeWindow_getWidth(mANativeWindow);
-    window_height = ANativeWindow_getHeight(mANativeWindow);
+    int32_t n_window_width = ANativeWindow_getWidth(mANativeWindow);
+    int32_t n_window_height = ANativeWindow_getHeight(mANativeWindow);
+    if (n_window_width > 0 && n_window_height > 0) {
+        window_height = n_window_height;
+        window_width = n_window_width;
+    }
     LOGD("gl_init", "window w&h: %d, %d", window_height, window_width);
     ANativeWindow_setBuffersGeometry(mANativeWindow,
                                      window_width,
@@ -447,13 +453,11 @@ void *gl_thread(void *arg) {
 
 void initGraphic(ANativeWindow *window, int width, int height) {
     mANativeWindow = window;
-//    window_width = width;
-//    window_height = height;
-
+    window_width = width;
+    window_height = height;
     pthread_t id;
     initPalette();
-    currentScreenBuffer = (uint8_t *) malloc(
-            sizeof(char) * (global_config::k_screen_width * global_config::k_screen_height));
+    currentScreenBuffer = (uint8_t *) malloc(global_config::k_screen_buffer_size);
     pthread_create(&id, nullptr, gl_thread, mANativeWindow);
 }
 
