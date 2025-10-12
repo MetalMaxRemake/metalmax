@@ -45,7 +45,7 @@ void MapRender::updateMap(int newMapId, int x, int y) {
 }
 
 MapRender::MapRender() {
-    logd("MapRender", "new!");
+    LOGD("MapRender", "new!");
     srand((unsigned) time(nullptr));
 }
 
@@ -443,5 +443,5 @@ bool MapRender::checkEntrance(Character *player, int targetX, int targetY) {
 }
 
 MapRender::~MapRender() {
-    logd("MapRender", "delete");
+    LOGD("MapRender", "delete");
 }

@@ -9,52 +9,45 @@
 #include "opt/mem_opt.h"
 #include "logic/logic.h"
 
-void commonTest(JNIEnv *env, jclass clazz) {
-    //test code
-    initLogic();
-}
-
-void onKeyEvent(JNIEnv *env, jclass clazz, jint key) {
-    updateDirectKey(key);
-}
-
-void onFuncKeyEvent(JNIEnv *env, jclass clazz, jint key) {
-    updateFunctionKey(key);
-}
-
-void slInit(JNIEnv *env, jclass clazz) {
-    initSL();
-}
-
-void slRelease(JNIEnv *env, jclass clazz) {
-    releaseSL();
-}
-
-void initNativeWindow(JNIEnv *env, jclass clazz, jobject surface) {
-    ANativeWindow* mANativeWindow = ANativeWindow_fromSurface(env, surface);
-    initGraphic(mANativeWindow);
-}
-
-void releaseNativeWindow(JNIEnv *env, jclass clazz) {
-    releaseGraphic();
-}
-
-static JNINativeMethod methods[] = {
-        {"commonTest",   "()V",   (void *) &commonTest},
-        {"onKeyEvent",     "(I)V",  (void *) &onKeyEvent},
-        {"onFuncKeyEvent", "(I)V",  (void *) &onFuncKeyEvent},
-        {"slInit", "()V",   (void *) &slInit},
-        {"slRelease", "()V",   (void *) &slRelease},
-        {"initNativeWindow", "(Landroid/view/Surface;)V",   (void *) &initNativeWindow},
-        {"releaseNativeWindow", "()V",   (void *) &releaseNativeWindow},
-};
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_initNativeMethod(JNIEnv *env, jclass clazz) {
-    (*env).RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0]));
+Java_com_park_metalmax_NativeBridge_initNativeWindow(JNIEnv *env,
+                                                     jclass clazz,
+                                                     jobject surface,
+                                                     jint width,
+                                                     jint height) {
+    LOGD("bridge", "initNativeWindow:%d, %d", width, height);
+    ANativeWindow *mANativeWindow = ANativeWindow_fromSurface(env, surface);
+    initGraphic(mANativeWindow, width, height);
 }
-
-__attribute__((constructor)) static void onDlOpen(void) {
-    logd("test", "on dlopen");
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_releaseNativeWindow(JNIEnv *env, jclass clazz) {
+    releaseGraphic();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_slInit(JNIEnv *env, jclass clazz) {
+    initSL();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_slRelease(JNIEnv *env, jclass clazz) {
+    releaseSL();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_commonTest(JNIEnv *env, jclass clazz) {
+    initLogic();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_onKeyEvent(JNIEnv *env, jclass clazz, jint key) {
+    updateDirectKey(key);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_onFuncKeyEvent(JNIEnv *env, jclass clazz, jint key) {
+    updateFunctionKey(key);
 }

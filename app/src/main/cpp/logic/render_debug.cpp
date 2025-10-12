@@ -139,10 +139,10 @@ void DebugRender::tikLogic() {
 }
 
 DebugRender::DebugRender() {
-    logd("DebugRender", "new");
+    LOGD("DebugRender", "new");
     BaseMenuRender();
 }
 
 DebugRender::~DebugRender() {
-    logd("DebugRender", "delete");
+    LOGD("DebugRender", "delete");
 }

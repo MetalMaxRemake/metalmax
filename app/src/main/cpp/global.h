@@ -5,7 +5,8 @@
 #ifndef METALMAX_GLOBAL_H
 #define METALMAX_GLOBAL_H
 
-#include "stdint.h"
+#include <android/log.h>
+#include <stdint.h>
 
 namespace global_config {
     //this should be 16:9
@@ -20,8 +21,9 @@ namespace global_config {
     const RenderMode k_render_mode = RenderMode::kOpenGL;
 }
 
-void logd(char *tag, const char *fmt, ...);
-
-void loge(char *tag, const char *fmt, ...);
+#define LOGI(LOG_TAG, ...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGD(LOG_TAG, ...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+#define LOGW(LOG_TAG, ...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
+#define LOGE(LOG_TAG, ...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 #endif //METALMAX_GLOBAL_H

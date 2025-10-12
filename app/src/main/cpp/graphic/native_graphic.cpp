@@ -55,7 +55,7 @@ EGLDisplay eglDisplay;
 static ANativeWindow *mANativeWindow;
 static ANativeWindow_Buffer nwBuffer;
 
-volatile int window_height, window_width;
+volatile int32_t window_height, window_width;
 
 constexpr int k_screen_width = 455;
 /**
@@ -111,9 +111,6 @@ float textureCoords[8];
 short drawOrder[] = {0, 1, 2, 0, 2, 3};
 
 void initQuadCoordinates(int width, int height) {
-    int maxTexX = global_config::k_screen_width;
-    int maxTexY = global_config::k_screen_height;
-    int textureSize = global_config::k_screen_height;
     float tempQuadCoords[] = {
             -width / 2.0f, -height / 2.0f, 0,
             -width / 2.0f, height / 2.0f, 0,
@@ -123,13 +120,13 @@ void initQuadCoordinates(int width, int height) {
     __memcpy_aarch64_simd(quadCoords, tempQuadCoords, 12 * sizeof(float));
     float tempTextureCoords[] = {
             0,
-            maxTexY / (float) textureSize,
+            1,
             0,
             0,
-            maxTexX / (float) textureSize,
+            1,
             0,
-            maxTexX / (float) textureSize,
-            maxTexY / (float) textureSize,
+            1,
+            1,
     };
     __memcpy_aarch64_simd(textureCoords, tempTextureCoords, 8 * sizeof(float));
 }
@@ -228,7 +225,10 @@ void onGLSurfaceChange() {
     orthoM(projMatrix, 0, -window_width / 2.0f, +window_width / 2.0f, -window_height / 2.0f,
            +window_height / 2.0f, -2.0f, 2.0f);
     glViewport(0, 0, window_width, window_height);
-    initQuadCoordinates(window_height, window_height);
+    int gl_height = window_height;
+    int gl_width = gl_height * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
+    LOGD("gl_init", "gl_height: %d, gl_width: %d", gl_height, gl_width);
+    initQuadCoordinates(gl_width, gl_height);
     glUseProgram(program);
     positionHandle = glGetAttribLocation(program, "a_position");
     textureHandle = glGetUniformLocation(program, "s_texture");
@@ -372,7 +372,7 @@ inline void calculateFps(bool &first, long &totalDuration, int &count) {
 }
 
 void software() {
-    logd("native_graphic", "use software");
+    LOGD("native_graphic", "use software");
     graphicRunning = true;
     bool first = true;
     long totalDuration = 0;
@@ -391,7 +391,7 @@ void software() {
 volatile bool needRefreshPalette = false;
 
 void openGL() {
-    logd("native_graphic", "use opengl");
+    LOGD("native_graphic", "use opengl");
     initEGL(mANativeWindow);
     initGL();
     onGLSurfaceChange();
@@ -412,8 +412,8 @@ void openGL() {
 }
 
 void vulkan() {
-    logd("native_graphic", "use vulkan");
-    loge("native_graphic", "current version not support vulkan");
+    LOGD("native_graphic", "use vulkan");
+    LOGE("native_graphic", "current version not support vulkan");
     exit(-1);
 }
 
@@ -430,6 +430,7 @@ const static uint8_t SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
 void *gl_thread(void *arg) {
     window_width = ANativeWindow_getWidth(mANativeWindow);
     window_height = ANativeWindow_getHeight(mANativeWindow);
+    LOGD("gl_init", "window w&h: %d, %d", window_height, window_width);
     ANativeWindow_setBuffersGeometry(mANativeWindow,
                                      window_width,
                                      window_height,
@@ -444,8 +445,11 @@ void *gl_thread(void *arg) {
     return nullptr;
 }
 
-void initGraphic(ANativeWindow *window) {
+void initGraphic(ANativeWindow *window, int width, int height) {
     mANativeWindow = window;
+//    window_width = width;
+//    window_height = height;
+
     pthread_t id;
     initPalette();
     currentScreenBuffer = (uint8_t *) malloc(
@@ -463,7 +467,7 @@ void refreshPalette(int *newPalette) {
 }
 
 void releaseGraphic() {
-    logd("native_gl", "releaseGraphic");
+    LOGD("native_gl", "releaseGraphic");
     graphicRunning = false;
     free(config);
     free(currentScreenBuffer);

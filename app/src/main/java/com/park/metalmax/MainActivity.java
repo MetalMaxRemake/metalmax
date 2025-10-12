@@ -32,7 +32,6 @@ public class MainActivity extends Activity {
         );
         super.onCreate(savedInstanceState);
         setContentView(createSurfaceView());
-        NativeBridge.initNativeMethod();
         NativeBridge.commonTest();
     }
 

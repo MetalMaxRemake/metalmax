@@ -188,7 +188,7 @@ extern "C" short *getAudioBuffer() {
     }
     if (readIdx > 100000) {
         pthread_mutex_lock(&cacheIdxMutex);
-        logd("native_sound", "reset cacheIdx");
+        LOGD("native_sound", "reset cacheIdx");
         if (readIdx < cacheIdx) {
             cacheIdx %= CACHE_SIZE;
             readIdx %= CACHE_SIZE;

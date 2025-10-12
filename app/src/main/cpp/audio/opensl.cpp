@@ -206,7 +206,7 @@ void *openslThread(void *) {
 }
 
 void startSLEngine() {
-    logd("opensl", "startSLEngine()");
+    LOGD("opensl", "startSLEngine()");
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
     pthread_create(&id, nullptr, openslThread, nullptr);
