@@ -7,17 +7,21 @@
 
 #include "../global.h"
 
-uint8_t *renderBitmap(uint8_t *originData,
-                   int width, int height,
-                   int x, int y,
-                   uint8_t *result);
-uint8_t *renderBitmapWithTrans(uint8_t *originData,
-                            int width, int height,
-                            int x, int y,
-                            uint8_t *result);
-uint8_t *renderBitmapWithScroll(uint8_t *originData, uint8_t direct,
-                             int width, int height,
-                             int x, int y,
-                             uint8_t *result);
+namespace bitmap_render {
+    uint8_t *render_bitmap(uint8_t *bitmap_buffer,
+                           int bitmap_width, int bitmap_height,
+                           int render_x, int render_y,
+                           uint8_t *screen_buffer);
+
+    uint8_t *render_bitmap_with_transport(uint8_t *bitmap_buffer,
+                                          int bitmap_width, int bitmap_height,
+                                          int x, int y,
+                                          uint8_t *screen_buffer);
+
+    uint8_t *render_bitmap_with_src_scroll(uint8_t *originData, uint8_t direct,
+                                           int width, int height,
+                                           int x, int y,
+                                           uint8_t *result);
+}
 
 #endif //METALMAX_BITMAP_RENDER_H

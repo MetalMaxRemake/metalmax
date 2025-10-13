@@ -28,7 +28,7 @@
 static const uint8_t HUMAN_PASS = 0b0001;
 static const uint8_t CAR_PASS = 0b0010;
 
-static volatile int posX, posY;
+static volatile int map_render_x, map_render_y;
 static volatile int mapId;
 
 void MapRender::updateMap(int newMapId, int x, int y) {
@@ -39,8 +39,8 @@ void MapRender::updateMap(int newMapId, int x, int y) {
     mapId = mapId % 240;
     renderEffect(EFFECT_ENTER_ENTRANCE);
     refreshMusic();
-    posX = x * 16;
-    posY = y * 16;
+    map_render_x = x * 16;
+    map_render_y = y * 16;
     refreshCurrentMap(mapId);
 }
 
@@ -67,9 +67,9 @@ uint8_t *MapRender::render(uint8_t *screenBuffer) {
     pthread_mutex_lock(&changeMapMutex);
     Character *player = getDefaultPlayer();
     //x is left or right, y is up or down
-    posX = player->renderX - global_config::k_screen_width / 2;
-    posY = player->renderY - global_config::k_screen_height / 2;
-    screenBuffer = renderMap(posX, posY, screenBuffer);
+    map_render_x = player->renderX - global_config::k_screen_width / 2;
+    map_render_y = player->renderY - global_config::k_screen_height / 2;
+    screenBuffer = renderMap(map_render_x, map_render_y, screenBuffer);
     renderWater(screenBuffer);
     renderDoor(screenBuffer);
     renderSprite(screenBuffer);
@@ -79,10 +79,11 @@ uint8_t *MapRender::render(uint8_t *screenBuffer) {
 }
 
 void MapRender::renderPlayers(uint8_t *screenBuffer, Character *player) const {
-    renderBitmapWithTrans(player->currentBitmap,
-                          16, 16,
-                          global_config::k_screen_width / 2, global_config::k_screen_height / 2,
-                          screenBuffer);
+    bitmap_render::render_bitmap_with_transport(player->currentBitmap,
+                                                16, 16,
+                                                global_config::k_screen_width / 2,
+                                                global_config::k_screen_height / 2,
+                                                screenBuffer);
 }
 
 int water_status_map[4] = {1, 2, 3, 2};
@@ -92,36 +93,46 @@ int water_status_clk = 0;
 
 void MapRender::renderWater(uint8_t *screenBuffer) const {
     //convert render pos to tile pos
-    int startX = posX / 16;
-    int startY = posY / 16;
-    //for (int x = startX - 1; x < startX + (global_config::k_screen_width / 16) + 1; x++) {
-    //for (int y = startY - 1; y < startY + (global_config::k_screen_height / 16) + 1; y++) {
-    for (int x = startX - 1; x < startX + 17; x++) {
-        for (int y = startY - 1; y < startY + 17; y++) {
-            if (isPureWater(getTileIdx(x, y))) {
-                int renderY = y * 16 - posY;
-                int renderX = x * 16 - posX;
-                if (renderX > -16 && renderX < global_config::k_screen_width + 17 &&
-                    renderY > -16 && renderY < global_config::k_screen_width + 17) {
-                    renderBitmap(water[water_status_map[water_status] - 1],
-                                 16, 16,
-                                 renderX, renderY,
-                                 screenBuffer);
+    int tile_start_index_x = map_render_x / 16;
+    int tile_end_index_x = tile_start_index_x + global_config::k_tile_width;
+    int tile_start_index_y = map_render_y / 16;
+    int tile_end_index_y = tile_start_index_y + global_config::k_tile_height;
+    for (int tile_index_x = tile_start_index_x - 1;
+         tile_index_x < tile_end_index_x;
+         tile_index_x++) {
+        for (int tile_index_y = tile_start_index_y - 1;
+             tile_index_y < tile_end_index_y;
+             tile_index_y++) {
+            if (tile_is_pure_water(getTileIdx(tile_index_x, tile_index_y))) {
+                int render_x = tile_index_x * 16 - map_render_x;
+                int render_y = tile_index_y * 16 - map_render_y;
+
+                if (render_x > -16 && render_x < global_config::k_screen_width + 17 &&
+                    render_y > -16 && render_y < global_config::k_screen_height + 17) {
+                    bitmap_render::render_bitmap(water[water_status_map[water_status] - 1],
+                                                 global_config::k_tile_size,
+                                                 global_config::k_tile_size,
+                                                 render_x,
+                                                 render_y,
+                                                 screenBuffer);
                     uint8_t direct = 0;
-                    if (!isWater(getTileIdx(x, y - 1))) {
+                    if (!tile_is_water(getTileIdx(tile_index_x, tile_index_y - 1))) {
                         direct |= up;
                     }
-                    if (!isWater(getTileIdx(x, y + 1))) {
+                    if (!tile_is_water(getTileIdx(tile_index_x, tile_index_y + 1))) {
                         direct |= down;
                     }
-                    if (!isWater(getTileIdx(x - 1, y))) {
+                    if (!tile_is_water(getTileIdx(tile_index_x - 1, tile_index_y))) {
                         direct |= left;
                     }
-                    if (!isWater(getTileIdx(x + 1, y))) {
+                    if (!tile_is_water(getTileIdx(tile_index_x + 1, tile_index_y))) {
                         direct |= right;
                     }
-                    renderWave(direct, water_status_map[water_status] - 1, screenBuffer, renderX,
-                               renderY);
+                    renderWave(direct,
+                               water_status_map[water_status] - 1,
+                               screenBuffer,
+                               render_x,
+                               render_y);
                 }
             }
         }
@@ -133,17 +144,19 @@ void MapRender::renderSprite(uint8_t *screenBuffer) const {
     for (int i = 0; i < spriteCount; i++) {
         uint8_t x = map_sprite[mapId][i * 3];
         uint8_t y = map_sprite[mapId][i * 3 + 1] - 1;
-        int renderY = y * 16 - posY;
-        int renderX = x * 16 - posX;
+        int renderY = y * 16 - map_render_y;
+        int renderX = x * 16 - map_render_x;
         if (renderX > -16
             && renderX < global_config::k_screen_width + 16
             && renderY > -16
             && renderY < global_config::k_screen_height + 16) {
             uint8_t spriteBmpId = map_sprite[mapId][i * 3 + 2];
-            renderBitmapWithTrans(sprites[spriteBmpId],
-                                  16, 16,
-                                  renderX, renderY,
-                                  screenBuffer);
+            bitmap_render::render_bitmap_with_transport(sprites[spriteBmpId],
+                                                        global_config::k_tile_size,
+                                                        global_config::k_tile_size,
+                                                        renderX,
+                                                        renderY,
+                                                        screenBuffer);
         }
     }
 }
@@ -168,7 +181,8 @@ void MapRender::renderDoor(uint8_t *screenBuffer) const {
                 || tileId == 162 || tileId == 193) {
                 int renderY = i * 16;
                 int renderX = x * 16;
-                fillOneTileInScreen(renderX - posX, renderY - posY, fillTileId, screenBuffer);
+                fillOneTileInScreen(renderX - map_render_x, renderY - map_render_y, fillTileId,
+                                    screenBuffer);
             }
         }
 

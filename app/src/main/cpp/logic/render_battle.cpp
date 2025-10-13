@@ -13,7 +13,7 @@
 #include "../graphic/palette_data.h"
 
 void renderBackground(uint8_t *screenBuffer) {
-    __memset_aarch64(screenBuffer, BLACK, global_config::k_screen_width * global_config::k_screen_height);
+    __memset_aarch64(screenBuffer, palette::k_palette_black, global_config::k_screen_width * global_config::k_screen_height);
 }
 
 void renderHumanMenu(uint8_t *screenBuffer) {

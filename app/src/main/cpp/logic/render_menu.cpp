@@ -87,7 +87,7 @@ uint8_t *MenuRender::render(uint8_t *screenBuffer) {
     int start = 192;
     int textHeight = 8;
     int total = global_config::k_screen_width * global_config::k_screen_height;
-    __memset_aarch64(screenBuffer + start * global_config::k_screen_width, BLACK, total - start * global_config::k_screen_width);
+    __memset_aarch64(screenBuffer + start * global_config::k_screen_width, palette::k_palette_black, total - start * global_config::k_screen_width);
     renderAsciText(screenBuffer, "  TALK", 10, start + textHeight * 1);
     renderAsciText(screenBuffer, "  EQUP", 10, start + textHeight * 2);
     renderAsciText(screenBuffer, "  STRE", 10, start + textHeight * 3);

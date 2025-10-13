@@ -11,7 +11,7 @@
 uint8_t *renderMonster(int monsterId, int rawIdx, int columnIdx, uint8_t *result) {
     int monster_width = monster_size[monsterId * 2 + 1];
     int monster_height = monster_size[monsterId * 2];
-    return renderBitmap(monster_model[monsterId],
+    return bitmap_render::render_bitmap(monster_model[monsterId],
                         monster_width, monster_height,
                         columnIdx, rawIdx, result);
 }

@@ -9,47 +9,50 @@
 #include "../graphic/palette_data.h"
 
 unsigned short water_block_id[WATER_BLOCK_COUNT] = {
-        13,15,31,35,39,47,85,112,154,190,
-        207,218,277,281,295,305,344,398,545,547,
-        576,626,664,677,679,683,784,917,922,929,
-        1040,1453,1467,1497,1545,1556,1572,1591,1601,1761,
-        1764,1792,1823,1829,1834,1837,1839,1864,1881,
+        13, 15, 31, 35, 39, 47, 85, 112, 154, 190,
+        207, 218, 277, 281, 295, 305, 344, 398, 545, 547,
+        576, 626, 664, 677, 679, 683, 784, 917, 922, 929,
+        1040, 1453, 1467, 1497, 1545, 1556, 1572, 1591, 1601, 1761,
+        1764, 1792, 1823, 1829, 1834, 1837, 1839, 1864, 1881,
 };
 
 unsigned short pure_water_block_id[32] = {
-        13,15,31,35,39,47,85,112,154,218,
-        344,398,545,547,677,679,683,1040,1497,1545,
-        1556,1572,1761,1764,1792,1823,1829,1834,1837,1839,
-        1864,1881,
+        13, 15, 31, 35, 39, 47, 85, 112, 154, 218,
+        344, 398, 545, 547, 677, 679, 683, 1040, 1497, 1545,
+        1556, 1572, 1761, 1764, 1792, 1823, 1829, 1834, 1837, 1839,
+        1864, 1881,
 };
 
-bool isWater(unsigned short tileId) {
-        for(int i = 0;i<WATER_BLOCK_COUNT;i++) {
-                if (tileId == water_block_id[i]) {
-                        return true;
-                }
+bool tile_is_water(unsigned short tileId) {
+    for (int i = 0; i < WATER_BLOCK_COUNT; i++) {
+        if (tileId == water_block_id[i]) {
+            return true;
         }
-        return false;
+    }
+    return false;
 }
 
-bool isPureWater(unsigned short tileId) {
-        for(int i = 0;i<32;i++) {
-                if (tileId == pure_water_block_id[i]) {
-                        return true;
-                }
+bool tile_is_pure_water(unsigned short tileId) {
+    for (int i = 0; i < 32; i++) {
+        if (tileId == pure_water_block_id[i]) {
+            return true;
         }
-        return false;
+    }
+    return false;
 }
 
 /**
  * @param direct 复用一下方向键的方向吧
- * @param screenBuffer
+ * @param screen_buffer
  */
-void renderWave(uint8_t direct, uint8_t status, uint8_t *screenBuffer, int x, int y) {
-        renderBitmapWithScroll(wave[status], direct,
-                               16, 4,
-                               x, y,
-                               screenBuffer);
+void renderWave(uint8_t direct, uint8_t status, uint8_t *screen_buffer, int x, int y) {
+    bitmap_render::render_bitmap_with_src_scroll(wave[status],
+                                                 direct,
+                                                 16,
+                                                 4,
+                                                 x,
+                                                 y,
+                                                 screen_buffer);
 }
 
 //upper side, need to scroll & use
@@ -57,21 +60,21 @@ void renderWave(uint8_t direct, uint8_t status, uint8_t *screenBuffer, int x, in
 uint8_t wave[3][16 * 4] = {
         {
                 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                35, 8, 35, 35, 8, 8, 35, 8, 8, 35, 8, 8, 35, 8, 35, 8,
+                35, 8,  35, 35, 8, 8,  35, 8, 8,  35, 8, 8,  35, 8, 35, 8,
                 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
                 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
         },
         {
                 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                8, 35, 8, 35, 8, 35, 8, 8, 35, 8, 8, 35, 8, 8, 8, 35,
-                35, 8, 35, 35, 35, 8, 35, 35, 8, 35, 35, 8, 35, 8, 35, 8,
+                8,  35, 8,  35, 8, 35, 8,  8, 35, 8,  8, 35, 8,  8, 8,  35,
+                35, 8,  35, 35, 35, 8,  35, 35, 8,  35, 35, 8,  35, 8,  35, 8,
                 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
         },
         {
                 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                8, 8, 8, 35, 8, 8, 8, 8, 8, 35, 8, 8, 35, 8, 8, 8,
-                35, 8, 35, 8, 35, 8, 35, 35, 8, 8, 8, 8, 8, 8, 35, 8,
-                35, 35, 8, 35, 35, 35, 35, 8, 8, 35, 8, 8, 35, 35, 8, 35,
+                8,  8,  8,  35, 8, 8,  8,  8, 8,  35, 8, 8,  35, 8, 8,  8,
+                35, 8,  35, 8,  35, 8,  35, 35, 8,  8,  8,  8,  8,  8,  35, 8,
+                35, 35, 8,  35, 35, 35, 35, 8,  8,  35, 8,  8,  35, 35, 8,  35,
         }
 };
 

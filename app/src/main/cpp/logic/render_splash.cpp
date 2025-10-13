@@ -5,6 +5,7 @@
 #include "render_splash.h"
 #include "../opt/mem_opt.h"
 #include "../graphic/bitmap_render.h"
+#include "../graphic/palette_data.h"
 #include "../splash/splash.h"
 #include "render_map.h"
 #include "../splash/logo.h"
@@ -60,7 +61,7 @@ void SplashRender::tikLogic() {
     } else if (splash_scene == 3) {
         int height = 32;
         if (logo_y == 0) {
-            logo_y = 128 - height / 2;
+            logo_y = (global_config::k_screen_height / 2) - height / 2;
         } else if (logo_y > 52) {
             logo_y--;
         } else {
@@ -75,43 +76,59 @@ void SplashRender::tikLogic() {
 }
 
 uint8_t *SplashRender::render(uint8_t *screenBuffer) {
-    __memset_aarch64(screenBuffer, 8, global_config::k_screen_width * global_config::k_screen_height);
+    __memset_aarch64(screenBuffer,
+                     palette::k_palette_black,
+                     global_config::k_screen_width * global_config::k_screen_height);
     if (splash_scene == 0) {
         int width = 143;
         int height = 79;
-        return renderBitmap((uint8_t *) splash, width, height,
-                            128 - width / 2, 128 - height / 2, screenBuffer);
+        return bitmap_render::render_bitmap((uint8_t *) splash, width, height,
+                                            (global_config::k_screen_width / 2) - width / 2,
+                                            (global_config::k_screen_height / 2) - height / 2,
+                                            screenBuffer);
     } else if (splash_scene == 1) {
         int width = 208;
         int height = 32;
-        return renderBitmap((uint8_t *) logo, width, percent,
-                            128 - width / 2 + 4, 128 - height / 2, screenBuffer);
+        return bitmap_render::render_bitmap((uint8_t *) logo, width, percent,
+                                            (global_config::k_screen_width / 2) - width / 2 + 4,
+                                            (global_config::k_screen_height / 2) - height / 2,
+                                            screenBuffer);
     } else if (splash_scene == 2) {
         int width = 208;
         int height = 32;
-        return renderBitmap((uint8_t *) logo, width, height,
-                            128 - width / 2 + 4, 128 - height / 2, screenBuffer);
+        return bitmap_render::render_bitmap((uint8_t *) logo, width, height,
+                                            (global_config::k_screen_width / 2) - width / 2 + 4,
+                                            (global_config::k_screen_height / 2) - height / 2,
+                                            screenBuffer);
     } else if (splash_scene == 3) {
         int width = 208;
         int height = 32;
-        return renderBitmap((uint8_t *) logo, width, height,
-                            128 - width / 2 + 4, logo_y, screenBuffer);
+        return bitmap_render::render_bitmap((uint8_t *) logo, width, height,
+                                            (global_config::k_screen_width / 2) - width / 2 + 4,
+                                            logo_y, screenBuffer);
     } else if (splash_scene == 4) {
         int width = 248;
         int height = 106;
         if (percent < height) {
-            screenBuffer = renderBitmap((uint8_t *) logo, 208, 32,
-                                        128 - 208 / 2 + 4, 52, screenBuffer);
+            screenBuffer = bitmap_render::render_bitmap((uint8_t *) logo, 208, 32,
+                                                        (global_config::k_screen_width / 2) -
+                                                        208 / 2 + 4, 52, screenBuffer);
         }
-        renderAsciText(screenBuffer, "PUSH START", 98, 150);
-        renderAsciText(screenBuffer, "1996 DATA EAST", 86, 180);
-        renderAsciText(screenBuffer, "1996 CREA-TECH", 86, 190);
-        renderAsciText(screenBuffer, "2023 PARK REMAKE", 80, 200);
-        return renderBitmap((uint8_t *) logo_2, width, percent,
-                            128 - width / 2, 10, screenBuffer);
+        renderAsciText(screenBuffer, "PUSH START", (global_config::k_screen_width / 2) - 32, 150);
+        renderAsciText(screenBuffer, "1996 DATA EAST", (global_config::k_screen_width / 2) - 48, 180);
+        renderAsciText(screenBuffer, "1996 CREA-TECH", (global_config::k_screen_width / 2) - 48, 190);
+        renderAsciText(screenBuffer, "2023 PARK REMAKE", (global_config::k_screen_width / 2) - 56, 200);
+        return bitmap_render::render_bitmap((uint8_t *) logo_2, width, percent,
+                                            (global_config::k_screen_width / 2) - width / 2, 10,
+                                            screenBuffer);
     } else {
-        return renderBitmap((uint8_t *) set_name, 236, 221,
-                            0, 0, screenBuffer);
+        //todo
+        return bitmap_render::render_bitmap((uint8_t *) set_name,
+                                            236,
+                                            221,
+                                            0,
+                                            0,
+                                            screenBuffer);
     }
 }
 

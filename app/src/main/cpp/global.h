@@ -13,6 +13,10 @@ namespace global_config {
     constexpr uint16_t k_screen_width = 455;
     constexpr uint16_t k_screen_height = 256;
 
+    constexpr uint16_t k_tile_size = 16;
+    constexpr uint16_t k_tile_width = k_screen_width / k_tile_size;
+    constexpr uint16_t k_tile_height = k_screen_height / k_tile_size;
+
     constexpr size_t k_screen_pixel_size = sizeof(uint8_t);
     constexpr size_t k_screen_buffer_size = k_screen_pixel_size * k_screen_width * k_screen_height;
 
