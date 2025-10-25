@@ -20,13 +20,13 @@ Java_com_park_metalmax_NativeBridge_initNativeWindow(JNIEnv *env,
                                                      jint height) {
     LOGD(BRIDGE_TAG, "initNativeWindow:%d, %d", width, height);
     ANativeWindow *mANativeWindow = ANativeWindow_fromSurface(env, surface);
-    initGraphic(mANativeWindow, width, height);
+    native_graphic::initGraphic(mANativeWindow, width, height);
 }
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_releaseNativeWindow(JNIEnv *env, jclass clazz) {
     LOGD(BRIDGE_TAG, "releaseNativeWindow");
-    releaseGraphic();
+    native_graphic::releaseGraphic();
 }
 extern "C"
 JNIEXPORT void JNICALL

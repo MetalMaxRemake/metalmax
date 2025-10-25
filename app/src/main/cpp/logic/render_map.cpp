@@ -190,7 +190,7 @@ void MapRender::renderDoor(uint8_t *screenBuffer) const {
 }
 
 void MapRender::resetPalette() const {
-    int *currentPalette = getCurrentPalette();
+    int *currentPalette = native_graphic::getCurrentPalette();
     for (int i = 0; i < palette::palette_size; i++) {
         int dd = palette::palette_rgb[i];
         int b = (dd & 0x00FF0000) >> 16;
@@ -198,11 +198,11 @@ void MapRender::resetPalette() const {
         int r = (dd & 0x000000FF) >> 0;
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    refreshPalette(currentPalette);
+    native_graphic::refreshPalette(currentPalette);
 }
 
 void MapRender::fadeIn() const {
-    int *currentPalette = getCurrentPalette();
+    int *currentPalette = native_graphic::getCurrentPalette();
     for (int i = 0; i < palette::palette_size; i++) {
         unsigned int origindd = palette::palette_rgb[i];
         unsigned int o_b = (origindd & 0x00FF0000) >> 16;
@@ -224,11 +224,11 @@ void MapRender::fadeIn() const {
         }
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    refreshPalette(currentPalette);
+    native_graphic::refreshPalette(currentPalette);
 }
 
 void MapRender::fadeOut() const {
-    int *currentPalette = getCurrentPalette();
+    int *currentPalette = native_graphic::getCurrentPalette();
     for (int i = 0; i < palette::palette_size; i++) {
         unsigned int dd = currentPalette[i];
         unsigned int b = (dd & 0x00FF0000) >> 16;
@@ -252,7 +252,7 @@ void MapRender::fadeOut() const {
         }
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    refreshPalette(currentPalette);
+    native_graphic::refreshPalette(currentPalette);
 }
 
 void MapRender::tikLogic() {

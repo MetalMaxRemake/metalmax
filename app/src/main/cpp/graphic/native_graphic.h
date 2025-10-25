@@ -12,11 +12,18 @@
 #include "GLES2/gl2platform.h"
 #include "../global.h"
 
-void setRenderCallback(uint8_t*(*getBuffer)(uint8_t* screenBuffer));
-void initGraphic(ANativeWindow* window, int width, int height);
-int* getCurrentPalette();
-void refreshPalette(int *currentPalette);
-void releaseGraphic();
-int getFps();
+namespace native_graphic {
+    void setRenderCallback(uint8_t *(*getBuffer)(uint8_t *screenBuffer));
+
+    void initGraphic(ANativeWindow *window, int width, int height);
+
+    int *getCurrentPalette();
+
+    void refreshPalette(int *currentPalette);
+
+    void releaseGraphic();
+
+    int getFps();
+}
 
 #endif //METALMAX_NATIVE_GRAPHIC_H
