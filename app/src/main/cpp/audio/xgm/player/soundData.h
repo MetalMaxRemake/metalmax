@@ -8,7 +8,7 @@
 namespace xgm
 {
   /**
-   * ƒV[ƒPƒ“ƒXŒ^‰‰‘tƒf[ƒ^
+   * ï¿½Vï¿½[ï¿½Pï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½tï¿½fï¿½[ï¿½^
    */
   class SoundData
   {
@@ -16,45 +16,45 @@ namespace xgm
     SoundData(){};
     virtual ~SoundData(){};
     /**
-     * ƒoƒCƒiƒŠƒCƒ[ƒW‚©‚ç‚Ì“Ç‚İ‚İ
+     * ï¿½oï¿½Cï¿½iï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½Ì“Ç‚İï¿½ï¿½ï¿½
      *
-     * @param image ƒoƒCƒiƒŠƒCƒ[ƒW‚Ö‚Ìƒ|ƒCƒ“ƒ^
-     * @param size  ƒCƒ[ƒW‚ÌƒTƒCƒY
-     * @return ¬Œ÷ true ¸”s false
+     * @param image ï¿½oï¿½Cï¿½iï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^
+     * @param size  ï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½ÌƒTï¿½Cï¿½Y
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true ï¿½ï¿½ï¿½sï¿½ï¿½ false
      */
     virtual bool Load(UINT8 *data, UINT32 size){ return false; }
 
     /**
-     * ƒtƒ@ƒCƒ‹‚©‚ç‚Ì“Ç‚İ‚İ
-     * @param fn ƒtƒ@ƒCƒ‹–¼i‚Ü‚½‚Íƒtƒ@ƒCƒ‹î•ñ‚ğ¦‚·•¶š—ñj‚Ö‚Ìƒ|ƒCƒ“ƒ^
+     * ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì“Ç‚İï¿½ï¿½ï¿½
+     * @param fn ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Ü‚ï¿½ï¿½Íƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^
      */
     virtual bool LoadFile(const char *fn){ return false; }
 
     /**
-     * ƒ^ƒCƒgƒ‹‚Ìæ“¾
-     * @return ƒ^ƒCƒgƒ‹î•ñ
+     * ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½Ìæ“¾
+     * @return ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½
      */
-    virtual const char *GetTitleString(const char *format=NULL, int song=-1){ return ""; }
+    virtual const char *GetTitleString(const char *format=nullptr, int song=-1){ return ""; }
 
     /**
-     * ƒ^ƒCƒgƒ‹‚Ìİ’è
-     * @param title V‚µ‚¢ƒ^ƒCƒgƒ‹‚Ö‚Ìƒ|ƒCƒ“ƒ^(255•¶š‚Ü‚Å)
+     * ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½Ìİ’ï¿½
+     * @param title ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^(255ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½)
      */
     virtual void SetTitleString(char *title){}
 
     /**
-     * ‰‰‘tŠÔ(ms)‚Ìæ“¾
+     * ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½(ms)ï¿½Ìæ“¾
      */
     virtual int GetLength(){ return 3*60*1000; }
 
     /**
-     * ‰‰‘tŠÔ(ms)‚Ìİ’è
+     * ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½(ms)ï¿½Ìİ’ï¿½
      */
     virtual void SetLength(int time_in_ms){}
   };
 
   /**
-   * •¡”‹È“ü‚è‰‰‘tƒf[ƒ^
+   * ï¿½ï¿½ï¿½ï¿½ï¿½È“ï¿½ï¿½è‰‰ï¿½tï¿½fï¿½[ï¿½^
    */
   class SoundDataMSP : public SoundData
   {

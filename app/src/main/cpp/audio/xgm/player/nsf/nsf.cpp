@@ -28,7 +28,7 @@ static int is_sjis_prefix(int c)
 
   NSF::NSF ():SoundDataMSP ()
   {
-    body = NULL;
+    body = nullptr;
     default_playtime = 5 * 60 * 1000;
     default_fadetime = 5 * 1000;
     default_loopnum = 0;
@@ -37,8 +37,8 @@ static int is_sjis_prefix(int c)
     artist = artist_nsf;
     copyright = copyright_nsf;
     ripper = "";
-    nsfe_image = NULL;
-    nsfe_plst = NULL;
+    nsfe_image = nullptr;
+    nsfe_plst = nullptr;
     nsfe_plst_size = 0;
     for (unsigned int i=0; i<NSFE_MIXES; ++i) nsfe_mixe[i] = NSFE_MIXE_DEFAULT;
   }
@@ -123,7 +123,7 @@ static int is_sjis_prefix(int c)
     char fpath[sizeof(this->filename)];
     __memcpy_aarch64_simd(fpath,this->filename,sizeof(this->filename));
     char *fname = strrchr(fpath,'\\');
-    if(fname!=NULL) *(fname++) = '\0'; else fname = fpath;
+    if(fname!=nullptr) *(fname++) = '\0'; else fname = fpath;
 
     if(song<0) song = this->song;
     UINT8 nsfe_ei = nsfe_plst ? nsfe_plst[song] : song;
@@ -133,7 +133,7 @@ static int is_sjis_prefix(int c)
       return print_title;
     }
 
-    if(format==NULL||strlen(format)>128)
+    if(format==nullptr||strlen(format)>128)
       format = "%L (%n/%e) %T - %A";
 
     print_title[wp] = '\0';
@@ -251,8 +251,8 @@ static int is_sjis_prefix(int c)
 
   bool NSF::LoadFile (const char *fn)
   {
-    FILE *fp = NULL;
-    UINT8 *buf = NULL;          //MAX 256KB
+    FILE *fp = nullptr;
+    UINT8 *buf = nullptr;          //MAX 256KB
     int size, rsize;
     const char *ext;
     const char *ext_next;
@@ -279,7 +279,7 @@ static int is_sjis_prefix(int c)
 
     filename[NSF_MAX_PATH - 1] = '\0';
     fp = fopen (filename, "rb");
-    if (fp == NULL)
+    if (fp == nullptr)
     {
       nsf_error = "Could not open file.";
       goto Error_Exit;
@@ -415,7 +415,7 @@ static int is_sjis_prefix(int c)
     // fill NSFe values with defaults
 
     // 'plst'
-    nsfe_plst = NULL;
+    nsfe_plst = nullptr;
     nsfe_plst_size = 0;
 
     // entries 'tlbl', 'taut', 'time', 'fade', 'psfx'
@@ -465,7 +465,7 @@ static int is_sjis_prefix(int c)
     copyright_nsf[31] = '\0';
     copyright = copyright_nsf;
     ripper = ""; // NSFe only
-    text = NULL; // NSFe only
+    text = nullptr; // NSFe only
     text_len = 0; // NSFe only
     speed_ntsc = image[0x6e] | (image[0x6f] << 8);
     __memcpy_aarch64_simd (bankswitch, image + 0x70, 8);
@@ -632,7 +632,7 @@ static int is_sjis_prefix(int c)
 
           // body should follow in 'DATA' chunk
           delete[] body;
-          body = NULL;
+          body = nullptr;
           bodysize = 0;
 
           // description strings should follow in 'auth' chunk
@@ -643,7 +643,7 @@ static int is_sjis_prefix(int c)
           artist    = artist_nsf;
           copyright = copyright_nsf;
           ripper    = "";
-          text      = NULL;
+          text      = nullptr;
           text_len  = 0; // NSFe only
 
           // INFO chunk read

@@ -14,7 +14,7 @@
 #define DETECT_FDS_MIRROR 0
 
 #if FDS_MEMCPY
-static UINT8* fds_image = NULL;
+static UINT8* fds_image = nullptr;
 #endif
 
 namespace xgm
@@ -22,7 +22,7 @@ namespace xgm
 
   NES_BANK::NES_BANK ()
   {
-    image = NULL;
+    image = nullptr;
   };
 
   NES_BANK::~NES_BANK ()

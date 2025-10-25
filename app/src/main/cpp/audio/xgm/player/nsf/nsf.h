@@ -105,7 +105,7 @@ namespace xgm
      *
      * @return �^�C�g�������� (��Ȏ� - �^�C�g��)
      */
-    const char *GetTitleString (const char *format=NULL, int song=-1);
+    const char *GetTitleString (const char *format=nullptr, int song=-1);
     const char *GetPlaylistString (const char *format, bool b);
     int GetLength ();
     void SetTitleString (char *);

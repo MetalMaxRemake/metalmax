@@ -175,5 +175,5 @@ void releaseLogicThread() {
 void initLogicThread() {
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, NULL, logic_thread, NULL);
+    pthread_create(&id, nullptr, logic_thread, nullptr);
 }

@@ -23,7 +23,7 @@ static char *vcm_itoa(int value, char *str, int base) {
         case 8: fmt = oct_fmt; break;
         case 10: fmt = dec_fmt; break;
         case 16: fmt = hex_fmt; break;
-        default: return NULL;
+        default: return nullptr;
     }
     sprintf(str,fmt,value);
     return str;
@@ -97,7 +97,7 @@ namespace vcm
       if(oblist.size()!=0)
         return *oblist.begin();
       else
-        return NULL;
+        return nullptr;
     }
 
     void Notify(int id)

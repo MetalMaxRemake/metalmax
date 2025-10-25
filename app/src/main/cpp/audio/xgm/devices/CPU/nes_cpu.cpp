@@ -22,13 +22,13 @@ const int FRAME_FIXED = 14;
 NES_CPU::NES_CPU (double clock)
 {
   nes_basecycles = clock;
-  bus = NULL;
-  nes_mem = NULL;
+  bus = nullptr;
+  nes_mem = nullptr;
   irqs = 0;
   enable_irq = true;
   enable_nmi = false;
   nsf2_bits = 0;
-  nsf2_irq = NULL;
+  nsf2_irq = nullptr;
 }
 
 NES_CPU::~NES_CPU ()
@@ -226,7 +226,7 @@ void NES_CPU::Start (
 
 	// enable NSF2 IRQ
 	if (nsf2_bits & 0x10) enable_irq = true;
-	else nsf2_irq = NULL;
+	else nsf2_irq = nullptr;
 
 	// NSF2 disable PLAY
 	if (nsf2_bits & 0x40)

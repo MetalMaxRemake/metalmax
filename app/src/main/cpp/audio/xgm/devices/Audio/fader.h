@@ -14,7 +14,7 @@ namespace xgm
   public:
     Fader ()
     {
-      d = NULL;
+      d = nullptr;
       Reset();
     }
 

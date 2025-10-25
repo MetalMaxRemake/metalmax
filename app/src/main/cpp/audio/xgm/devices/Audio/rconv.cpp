@@ -14,7 +14,7 @@ static double window(int n, int M)
 }
 
 RateConverter::RateConverter () : clock(0.0), rate(0.0), mult(0), clocks(0),
-	cpu(NULL), dmc(NULL), cpu_clocks(0), cpu_rest(0),
+	cpu(nullptr), dmc(nullptr), cpu_clocks(0), cpu_rest(0),
 	fast_skip(true)
 {
 }

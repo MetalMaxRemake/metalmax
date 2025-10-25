@@ -11,7 +11,7 @@ namespace xgm
 
   NSFPlayer::NSFPlayer () : PlayerMSP ()
   {
-    nsf = NULL;
+    nsf = nullptr;
 
     sc[APU] = (apu = new NES_APU());
     sc[DMC] = (dmc = new NES_DMC());
@@ -53,7 +53,7 @@ namespace xgm
 
   const char *NSFPlayer::GetTitleString ()
   {
-    if (nsf == NULL) return "(not loaded)";
+    if (nsf == nullptr) return "(not loaded)";
 
     static char buf[512];
     sprintf (buf, "%s", nsf->GetTitleString((*config)["TITLE_FORMAT"]));
@@ -71,7 +71,7 @@ namespace xgm
     }
     else
     {
-      nsf->nsfe_plst = NULL;
+      nsf->nsfe_plst = nullptr;
     }
 
     nsf->DebugOut ();
@@ -236,7 +236,7 @@ void NSFPlayer::SetPlayFreq (double r)
 
   void NSFPlayer::Reset ()
   {
-    ::srand((unsigned)::time(NULL)); // randomizing random generator
+    ::srand((unsigned)::time(nullptr)); // randomizing random generator
 
     time_in_ms = 0;
     silent_length = 0;
@@ -520,7 +520,7 @@ void NSFPlayer::SetPlayFreq (double r)
 
   int NSFPlayer::GetLength ()
   {
-    if (nsf == NULL) return 0;
+    if (nsf == nullptr) return 0;
     return nsf->GetLength ();
   }
 

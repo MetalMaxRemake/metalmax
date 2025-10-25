@@ -10,7 +10,7 @@
 namespace xgm {
 
   /**
-   * ‰¹º‡¬Œn‚Ìİ’è‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+   * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½Ìİ’ï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½X
    * @see Player
    */
   class PlayerConfig : public vcm::Configuration
@@ -18,7 +18,7 @@ namespace xgm {
   };
 
   /**
-   * ‰¹º‡¬Œn
+   * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½n
    */
   class Player : public vcm::ObserverI
   {
@@ -27,27 +27,27 @@ namespace xgm {
 
   public:
     /**
-     * GetLoopCountƒƒ\ƒbƒh‚Ì“Á•Ê‚È–ß‚è’l
+     * GetLoopCountï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½Ì“ï¿½ï¿½Ê‚È–ß‚ï¿½l
      * @see GetLoopCount
      */
     enum { NEVER_LOOP=-1, INFINITE_LOOP=0 };
 
     Player()
     {
-        config = NULL;
+        config = nullptr;
     }
 
     virtual ~Player(){ 
-        if(config != NULL)
+        if(config != nullptr)
             config->DetachObserver(this);
     }
 
     /**
-     * PlayerConfigƒIƒuƒWƒFƒNƒg‚ğƒAƒ^ƒbƒ`‚·‚é
+     * PlayerConfigï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Aï¿½^ï¿½bï¿½`ï¿½ï¿½ï¿½ï¿½
      * <P>
-     * PlayerConfigƒIƒuƒWƒFƒNƒg‚ÌƒIƒuƒU[ƒo‚ÉC‚±‚ÌƒIƒuƒWƒFƒNƒg‚ª©“®“I‚É“o˜^‚³‚ê‚éD
+     * PlayerConfigï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ÌƒIï¿½uï¿½Uï¿½[ï¿½oï¿½ÉCï¿½ï¿½ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½D
      * </P>
-     * @param pc ƒAƒ^ƒbƒ`‚·‚éPlayerConfigƒIƒuƒWƒFƒNƒg
+     * @param pc ï¿½Aï¿½^ï¿½bï¿½`ï¿½ï¿½ï¿½ï¿½PlayerConfigï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
      */
     virtual void SetConfig(PlayerConfig *pc)
     { 
@@ -61,30 +61,30 @@ namespace xgm {
     }
 
     /**
-     * PlayerConfigƒIƒuƒWƒFƒNƒg‚ªXV‚³‚ê‚½‚ÉƒR[ƒ‹‚³‚ê‚éƒGƒ“ƒgƒŠ
-     * @param param XVƒXƒe[ƒ^ƒX
+     * PlayerConfigï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½ÉƒRï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½gï¿½ï¿½
+     * @param param ï¿½Xï¿½Vï¿½Xï¿½eï¿½[ï¿½^ï¿½X
      */
     virtual void Notify(int param){};
 
     /**
-     * ‰‰‘tƒf[ƒ^‚ğƒ[ƒh‚·‚é
+     * ï¿½ï¿½ï¿½tï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½
      * <P>
-     * PlayerƒIƒuƒWƒFƒNƒg‚ÍA“à•”‚É‰‰‘tƒf[ƒ^‚ÌƒRƒs[‚ğŠi”[‚µ‚È‚¢B
-     * ‚µ‚½‚ª‚Á‚ÄAPlayerƒIƒuƒWƒFƒNƒg‚Ì‰‰‘t’†‚É‰‰‘tƒf[ƒ^‚ğÁ–Å‚³‚¹‚Ä‚Í‚¢‚¯‚È‚¢B
-     * ‰‰‘tƒf[ƒ^‚Ì¶¬‚ÆÁ–Å‚ÍPlayerƒIƒuƒWƒFƒNƒg‚ÌŠO•”‚ÅŠÇ—‚·‚éB
+     * Playerï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ÍAï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½tï¿½fï¿½[ï¿½^ï¿½ÌƒRï¿½sï¿½[ï¿½ï¿½ï¿½iï¿½[ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄAPlayerï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ì‰ï¿½ï¿½tï¿½ï¿½ï¿½É‰ï¿½ï¿½tï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½Ä‚Í‚ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
+     * ï¿½ï¿½ï¿½tï¿½fï¿½[ï¿½^ï¿½Ìï¿½ï¿½ï¿½ï¿½Æï¿½ï¿½Å‚ï¿½Playerï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ÌŠOï¿½ï¿½ï¿½ÅŠÇ—ï¿½ï¿½ï¿½ï¿½ï¿½B
      * </P>
-     * @param data ‰‰‘tƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-     * @return ¬Œ÷ ture ¸”s false
+     * @param data ï¿½ï¿½ï¿½tï¿½fï¿½[ï¿½^ï¿½Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ture ï¿½ï¿½ï¿½sï¿½ï¿½ false
      */
     virtual bool Load(SoundData *sdat)=0;
 
     /**
-     * ƒvƒŒƒCƒ„‚ğ‰Šú‰»‚·‚é
+     * ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     virtual void Reset()=0;
 
     /**
-     * Ä¶ƒŒ[ƒg‚ğİ’è‚·‚é
+     * ï¿½Äï¿½ï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½İ’è‚·ï¿½ï¿½
      */
     virtual void SetPlayFreq(double rate)=0;
 
@@ -94,48 +94,48 @@ namespace xgm {
     virtual void SetChannels(int channels)=0;
 
     /**
-     * ‰¹ºƒf[ƒ^‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO‚ğs‚¤
+     * ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½Ìƒï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½
      * <P>
-     * ƒoƒbƒtƒ@ƒTƒCƒY‚Í samples * sizeof(INT16)•K—v
+     * ï¿½oï¿½bï¿½tï¿½@ï¿½Tï¿½Cï¿½Yï¿½ï¿½ samples * sizeof(INT16)ï¿½Kï¿½v
      * </P>
-     * @param buf ƒŒƒ“ƒ_ƒŠƒ“ƒOƒf[ƒ^‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-     * @param samples ƒTƒ“ƒvƒ‹‚ÌŒÂ”
-     *                0‚ğ—^‚¦‚ç‚ê‚Ä‚àƒnƒ“ƒOƒAƒbƒv‚µ‚Ä‚Í‚È‚ç‚È‚¢
-     * @return ÀÛ‚É¶¬‚³‚ê‚½ƒTƒ“ƒvƒ‹”
+     * @param buf ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½iï¿½[ï¿½ï¿½ï¿½ï¿½oï¿½bï¿½tï¿½@
+     * @param samples ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ÌŒÂï¿½
+     *                0ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½nï¿½ï¿½ï¿½Oï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½Ä‚Í‚È‚ï¿½È‚ï¿½
+     * @return ï¿½ï¿½ï¿½Û‚Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½
      */
     virtual UINT32 Render(INT16 *buf, UINT32 samples)=0;
 
-    /** ƒtƒF[ƒhƒAƒEƒg */
+    /** ï¿½tï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½g */
     virtual void FadeOut(int fade_in_ms)=0;
 
     /**
-     * ‰¹ºƒf[ƒ^‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO‚ğƒXƒLƒbƒv‚·‚é
-     * @param samples ƒXƒLƒbƒv‚·‚éƒTƒ“ƒvƒ‹”
-     *                0‚ğ—^‚¦‚ç‚ê‚Ä‚àƒnƒ“ƒOƒAƒbƒv‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-     * @return ÀÛ‚ÉƒXƒLƒbƒv‚µ‚½ƒTƒ“ƒvƒ‹”
+     * ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½Ìƒï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Xï¿½Lï¿½bï¿½vï¿½ï¿½ï¿½ï¿½
+     * @param samples ï¿½Xï¿½Lï¿½bï¿½vï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½
+     *                0ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½nï¿½ï¿½ï¿½Oï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½Ä‚Í‚È‚ï¿½È‚ï¿½ï¿½D
+     * @return ï¿½ï¿½ï¿½Û‚ÉƒXï¿½Lï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½
      */
     virtual UINT32 Skip(UINT32 samples)=0;
 
     /**
-     * ‰‰‘t‚ª’â~‚µ‚½‚©‚Ç‚¤‚©‚ğ’²‚×‚éD
-     * @return ’â~’†‚È‚çtrueD‰‰‘t’†‚È‚çfalseD
+     * ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ğ’²‚×‚ï¿½D
+     * @return ï¿½ï¿½~ï¿½ï¿½ï¿½È‚ï¿½trueï¿½Dï¿½ï¿½ï¿½tï¿½ï¿½ï¿½È‚ï¿½falseï¿½D
      */
     virtual bool IsStopped()=0;
 
     /**
-     * ‰‰‘t‚ªƒ‹[ƒv‚µ‚½‰ñ”‚ğƒ`ƒFƒbƒN‚·‚éD
+     * ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ñ”‚ï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½D
      * <P>
-     * ‰‰ñ‚Ì‰‰‘t‚ğ1ƒ‹[ƒv–Ú‚Æ”‚¦‚éD
+     * ï¿½ï¿½ï¿½ï¿½Ì‰ï¿½ï¿½tï¿½ï¿½1ï¿½ï¿½ï¿½[ï¿½vï¿½Ú‚Æï¿½ï¿½ï¿½ï¿½ï¿½D
      * </P>
-     * @return ‰‰‘t‚ªƒ‹[ƒv‚µ‚½‰ñ”D
-     NEVER_LOOP‚Ìê‡‚Íƒ‹[ƒv‚µ‚È‚¢ƒf[ƒ^CINFINITE_LOOP‚Ìê‡‚Í–³ŒÀƒ‹[ƒv‚·‚éƒf[ƒ^‚Å‚ ‚éD
+     * @return ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ñ”D
+     NEVER_LOOPï¿½Ìê‡ï¿½Íƒï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½È‚ï¿½ï¿½fï¿½[ï¿½^ï¿½CINFINITE_LOOPï¿½Ìê‡ï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½Å‚ï¿½ï¿½ï¿½D
      */
     virtual int  GetLoopCount(){ return NEVER_LOOP; }
     virtual const char* GetTitleString(){ return "UNKNOWN"; }
     virtual int GetLength(){ return 5*60*1000; }
     
-    /* ”Ô†id‚ÌŠÔtime‚Å‚ÌƒfƒoƒCƒXî•ñ‚ğæ“¾ time==-1‚Ì‚ÍŒ»İ‚ÌƒfƒoƒCƒXî•ñ‚ğ•Ô‚· */
-    virtual IDeviceInfo *GetInfo(int time_in_ms, int device_id){ return NULL; }
+    /* ï¿½Ôï¿½idï¿½Ìï¿½ï¿½ï¿½timeï¿½Å‚Ìƒfï¿½oï¿½Cï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ time==-1ï¿½Ìï¿½ï¿½ÍŒï¿½ï¿½İ‚Ìƒfï¿½oï¿½Cï¿½Xï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ */
+    virtual IDeviceInfo *GetInfo(int time_in_ms, int device_id){ return nullptr; }
   };
 
   class PlayerMSP : public Player
@@ -144,29 +144,29 @@ namespace xgm {
     PlayerMSP() : Player(){};
     virtual ~PlayerMSP(){};
     /**
-     * Ÿ‚Ì‹È‚Éi‚Ş
-     * @param step i‚ß‚é‹È”
-     * @return ¬Œ÷ true ¸”s false
+     * ï¿½ï¿½ï¿½Ì‹È‚Éiï¿½ï¿½
+     * @param step ï¿½iï¿½ß‚ï¿½Èï¿½
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true ï¿½ï¿½ï¿½sï¿½ï¿½ false
      */
     virtual bool NextSong(int s){ return false; }
 
     /**
-     * ‘O‚Ì‹È‚É–ß‚é
-     * @param step –ß‚é‹È”
-     * @return ¬Œ÷ true ¸”s false
+     * ï¿½Oï¿½Ì‹È‚É–ß‚ï¿½
+     * @param step ï¿½ß‚ï¿½Èï¿½
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true ï¿½ï¿½ï¿½sï¿½ï¿½ false
      */
     virtual bool PrevSong(int s){ return false; }
 
     /**
-     * ‹È”Ô†‚ğ’¼Úİ’è‚·‚é
-     * @param song ‹È”Ô†
-     * @return ¬Œ÷ true ¸”s false
+     * ï¿½È”Ôï¿½ï¿½ğ’¼Úİ’è‚·ï¿½ï¿½
+     * @param song ï¿½È”Ôï¿½
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true ï¿½ï¿½ï¿½sï¿½ï¿½ false
      */
     virtual bool SetSong(int song){ return false; }
 
     /**
-     * Œ»İ‘I‘ğ’†‚Ì‹È”Ô†‚ğŠl“¾‚·‚é
-     * @return ‹È”Ô†
+     * ï¿½ï¿½ï¿½İ‘Iï¿½ğ’†‚Ì‹È”Ôï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     * @return ï¿½È”Ôï¿½
      */
     virtual int GetSong(){ return -1; }
   };
