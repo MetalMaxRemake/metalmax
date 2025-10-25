@@ -57,8 +57,6 @@ namespace native_graphic {
     static ANativeWindow_Buffer nwBuffer;
 
     volatile int32_t window_height, window_width;
-
-    constexpr int k_screen_width = 455;
 /**
  * OpenGL
  */
@@ -216,12 +214,6 @@ namespace native_graphic {
         checkGlError("textures");
     }
 
-    void initGL() {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        program = loadProgram(VERTEX_SHADER, FRAGMENT_SHADER);
-        initTextures();
-    }
-
     void onGLSurfaceChange() {
         orthoM(projMatrix, 0, -window_width / 2.0f, +window_width / 2.0f, -window_height / 2.0f,
                +window_height / 2.0f, -2.0f, 2.0f);
@@ -229,13 +221,20 @@ namespace native_graphic {
         int gl_height = window_height;
         int gl_width =
                 gl_height * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
-        LOGD("gl_init", "gl_height: %d, gl_width: %d", gl_height, gl_width);
+        LOGD(TAG, "gl_height: %d, gl_width: %d", gl_height, gl_width);
         initQuadCoordinates(gl_width, gl_height);
         glUseProgram(program);
         positionHandle = glGetAttribLocation(program, "a_position");
         textureHandle = glGetUniformLocation(program, "s_texture");
         paletteHandle = glGetUniformLocation(program, "s_palette");
         texCoordHandle = glGetAttribLocation(program, "a_texCoord");
+    }
+
+    void initGL() {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        program = loadProgram(VERTEX_SHADER, FRAGMENT_SHADER);
+        initTextures();
+        onGLSurfaceChange();
     }
 
     void onGLDraw() {
@@ -375,7 +374,7 @@ namespace native_graphic {
     }
 
     void software() {
-        LOGD("native_graphic", "use software");
+        LOGD(TAG, "use software");
         graphicRunning = true;
         bool first = true;
         long totalDuration = 0;
@@ -394,10 +393,9 @@ namespace native_graphic {
     volatile bool needRefreshPalette = false;
 
     void openGL() {
-        LOGD("native_graphic", "use opengl");
+        LOGD(TAG, "use opengl");
         initEGL(mANativeWindow);
         initGL();
-        onGLSurfaceChange();
         graphicRunning = true;
         bool first = true;
         long totalDuration = 0;
@@ -415,8 +413,8 @@ namespace native_graphic {
     }
 
     void vulkan() {
-        LOGD("native_graphic", "use vulkan");
-        LOGE("native_graphic", "current version not support vulkan");
+        LOGD(TAG, "use vulkan");
+        LOGE(TAG, "current version not support vulkan");
         exit(-1);
     }
 
@@ -472,7 +470,7 @@ namespace native_graphic {
     }
 
     void releaseGraphic() {
-        LOGD("native_gl", "releaseGraphic");
+        LOGD(TAG, "releaseGraphic");
         graphicRunning = false;
         free(config);
         free(currentScreenBuffer);
