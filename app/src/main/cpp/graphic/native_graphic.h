@@ -16,7 +16,7 @@ namespace native_graphic {
 
     void setRenderCallback(uint8_t *(*getBuffer)(uint8_t *screenBuffer));
 
-    void initGraphic(ANativeWindow *window);
+    bool initGraphic(ANativeWindow *window);
 
     void applyNewPalette(int *currentPalette);
 

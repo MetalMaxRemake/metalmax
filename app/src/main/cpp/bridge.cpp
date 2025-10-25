@@ -11,47 +11,59 @@
 const char *BRIDGE_TAG = "bridge";
 
 extern "C"
-JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_initNativeWindow(JNIEnv *env,
-                                                     jclass clazz,
-                                                     jobject surface) {
+JNIEXPORT jboolean JNICALL
+Java_com_park_metalmax_NativeBridge_initNativeWindowNative(JNIEnv *env,
+                                                           jclass clazz,
+                                                           jobject surface) {
     LOGD(BRIDGE_TAG, "initNativeWindow");
-    ANativeWindow *mANativeWindow = ANativeWindow_fromSurface(env, surface);
-    native_graphic::initGraphic(mANativeWindow);
+    ANativeWindow *nativeWindow = ANativeWindow_fromSurface(env, surface);
+    if (nativeWindow == nullptr) {
+        return JNI_FALSE;
+    }
+    if (!native_graphic::initGraphic(nativeWindow)) {
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
 }
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_releaseNativeWindow(JNIEnv *env, jclass clazz) {
+Java_com_park_metalmax_NativeBridge_releaseNativeWindowNative(JNIEnv *env, jclass clazz) {
     LOGD(BRIDGE_TAG, "releaseNativeWindow");
     native_graphic::releaseGraphic();
 }
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_slInit(JNIEnv *env, jclass clazz) {
+Java_com_park_metalmax_NativeBridge_slInitNative(JNIEnv *env, jclass clazz) {
     LOGD(BRIDGE_TAG, "slInit");
     initSL();
 }
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_slRelease(JNIEnv *env, jclass clazz) {
+Java_com_park_metalmax_NativeBridge_slReleaseNative(JNIEnv *env, jclass clazz) {
     LOGD(BRIDGE_TAG, "slRelease");
     releaseSL();
 }
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_initLogic(JNIEnv *env, jclass clazz) {
+Java_com_park_metalmax_NativeBridge_initLogicNative(JNIEnv *env, jclass clazz) {
     LOGD(BRIDGE_TAG, "initLogic");
     initLogic();
 }
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onKeyEvent(JNIEnv *env, jclass clazz, jint key) {
+Java_com_park_metalmax_NativeBridge_onKeyEventNative(JNIEnv *env, jclass clazz, jint key) {
     LOGD(BRIDGE_TAG, "onKeyEvent");
     updateDirectKey(key);
 }
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_park_metalmax_NativeBridge_onFuncKeyEvent(JNIEnv *env, jclass clazz, jint key) {
+Java_com_park_metalmax_NativeBridge_onFuncKeyEventNative(JNIEnv *env, jclass clazz, jint key) {
     LOGD(BRIDGE_TAG, "onFuncKeyEvent");
     updateFunctionKey(key);
 }

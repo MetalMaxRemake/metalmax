@@ -495,13 +495,14 @@ namespace native_graphic {
         return nullptr;
     }
 
-    void initGraphic(ANativeWindow *window) {
+    bool initGraphic(ANativeWindow *window) {
         LOGD(TAG, "initGraphic");
         mANativeWindow = window;
         pthread_t id;
         initPalette();
         screenBuffer = (uint8_t *) malloc(global_config::k_screen_buffer_size);
         pthread_create(&id, nullptr, render_thread_task, mANativeWindow);
+        return true;
     }
 
     void applyNewPalette(int *newPalette) {
