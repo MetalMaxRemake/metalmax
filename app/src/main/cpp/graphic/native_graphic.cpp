@@ -72,7 +72,6 @@ namespace software_render {
         uint8_t *screenBuffer = native_graphic::getScreenBuffer();
         ANativeWindow_acquire(nativeWindow);
         while (native_graphic::isRenderRunning()) {
-
             onSoftDraw();
             native_graphic::requireLogicRender();
         }
@@ -131,7 +130,7 @@ namespace opengl_render {
                                   "	     float c = floor((a * 256.0) / 127.5);"
                                   "      float x = a - c * 0.001953;"// = 1 / (screen_width * 2) //0.001953
                                   "      vec2 curPt = vec2(x, 0);"
-                                  "      gl_FragColor.rgb = texture2D(s_palette, curPt).rgb;"
+                                  "      gl_FragColor.rgb = texture2D(s_palette, curPt).rgb;"//vec3(0.0, 0.0, 1.0);
                                   "}";
 
     const char *VERTEX_SHADER = "attribute vec4 a_position;"
@@ -183,7 +182,11 @@ namespace opengl_render {
         glCompileShader(shader);
         glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
         if (!compiled) {
-            __android_log_print(ANDROID_LOG_ERROR, "native_GL", "compile err");
+            const size_t infoLogLength = 1024;
+            char *infoLog = (char *) malloc(sizeof(char) * infoLogLength);
+            glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
+            LOGE(TAG, "compile shader fail: %s", infoLog);
+            free(infoLog);
             return 0;
         }
         return shader;
@@ -191,20 +194,24 @@ namespace opengl_render {
 
     unsigned int loadProgram(const char *VShaderCode, const char *FShaderCode) {
         unsigned int iVshader, iFShader, iProgramId;
-        int link;
+        int linked;
         iVshader = loadShader(VShaderCode, GL_VERTEX_SHADER);
         iFShader = loadShader(FShaderCode, GL_FRAGMENT_SHADER);
         if (!(iVshader && iFShader)) {
-            __android_log_print(ANDROID_LOG_ERROR, "native_GL", "shader err");
+            LOGE(TAG, "shader fail");
             return 0;
         }
         iProgramId = glCreateProgram();
         glAttachShader(iProgramId, iVshader);
         glAttachShader(iProgramId, iFShader);
         glLinkProgram(iProgramId);
-        glGetProgramiv(iProgramId, GL_LINK_STATUS, &link);
-        if (!link) {
-            __android_log_print(ANDROID_LOG_ERROR, "native_GL", "link err");
+        glGetProgramiv(iProgramId, GL_LINK_STATUS, &linked);
+        if (!linked) {
+            const size_t infoLogLength = 1024;
+            char *infoLog = (char *) malloc(sizeof(char) * infoLogLength);
+            glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog);
+            LOGE(TAG, "program linked fail: %d", linked);
+            free(infoLog);
             return 0;
         }
         glDeleteShader(iVshader);
@@ -213,6 +220,7 @@ namespace opengl_render {
     }
 
     void initTextures() {
+        LOGD(TAG, "initTextures()");
         GLsizei numTextures = 2;
         GLuint textureIds[2];
         int textureWidth = global_config::k_screen_width;
@@ -256,7 +264,8 @@ namespace opengl_render {
         checkGlError("textures");
     }
 
-    void onGLSurfaceChange() {
+    void initGlViewPort() {
+        LOGD(TAG, "initGlViewPort()");
         int window_width = native_graphic::getWindowWidth();
         int window_height = native_graphic::getWindowHeight();
         orthoM(projMatrix, 0, -window_width / 2.0f, +window_width / 2.0f, -window_height / 2.0f,
@@ -274,14 +283,15 @@ namespace opengl_render {
         texCoordHandle = glGetAttribLocation(program, "a_texCoord");
     }
 
-    void initGL() {
+    void initOpenGl() {
+        LOGD(TAG, "initOpenGl()");
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         program = loadProgram(VERTEX_SHADER, FRAGMENT_SHADER);
         initTextures();
-        onGLSurfaceChange();
+        initGlViewPort();
     }
 
-    void onGLDraw() {
+    void onDraw() {
         uint8_t *screenBuffer = native_graphic::getScreenBuffer();
         if (screenBuffer == nullptr) {
             return;
@@ -318,9 +328,9 @@ namespace opengl_render {
         eglSwapBuffers(eglDisplay, surface);
     }
 
-    void initEGL() {
+    void initEgl() {
+        LOGD(TAG, "initEgl()");
         ANativeWindow *nativeWindow = native_graphic::getNativeWindow();
-        //初始化EGL
         EGLint configCount;
         eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
         eglInitialize(eglDisplay, &major, &minor);
@@ -336,21 +346,22 @@ namespace opengl_render {
         eglMakeCurrent(eglDisplay, surface, surface, context);
     }
 
-    void releaseEGL() {
+    void releaseEgl() {
+        LOGD(TAG, "releaseEgl()");
         eglReleaseThread();
         eglTerminate(eglDisplay);
         free(config);
     }
 
     void init() {
-        LOGD(TAG, "init");
-        initEGL();
-        initGL();
+        LOGD(TAG, "init()");
+        initEgl();
+        initOpenGl();
         while (native_graphic::isRenderRunning()) {
-            onGLDraw();
+            onDraw();
             native_graphic::requireLogicRender();
         }
-        releaseEGL();
+        releaseEgl();
     }
 }
 
@@ -359,22 +370,27 @@ namespace native_graphic {
 
     const char *TAG = "native_graphic";
 
-    static ANativeWindow *mANativeWindow;
-    static ANativeWindow_Buffer nwBuffer;
-
-    volatile int32_t window_height, window_width;
-/**
- * OpenGL
- */
     const int palette_texture_size = 256;
+    int *palette_texture_pixels;
+
+    static ANativeWindow *mANativeWindow;
+
+    volatile int32_t window_height;
+    volatile int32_t window_width;
 
     uint8_t *(*renderBufferCallback)(uint8_t *screenBuffer);
-
     uint8_t *screenBuffer;
 
     volatile bool renderRunning = true;
 
-    int *palette_texture_pixels;
+    //fps recorder
+    volatile bool enableFps = true;
+    volatile long duration = 0;
+    timespec time1;
+    timespec time2;
+    bool firstFrame = true;
+    long frameDurationMs = 0;
+    int frameCount = 0;
 
     bool isRenderRunning() {
         return renderRunning;
@@ -411,49 +427,31 @@ namespace native_graphic {
         }
     }
 
-    volatile bool enableFps = true;
-
-    volatile long duration = 0;
-
-    timespec time1, time2;
-
-    extern "C" void startTimestamp() {
-        clock_gettime(CLOCK_MONOTONIC, &time1);
-    }
-
-    extern "C" long getDuration() {
-        clock_gettime(CLOCK_MONOTONIC, &time2);
-        return (time2.tv_sec - time1.tv_sec) * 1000 + (time2.tv_nsec - time1.tv_nsec) / 1000000;
-    }
-
     int getFps() {
         float fps = 1000.0f / (duration * 1.f);
         return (int) fps;
     }
 
-    inline void calculateFps(bool &first, long &totalDuration, int &count) {
+    inline void calculateFps() {
         if (enableFps) {
-            if (first) {
-                first = false;
+            if (firstFrame) {
+                firstFrame = false;
             } else {
-                totalDuration += getDuration();
-                count++;
-                if (totalDuration >= 200) {
-                    duration = totalDuration / count;
-                    count = 0;
-                    totalDuration = 0;
+                clock_gettime(CLOCK_MONOTONIC, &time2);
+                frameDurationMs += ((time2.tv_sec - time1.tv_sec) * 1000 + (time2.tv_nsec - time1.tv_nsec) / 1000000);
+                frameCount++;
+                if (frameDurationMs >= 200) {
+                    duration = frameDurationMs / frameCount;
+                    frameCount = 0;
+                    frameDurationMs = 0;
                 }
             }
-            startTimestamp();
+            clock_gettime(CLOCK_MONOTONIC, &time1);
         }
     }
 
-    bool first = true;
-    long totalDuration = 0;
-    int count = 0;
-
     void requireLogicRender() {
-        calculateFps(first, totalDuration, count);
+        calculateFps();
         renderBufferCallback(screenBuffer);
     }
 
@@ -467,7 +465,6 @@ namespace native_graphic {
 
     volatile bool needRefreshPalette = false;
 
-
     void vulkan() {
         LOGD(TAG, "use vulkan");
         LOGE(TAG, "current version not support vulkan");
@@ -475,6 +472,7 @@ namespace native_graphic {
     }
 
     void *render_thread_task(void *arg) {
+        LOGI(TAG, "render thread start!");
         int32_t n_window_width = ANativeWindow_getWidth(mANativeWindow);
         int32_t n_window_height = ANativeWindow_getHeight(mANativeWindow);
         if (n_window_width > 0 && n_window_height > 0) {
@@ -498,6 +496,7 @@ namespace native_graphic {
     }
 
     void initGraphic(ANativeWindow *window) {
+        LOGD(TAG, "initGraphic");
         mANativeWindow = window;
         pthread_t id;
         initPalette();
@@ -505,7 +504,8 @@ namespace native_graphic {
         pthread_create(&id, nullptr, render_thread_task, mANativeWindow);
     }
 
-    void refreshPalette(int *newPalette) {
+    void applyNewPalette(int *newPalette) {
+        LOGD(TAG, "applyNewPalette");
         needRefreshPalette = true;
         palette_texture_pixels = newPalette;
     }

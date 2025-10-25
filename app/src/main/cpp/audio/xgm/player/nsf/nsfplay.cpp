@@ -748,7 +748,7 @@ void NSFPlayer::SetPlayFreq (double r)
           if (usr_region == REGION_NTSC  && !(flags & 1)) usr_region = -1;
       }
 
-      // user preference first, then fall back to NSF preference
+      // user preference firstFrame, then fall back to NSF preference
       int region = usr_region;
       if (region < 0) region = nsf_region;
 

@@ -197,7 +197,7 @@ void MapRender::resetPalette() const {
         int r = (dd & 0x000000FF) >> 0;
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    native_graphic::refreshPalette(currentPalette);
+    native_graphic::applyNewPalette(currentPalette);
 }
 
 void MapRender::fadeIn() const {
@@ -223,7 +223,7 @@ void MapRender::fadeIn() const {
         }
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    native_graphic::refreshPalette(currentPalette);
+    native_graphic::applyNewPalette(currentPalette);
 }
 
 void MapRender::fadeOut() const {
@@ -251,7 +251,7 @@ void MapRender::fadeOut() const {
         }
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    native_graphic::refreshPalette(currentPalette);
+    native_graphic::applyNewPalette(currentPalette);
 }
 
 void MapRender::tikLogic() {

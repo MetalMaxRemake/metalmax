@@ -18,7 +18,7 @@ namespace native_graphic {
 
     void initGraphic(ANativeWindow *window);
 
-    void refreshPalette(int *currentPalette);
+    void applyNewPalette(int *currentPalette);
 
     void releaseGraphic();
 

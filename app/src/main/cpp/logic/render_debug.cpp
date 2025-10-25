@@ -67,7 +67,7 @@ inline void DebugRender::processSelection() {
             unsigned int b = (dd & 0x000000FF) >> 0;
             currentPalette[i] = (a<<24) | (r << 16) | (g << 8) | b;
         }
-        native_graphic::refreshPalette(currentPalette);
+        native_graphic::applyNewPalette(currentPalette);
     } else if (selectPos == 6) {
         int *currentPalette = native_graphic::getPaletteBuffer();
         //fixme
@@ -79,7 +79,7 @@ inline void DebugRender::processSelection() {
             int r = (dd & 0x000000FF) >> 0;
             currentPalette[i] = (a<<24) | (r << 16) | (g << 8) | b;
         }
-        native_graphic::refreshPalette(currentPalette);
+        native_graphic::applyNewPalette(currentPalette);
     } else if (selectPos == 7) {
         getDefaultPlayer()->godMode = !getDefaultPlayer()->godMode;
     } else if (selectPos == 8) {
