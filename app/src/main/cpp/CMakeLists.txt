@@ -6,6 +6,9 @@ set(ANDROID_STL "none")
 enable_language(ASM)
 set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS s)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
+
 file(GLOB_RECURSE MAP_DATA_SRC "maps/map_data/*.cpp" "maps/map_data/*.c" "maps/*.cpp")
 file(GLOB_RECURSE MONSTER "monster/*.cpp")
 file(GLOB_RECURSE SOUND_DATA_SRC "audio/*.cpp" "audio/*.c")

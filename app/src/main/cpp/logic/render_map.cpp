@@ -22,7 +22,8 @@
 #include "render_menu.h"
 #include "../maps/active_tile_bmp.h"
 
-#define ANIMATION_DURATION 20
+//unit at tik, max 100
+#define ANIMATION_DURATION 30
 
 static const uint8_t HUMAN_PASS = 0b0001;
 static const uint8_t CAR_PASS = 0b0010;
@@ -58,6 +59,7 @@ uint8_t *MapRender::render(uint8_t *screenBuffer) {
     if (entranceAnimation > ANIMATION_DURATION / 2) {
         fadeOut();
     } else if (entranceAnimation) {
+        enterAnotherMap(getDefaultPlayer());
         fadeIn();
     } else if (!isOriginPalette) {
         isOriginPalette = true;
@@ -200,58 +202,28 @@ void MapRender::resetPalette() const {
     native_graphic::applyNewPalette(currentPalette);
 }
 
-void MapRender::fadeIn() const {
-    int *currentPalette = native_graphic::getPaletteBuffer();
-    for (int i = 0; i < palette::palette_size; i++) {
-        unsigned int origindd = palette::palette_rgb[i];
-        unsigned int o_b = (origindd & 0x00FF0000) >> 16;
-        unsigned int o_g = (origindd & 0x0000FF00) >> 8;
-        unsigned int o_r = (origindd & 0x000000FF) >> 0;
+unsigned int currentFadePercent = 100;
 
-        unsigned int dd = currentPalette[i];
-        unsigned int b = (dd & 0x00FF0000) >> 16;
-        unsigned int g = (dd & 0x0000FF00) >> 8;
-        unsigned int r = (dd & 0x000000FF) >> 0;
-        if (b <= 255) {
-            b += (o_b / ANIMATION_DURATION);
-        }
-        if (g <= 255) {
-            g += (o_g / ANIMATION_DURATION);
-        }
-        if (r <= 255) {
-            r += (o_r / ANIMATION_DURATION);
-        }
-        currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
+void MapRender::fadeIn() const {
+    LOGD("fadeIn", "%d", currentFadePercent);
+    if (currentFadePercent >= 100) {
+        currentFadePercent = 100;
+        return;
     }
-    native_graphic::applyNewPalette(currentPalette);
+    unsigned int step = 100 / (ANIMATION_DURATION);
+    native_graphic::setGlobalFadePercent(currentFadePercent);
+    currentFadePercent += step;
 }
 
 void MapRender::fadeOut() const {
-    int *currentPalette = native_graphic::getPaletteBuffer();
-    for (int i = 0; i < palette::palette_size; i++) {
-        unsigned int dd = currentPalette[i];
-        unsigned int b = (dd & 0x00FF0000) >> 16;
-        unsigned int g = (dd & 0x0000FF00) >> 8;
-        unsigned int r = (dd & 0x000000FF) >> 0;
-        int step = 20;
-        if (b >= step) {
-            b -= step;
-        } else {
-            b = 0;
-        }
-        if (g >= step) {
-            g -= step;
-        } else {
-            g = 0;
-        }
-        if (r >= step) {
-            r -= step;
-        } else {
-            r = 0;
-        }
-        currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
+    LOGD("fadeOut", "%d", currentFadePercent);
+    if (currentFadePercent <= 0) {
+        currentFadePercent = 0;
+        return;
     }
-    native_graphic::applyNewPalette(currentPalette);
+    unsigned int step = 100 / (ANIMATION_DURATION);
+    native_graphic::setGlobalFadePercent(currentFadePercent);
+    currentFadePercent -= step;
 }
 
 void MapRender::tikLogic() {
@@ -349,9 +321,9 @@ bool MapRender::processKey(uint8_t directKey, uint8_t functionKey) {
     }
     //fixme tile_map.c 's feature data was TOTALLY WRONG!!!
     if (canHumanPass(targetX, targetY) || true) {
-        if (checkEntrance(player, targetX, targetY)) {
+        if (mayEnterAnotherMap(player, targetX, targetY)) {
             player->direct = nextDirect;
-        } else if (checkOutOfMap(player, targetX, targetY)) {
+        } else if (mayExitToLastMap(player, targetX, targetY)) {
             player->direct = nextDirect;
         } else {
             player->x = targetX;
@@ -405,7 +377,7 @@ void MapRender::triggerMonster() const {
     push(battleRender);
 }
 
-bool MapRender::checkOutOfMap(Character *player, int targetX, int targetY) {
+bool MapRender::mayExitToLastMap(Character *player, int targetX, int targetY) {
     uint8_t startX = movable_offset[mapId * 2];
     uint8_t startY = movable_offset[mapId * 2 + 1];
     uint8_t endX = startX + movable_size[mapId * 2];
@@ -415,19 +387,38 @@ bool MapRender::checkOutOfMap(Character *player, int targetX, int targetY) {
         || targetX > endX
         || targetY > endY) {
         entranceAnimation = ANIMATION_DURATION;
-        pthread_mutex_lock(&changeMapMutex);
-        --lastPosStackTop;
-        player->setPos(lastPosStack[lastPosStackTop].x, lastPosStack[lastPosStackTop].y);
-        updateMap(lastPosStack[lastPosStackTop].mapId, 0, 0);
-        pthread_mutex_unlock(&changeMapMutex);
+        nextMapIsBack = true;
         return true;
     }
     return false;
 }
 
-bool MapRender::checkEntrance(Character *player, int targetX, int targetY) {
+bool MapRender::enterAnotherMap(Character *player) {
+    if (!nextMapIsBack && nextMapId == -1 && matchedEntrancesIdx == -1) {
+        return false;
+    }
+    LOGD(TAG, "enterAnotherMap(): %d %d %d", nextMapId, matchedEntrancesIdx, nextMapIsBack);
+    pthread_mutex_lock(&changeMapMutex);
+    if (nextMapIsBack) {
+        --lastPosStackTop;
+        player->setPos(lastPosStack[lastPosStackTop].x, lastPosStack[lastPosStackTop].y);
+        updateMap(lastPosStack[lastPosStackTop].mapId, 0, 0);
+    } else {
+        player->setPos(entrances[mapId][matchedEntrancesIdx * 5 + 2],
+                       entrances[mapId][matchedEntrancesIdx * 5 + 3]);
+        updateMap(nextMapId, 0, 0);
+    }
+
+    //reset
+    nextMapIsBack = false;
+    nextMapId = -1;
+    matchedEntrancesIdx = -1;
+    pthread_mutex_unlock(&changeMapMutex);
+    return true;
+}
+
+bool MapRender::mayEnterAnotherMap(Character *player, int targetX, int targetY) {
     int currentOnEntranceMapId = -1;
-    int nextMapId = -1;
     int matchedIdx = -1;
     for (int i = 0; i < entrance_count[mapId]; i++) {
         uint8_t entrance_x = entrances[mapId][i * 5];
@@ -441,6 +432,7 @@ bool MapRender::checkEntrance(Character *player, int targetX, int targetY) {
         }
     }
     if (matchedIdx != -1 && nextMapId != currentOnEntranceMapId) {
+        matchedEntrancesIdx = matchedIdx;
         entranceAnimation = ANIMATION_DURATION;
         bool isBack = false;
         for (int j = 0; j < lastPosStackTop; j++) {
@@ -455,10 +447,6 @@ bool MapRender::checkEntrance(Character *player, int targetX, int targetY) {
             lastPosStack[lastPosStackTop].y = targetY;
             lastPosStack[lastPosStackTop++].mapId = mapId;
         }
-        pthread_mutex_lock(&changeMapMutex);
-        player->setPos(entrances[mapId][matchedIdx * 5 + 2], entrances[mapId][matchedIdx * 5 + 3]);
-        updateMap(nextMapId, 0, 0);
-        pthread_mutex_unlock(&changeMapMutex);
         return true;
     }
     return false;

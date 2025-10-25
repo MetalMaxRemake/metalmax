@@ -18,6 +18,8 @@ namespace native_graphic {
 
     bool initGraphic(ANativeWindow *window);
 
+    void setGlobalFadePercent(unsigned int percent);
+
     void applyNewPalette(int *currentPalette);
 
     void releaseGraphic();

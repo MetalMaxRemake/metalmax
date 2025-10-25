@@ -10,10 +10,19 @@
 
 class MapRender : public BaseRender {
 private:
+    const char *TAG = "MapRender";
+
     volatile int entranceAnimation = 0;
     volatile bool isOriginPalette = true;
-    bool checkEntrance(Character *player, int targetX, int targetY);
-    bool checkOutOfMap(Character *player, int targetX, int targetY);
+
+    //we are go to another map now
+    bool nextMapIsBack = false;
+    int nextMapId = -1;
+    int matchedEntrancesIdx = -1;
+
+    bool mayEnterAnotherMap(Character *player, int targetX, int targetY);
+    bool enterAnotherMap(Character *player);
+    bool mayExitToLastMap(Character *player, int targetX, int targetY);
     void fadeOut() const;
     void fadeIn() const;
     void refreshMusic() const;

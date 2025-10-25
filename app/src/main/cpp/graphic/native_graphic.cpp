@@ -44,7 +44,7 @@ namespace software_render {
             return;
         }
         memset(dstBuffer, 0,
-                         mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
+               mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
         float scale = (float) mNativeWindowBuffer.height /
                       (global_config::k_screen_height * 1.f); //计算图像宽度缩放比例
         float scaleLeft = scale - (int) scale; //求出缩放比例的小数部分
@@ -113,8 +113,25 @@ namespace opengl_render {
     int VERTEX_STRIDE = COORDS_PER_VERTEX * 4;
     int TEXTURE_STRIDE = COORDS_PER_TEXTURE * 4;
 
+    volatile float globalFadeRate = 1.1f;// won't apply any fade when rate>1.0
+
+    //form 0-100
+    void setGlobalFadeRate(unsigned int fadePercent) {
+        if (fadePercent < 100) {
+            globalFadeRate = (fadePercent * 1.f / 100.f);
+        } else {
+            globalFadeRate = 1.1f;
+        }
+        LOGD(TAG, "globalFadeRate:%f", globalFadeRate);
+    }
+
     float projMatrix[16];
-    int positionHandle, textureHandle, paletteHandle, texCoordHandle, mvpMatrixHandle;
+    GLint positionHandle;
+    GLint textureHandle;
+    GLint paletteHandle;
+    GLint texCoordHandle;
+    GLint mvpMatrixHandle;
+    GLint globalFadeRateHandle;
 
     unsigned int program;
     unsigned int paletteTextureId;
@@ -124,13 +141,18 @@ namespace opengl_render {
                                   "varying vec2 v_texCoord;"
                                   "uniform sampler2D s_texture;"
                                   "uniform sampler2D s_palette; "
+                                  "uniform float u_global_fade_rate; "//全局fade in/out效果的比例，从0.0-1.0，大于1.0不执行fade操作
                                   "void main()"
                                   "{           "
-                                  "		 float a = texture2D(s_texture, v_texCoord).a;"
-                                  "	     float c = floor((a * 256.0) / 127.5);"
-                                  "      float x = a - c * 0.001953;"// = 1 / (screen_width * 2) //0.001953
-                                  "      vec2 curPt = vec2(x, 0);"
-                                  "      gl_FragColor.rgb = texture2D(s_palette, curPt).rgb;"//vec3(0.0, 0.0, 1.0);
+                                  "  float a = texture2D(s_texture, v_texCoord).a;"
+                                  "  float c = floor((a * 256.0) / 127.5);"
+                                  "  float x = a - c * 0.001953;"// = 1 / (screen_width * 2) //0.001953
+                                  "  vec2 curPt = vec2(x, 0);"
+                                  "  vec3 current_rgb = texture2D(s_palette, curPt).rgb;"
+                                  "  if (u_global_fade_rate <= 1.0) {"
+                                  "    current_rgb = current_rgb * u_global_fade_rate;"
+                                  "  }"
+                                  "  gl_FragColor.rgb = current_rgb;"//vec3(0.0, 0.0, 1.0);
                                   "}";
 
     const char *VERTEX_SHADER = "attribute vec4 a_position;"
@@ -139,8 +161,8 @@ namespace opengl_render {
                                 "varying lowp vec2 v_texCoord;"
                                 "void main()"
                                 "{"
-                                "   gl_Position =  uMVPMatrix  * a_position;"
-                                "   v_texCoord = a_texCoord;"
+                                "  gl_Position =  uMVPMatrix  * a_position;"
+                                "  v_texCoord = a_texCoord;"
                                 "}";
 
     float quadCoords[12];
@@ -171,7 +193,8 @@ namespace opengl_render {
     void checkGlError(const char *glOperation) {
         GLenum error;
         while ((error = glGetError()) != GL_NO_ERROR) {
-            __android_log_print(ANDROID_LOG_ERROR, "GLView", "%s: glError :%ud", glOperation, error);
+            __android_log_print(ANDROID_LOG_ERROR, "GLView", "%s: glError :%ud", glOperation,
+                                error);
         }
     }
 
@@ -249,7 +272,8 @@ namespace opengl_render {
 
 
         //palette!
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_graphic::getPaletteSize(), 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_graphic::getPaletteSize(), 1, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE,
                      native_graphic::getPaletteBuffer());
         glTexParameteri(GL_TEXTURE_2D,
                         GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -279,6 +303,7 @@ namespace opengl_render {
         glUseProgram(program);
         positionHandle = glGetAttribLocation(program, "a_position");
         textureHandle = glGetUniformLocation(program, "s_texture");
+        globalFadeRateHandle = glGetUniformLocation(program, "u_global_fade_rate");
         paletteHandle = glGetUniformLocation(program, "s_palette");
         texCoordHandle = glGetAttribLocation(program, "a_texCoord");
     }
@@ -309,6 +334,7 @@ namespace opengl_render {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mainTextureId);
         glUniform1i(textureHandle, 0);
+        glUniform1f(globalFadeRateHandle, globalFadeRate);
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, paletteTextureId);
@@ -379,6 +405,7 @@ namespace native_graphic {
     volatile int32_t window_width;
 
     uint8_t *(*renderBufferCallback)(uint8_t *screenBuffer);
+
     uint8_t *screenBuffer;
 
     volatile bool renderRunning = true;
@@ -438,7 +465,8 @@ namespace native_graphic {
                 firstFrame = false;
             } else {
                 clock_gettime(CLOCK_MONOTONIC, &time2);
-                frameDurationMs += ((time2.tv_sec - time1.tv_sec) * 1000 + (time2.tv_nsec - time1.tv_nsec) / 1000000);
+                frameDurationMs += ((time2.tv_sec - time1.tv_sec) * 1000 +
+                                    (time2.tv_nsec - time1.tv_nsec) / 1000000);
                 frameCount++;
                 if (frameDurationMs >= 200) {
                     duration = frameDurationMs / frameCount;
@@ -503,6 +531,10 @@ namespace native_graphic {
         screenBuffer = (uint8_t *) malloc(global_config::k_screen_buffer_size);
         pthread_create(&id, nullptr, render_thread_task, mANativeWindow);
         return true;
+    }
+
+    void setGlobalFadePercent(unsigned int percent) {
+        opengl_render::setGlobalFadeRate(percent);
     }
 
     void applyNewPalette(int *newPalette) {
