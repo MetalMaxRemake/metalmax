@@ -6,7 +6,6 @@
 #include "graphic/native_graphic.h"
 #include "audio/native_sound.h"
 #include "charset/charsets.h"
-#include "opt/mem_opt.h"
 #include "logic/logic.h"
 
 const char *BRIDGE_TAG = "bridge";
@@ -15,18 +14,16 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_initNativeWindow(JNIEnv *env,
                                                      jclass clazz,
-                                                     jobject surface,
-                                                     jint width,
-                                                     jint height) {
-    LOGD(BRIDGE_TAG, "initNativeWindow:%d, %d", width, height);
+                                                     jobject surface) {
+    LOGD(BRIDGE_TAG, "initNativeWindow");
     ANativeWindow *mANativeWindow = ANativeWindow_fromSurface(env, surface);
-    initGraphic(mANativeWindow, width, height);
+    native_graphic::initGraphic(mANativeWindow);
 }
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_releaseNativeWindow(JNIEnv *env, jclass clazz) {
     LOGD(BRIDGE_TAG, "releaseNativeWindow");
-    releaseGraphic();
+    native_graphic::releaseGraphic();
 }
 extern "C"
 JNIEXPORT void JNICALL

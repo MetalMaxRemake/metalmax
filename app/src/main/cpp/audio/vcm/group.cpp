@@ -2,7 +2,7 @@
 
 using namespace vcm;
 
-ConfigGroup::ConfigGroup( const std::string &l, const std::string &d, Configuration *b/*=NULL*/ )
+ConfigGroup::ConfigGroup( const std::string &l, const std::string &d, Configuration *b/*=nullptr*/ )
   : label(l), desc(d)
 {
 }
@@ -18,7 +18,7 @@ bool ConfigGroup::AddSubGroup( ConfigGroup *sub )
   return true;
 }
 
-bool ConfigGroup::Insert( const std::string &id, ValueCtrl *ctrl, ValueConv *conv /*=NULL*/ )
+bool ConfigGroup::Insert( const std::string &id, ValueCtrl *ctrl, ValueConv *conv /*=nullptr*/ )
 {
   if(conv) ctrl->AddConv( conv );
   this->members.push_back( std::pair < const std::string, ValueCtrl * >( id, ctrl ) );

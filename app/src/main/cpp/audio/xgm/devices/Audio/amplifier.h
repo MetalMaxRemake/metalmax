@@ -15,7 +15,7 @@ namespace xgm
   public:
     Amplifier ()
     {
-      target = NULL;
+      target = nullptr;
       mute = false;
       volume = 64;
     }

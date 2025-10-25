@@ -83,7 +83,7 @@ namespace xgm
 
     // frame sequencer
     NES_APU* apu; // apu is clocked by DMC's frame sequencer
-    int frame_sequence_count;  // current cycle count
+    int frame_sequence_count;  // current cycle frameCount
     int frame_sequence_length; // CPU cycles per FrameSequence
     int frame_sequence_step;   // current step of frame sequence
     int frame_sequence_steps;  // 4/5 steps per frame

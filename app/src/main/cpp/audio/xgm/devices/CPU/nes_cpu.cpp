@@ -3,7 +3,6 @@
 #include "nes_cpu.h"
 #include "../Memory/nes_mem.h"
 #include "../Misc/nsf2_irq.h"
-#include "../../../../opt/mem_opt.h"
 
 namespace xgm
 {
@@ -22,13 +21,13 @@ const int FRAME_FIXED = 14;
 NES_CPU::NES_CPU (double clock)
 {
   nes_basecycles = clock;
-  bus = NULL;
-  nes_mem = NULL;
+  bus = nullptr;
+  nes_mem = nullptr;
   irqs = 0;
   enable_irq = true;
   enable_nmi = false;
   nsf2_bits = 0;
-  nsf2_irq = NULL;
+  nsf2_irq = nullptr;
 }
 
 NES_CPU::~NES_CPU ()
@@ -180,7 +179,7 @@ bool NES_CPU::Read (UINT32 adr, UINT32 & val, UINT32 id)
 
 void NES_CPU::Reset ()
 {
-  __memset_aarch64 (&context, 0, sizeof (K6502_Context));
+  memset(&context, 0, sizeof (K6502_Context));
   context.ReadByte = readByte;
   context.WriteByte = writeByte;
   context.iRequest = K6502_INIT;
@@ -226,7 +225,7 @@ void NES_CPU::Start (
 
 	// enable NSF2 IRQ
 	if (nsf2_bits & 0x10) enable_irq = true;
-	else nsf2_irq = NULL;
+	else nsf2_irq = nullptr;
 
 	// NSF2 disable PLAY
 	if (nsf2_bits & 0x40)
@@ -260,12 +259,12 @@ void NES_CPU::Start (
 	// note: things like DMC, Frame Counter, NSF2 IRQ, MMC Frame Counter, etc. aren't receiving cycles here
 	//       but this should be OK?
 	//       - Use of IRQs should really be taking place in PLAY or non-returning second INIT.
-	//         IRQs are intentionally disabled here during first INIT to avoid issue with IRQs being mistaken
+	//         IRQs are intentionally disabled here during firstFrame INIT to avoid issue with IRQs being mistaken
 	//         for the audio-free INIT segment, but a hardware implementation probably wouldn't prevent this.
-	//       - Timing between end of INIT and first PLAY is not guaranteed by the player and should not be relied on.
-	//       - For NSFs that do not reset $4017 this leaves the envelope starting in synch with the first PLAY.
-	//       - Waiting on an IRQ during the first init should hit the timeout and eventually trigger.
-	//         (Could be a problem if they're trying to count cycles there?)
+	//       - Timing between end of INIT and firstFrame PLAY is not guaranteed by the player and should not be relied on.
+	//       - For NSFs that do not reset $4017 this leaves the envelope starting in synch with the firstFrame PLAY.
+	//       - Waiting on an IRQ during the firstFrame init should hit the timeout and eventually trigger.
+	//         (Could be a problem if they're trying to frameCount cycles there?)
 	int timeout = int(nes_basecycles);
 	while (timeout > 0)
 	{
@@ -279,7 +278,7 @@ void NES_CPU::Start (
 	extra_init = extra_init_temp; // restore extra_init
 	play_addr = play_addr_temp; // restore PLAY
 
-	// start of first frame
+	// start of firstFrame frame
 	fclocks_left_in_frame = fclocks_per_frame;
 	play_ready = breaked && !extra_init;
 }

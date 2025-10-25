@@ -4,7 +4,6 @@
 
 #include "opensl.h"
 #include "native_sound.h"
-#include "../opt/mem_opt.h"
 #include "../global.h"
 
 #include <SLES/OpenSLES.h>
@@ -13,19 +12,20 @@
 #include <assert.h>
 #include <cstdlib>
 #include <unistd.h>
+#include <string.h>
 
 #define SAMPLE_RATE 16000
 
 // engine interfaces
-static SLObjectItf engineObject = NULL;
+static SLObjectItf engineObject = nullptr;
 static SLEngineItf engineEngine;
 
 // output mix interfaces
-static SLObjectItf outputMixObject = NULL;
-static SLEnvironmentalReverbItf outputMixEnvironmentalReverb = NULL;
+static SLObjectItf outputMixObject = nullptr;
+static SLEnvironmentalReverbItf outputMixEnvironmentalReverb = nullptr;
 
 // buffer queue player interfaces
-static SLObjectItf bqPlayerObject = NULL;
+static SLObjectItf bqPlayerObject = nullptr;
 static SLPlayItf bqPlayerPlay;
 static SLAndroidSimpleBufferQueueItf bqPlayerBufferQueue;
 static SLEffectSendItf bqPlayerEffectSend;
@@ -45,7 +45,7 @@ void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
         return;
     }
     assert(bq == bqPlayerBufferQueue);
-    assert(NULL == context);
+    assert(nullptr == context);
     SLresult result;
     void * buffer = getAudioBuffer();
     while(buffer == nullptr) {
@@ -62,7 +62,7 @@ void createEngine() {
     SLresult result;
 
     // create engine
-    result = slCreateEngine(&engineObject, 0, NULL, 0, NULL, NULL);
+    result = slCreateEngine(&engineObject, 0, nullptr, 0, nullptr, nullptr);
     assert(SL_RESULT_SUCCESS == result);
     (void) result;
 
@@ -107,7 +107,7 @@ static short *slientBuf;
 void createBufferQueueAudioPlayer(int sampleRate) {
     SLresult result;
     slientBuf = (short *) malloc(sizeof(short) * 1024);
-    __memset_aarch64(slientBuf, 0, sizeof(short) * 1024);
+    memset(slientBuf, 0, sizeof(short) * 1024);
     if (sampleRate >= 0) {
         bqPlayerSampleRate = sampleRate * 1000;
     }
@@ -128,7 +128,7 @@ void createBufferQueueAudioPlayer(int sampleRate) {
 
     // configure audio sink
     SLDataLocator_OutputMix loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, outputMixObject};
-    SLDataSink audioSnk = {&loc_outmix, NULL};
+    SLDataSink audioSnk = {&loc_outmix, nullptr};
 
     /*
      * create audio player:
@@ -162,12 +162,12 @@ void createBufferQueueAudioPlayer(int sampleRate) {
     (void) result;
 
     // register callback on the buffer queue
-    result = (*bqPlayerBufferQueue)->RegisterCallback(bqPlayerBufferQueue, bqPlayerCallback, NULL);
+    result = (*bqPlayerBufferQueue)->RegisterCallback(bqPlayerBufferQueue, bqPlayerCallback, nullptr);
     assert(SL_RESULT_SUCCESS == result);
     (void) result;
 
     // get the effect send interface
-    bqPlayerEffectSend = NULL;
+    bqPlayerEffectSend = nullptr;
     if (0 == bqPlayerSampleRate) {
         result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_EFFECTSEND,
                                                  &bqPlayerEffectSend);

@@ -2,6 +2,7 @@
 // Created by parkyu on 2023/5/11.
 //
 
+#include <string.h>
 #include "render_menu.h"
 #include "../charset/charsets.h"
 #include "../audio/mm_sound.h"
@@ -9,7 +10,6 @@
 #include "status/character.h"
 #include "../computer/computer_data.h"
 #include "render_computer.h"
-#include "../opt/mem_opt.h"
 #include "../graphic/palette_data.h"
 
 MenuRender::MenuRender(int menuType) {
@@ -87,7 +87,7 @@ uint8_t *MenuRender::render(uint8_t *screenBuffer) {
     int start = 192;
     int textHeight = 8;
     int total = global_config::k_screen_width * global_config::k_screen_height;
-    __memset_aarch64(screenBuffer + start * global_config::k_screen_width, palette::k_palette_black, total - start * global_config::k_screen_width);
+    memset(screenBuffer + start * global_config::k_screen_width, palette::k_palette_black, total - start * global_config::k_screen_width);
     renderAsciText(screenBuffer, "  TALK", 10, start + textHeight * 1);
     renderAsciText(screenBuffer, "  EQUP", 10, start + textHeight * 2);
     renderAsciText(screenBuffer, "  STRE", 10, start + textHeight * 3);

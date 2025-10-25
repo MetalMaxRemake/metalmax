@@ -12,7 +12,6 @@
 #include <android/asset_manager_jni.h>
 #include <stdbool.h>
 #include "xgm/xgm.h"
-#include "../opt/mem_opt.h"
 #include "mm_sound.h"
 #include "opensl.h"
 #include "../global.h"

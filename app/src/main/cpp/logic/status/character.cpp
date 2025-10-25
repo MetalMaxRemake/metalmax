@@ -3,9 +3,9 @@
 //
 
 #include <cstdlib>
+#include <string.h>
 #include "character.h"
 #include "../../sprite/sprite.h"
-#include "../../opt/mem_opt.h"
 #include "../../graphic/graphic_process.h"
 
 uint8_t direct_up = 0;
@@ -21,14 +21,14 @@ Character::Character() {
             bitmap[i][j] = (uint8_t *) malloc(16 * 16);
         }
     }
-    __memcpy_aarch64_simd(bitmap[direct_up][0], getSpriteImage(0, 3, nullptr), 256);//up1
-    __memcpy_aarch64_simd(bitmap[direct_up][1], getSpriteImage(0, 3, nullptr), 256);//up2
-    __memcpy_aarch64_simd(bitmap[direct_down][0], getSpriteImage(0, 0, nullptr), 256);//down1
-    __memcpy_aarch64_simd(bitmap[direct_down][1], getSpriteImage(0, 0, nullptr), 256);//down2
-    __memcpy_aarch64_simd(bitmap[direct_left][0], getSpriteImage(0, 1, nullptr), 256);//left1
-    __memcpy_aarch64_simd(bitmap[direct_left][1], getSpriteImage(0, 2, nullptr), 256);//left2
-    __memcpy_aarch64_simd(bitmap[direct_right][0], getSpriteImage(0, 1, nullptr), 256);//right1
-    __memcpy_aarch64_simd(bitmap[direct_right][1], getSpriteImage(0, 2, nullptr), 256);//right2
+    memcpy(bitmap[direct_up][0], getSpriteImage(0, 3, nullptr), 256);//up1
+    memcpy(bitmap[direct_up][1], getSpriteImage(0, 3, nullptr), 256);//up2
+    memcpy(bitmap[direct_down][0], getSpriteImage(0, 0, nullptr), 256);//down1
+    memcpy(bitmap[direct_down][1], getSpriteImage(0, 0, nullptr), 256);//down2
+    memcpy(bitmap[direct_left][0], getSpriteImage(0, 1, nullptr), 256);//left1
+    memcpy(bitmap[direct_left][1], getSpriteImage(0, 2, nullptr), 256);//left2
+    memcpy(bitmap[direct_right][0], getSpriteImage(0, 1, nullptr), 256);//right1
+    memcpy(bitmap[direct_right][1], getSpriteImage(0, 2, nullptr), 256);//right2
 
     bitmap[direct_up][1] = horizontalFlip(bitmap[direct_up][1], 16, 16);
     bitmap[direct_down][1] = horizontalFlip(bitmap[direct_down][1], 16, 16);

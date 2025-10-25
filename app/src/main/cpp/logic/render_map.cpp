@@ -15,7 +15,6 @@
 #include "status/character.h"
 #include "../maps/tile_bmp.h"
 #include "../maps/map_data/map_data.h"
-#include "../opt/mem_opt.h"
 #include "../graphic/palette_data.h"
 #include "../audio/mm_sound.h"
 #include "../graphic/native_graphic.h"
@@ -190,7 +189,7 @@ void MapRender::renderDoor(uint8_t *screenBuffer) const {
 }
 
 void MapRender::resetPalette() const {
-    int *currentPalette = getCurrentPalette();
+    int *currentPalette = native_graphic::getPaletteBuffer();
     for (int i = 0; i < palette::palette_size; i++) {
         int dd = palette::palette_rgb[i];
         int b = (dd & 0x00FF0000) >> 16;
@@ -198,11 +197,11 @@ void MapRender::resetPalette() const {
         int r = (dd & 0x000000FF) >> 0;
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    refreshPalette(currentPalette);
+    native_graphic::applyNewPalette(currentPalette);
 }
 
 void MapRender::fadeIn() const {
-    int *currentPalette = getCurrentPalette();
+    int *currentPalette = native_graphic::getPaletteBuffer();
     for (int i = 0; i < palette::palette_size; i++) {
         unsigned int origindd = palette::palette_rgb[i];
         unsigned int o_b = (origindd & 0x00FF0000) >> 16;
@@ -224,11 +223,11 @@ void MapRender::fadeIn() const {
         }
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    refreshPalette(currentPalette);
+    native_graphic::applyNewPalette(currentPalette);
 }
 
 void MapRender::fadeOut() const {
-    int *currentPalette = getCurrentPalette();
+    int *currentPalette = native_graphic::getPaletteBuffer();
     for (int i = 0; i < palette::palette_size; i++) {
         unsigned int dd = currentPalette[i];
         unsigned int b = (dd & 0x00FF0000) >> 16;
@@ -252,7 +251,7 @@ void MapRender::fadeOut() const {
         }
         currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
     }
-    refreshPalette(currentPalette);
+    native_graphic::applyNewPalette(currentPalette);
 }
 
 void MapRender::tikLogic() {

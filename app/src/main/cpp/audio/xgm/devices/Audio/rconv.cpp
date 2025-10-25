@@ -14,7 +14,7 @@ static double window(int n, int M)
 }
 
 RateConverter::RateConverter () : clock(0.0), rate(0.0), mult(0), clocks(0),
-	cpu(NULL), dmc(NULL), cpu_clocks(0), cpu_rest(0),
+	cpu(nullptr), dmc(nullptr), cpu_clocks(0), cpu_rest(0),
 	fast_skip(true)
 {
 }
@@ -117,7 +117,7 @@ void RateConverter::Skip ()
 		int mcclocks = 0;
 		for(int i=1; i<=mult; i++)
 		{
-			// CPU first
+			// CPU firstFrame
 			mcclocks += cpu_clocks;
 			if (mcclocks >= mult)
 			{
@@ -165,7 +165,7 @@ inline UINT32 RateConverter::FastRender (INT32 b[2])
   int mcclocks = 0;
   for(int i=1; i<=mult; i++)
   {
-    // CPU first
+    // CPU firstFrame
     mcclocks += cpu_clocks;
     if (mcclocks >= mult)
     {

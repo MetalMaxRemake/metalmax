@@ -88,7 +88,7 @@ void initLogic() {
     if (!logicRunning) {
         return;
     }
-    setRenderCallback(&renderScreen);
+    native_graphic::setRenderCallback(&renderScreen);
     SplashRender *splashRender = new SplashRender;
     push(splashRender);
     tikLogic();
@@ -105,7 +105,7 @@ void tikLogic() {
 
 void renderFps(uint8_t *currentBuffer) {
     char fpsInfo[110];
-    sprintf(fpsInfo, "FPS %d", getFps());
+    sprintf(fpsInfo, "FPS %d", native_graphic::getFps());
     renderAsciText(currentBuffer, fpsInfo, 0, 0);
 }
 
@@ -175,5 +175,5 @@ void releaseLogicThread() {
 void initLogicThread() {
     pthread_t id;
     //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, NULL, logic_thread, NULL);
+    pthread_create(&id, nullptr, logic_thread, nullptr);
 }

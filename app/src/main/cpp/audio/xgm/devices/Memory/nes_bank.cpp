@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <cstring>
 #include "nes_bank.h"
-#include "../../../../opt/mem_opt.h"
 
 // this workaround solves a problem with mirrored FDS RAM writes
 // when the same bank is used twice; some NSF rips reuse bank 00
@@ -14,7 +13,7 @@
 #define DETECT_FDS_MIRROR 0
 
 #if FDS_MEMCPY
-static UINT8* fds_image = NULL;
+static UINT8* fds_image = nullptr;
 #endif
 
 namespace xgm
@@ -22,7 +21,7 @@ namespace xgm
 
   NES_BANK::NES_BANK ()
   {
-    image = NULL;
+    image = nullptr;
   };
 
   NES_BANK::~NES_BANK ()
@@ -50,7 +49,7 @@ namespace xgm
       bankdefault[i] = -1; // -1 is special empty bank
 
     int total_size = ((offset & 0xfff) + size);
-    bankmax = (total_size >> 12); // count of full banks
+    bankmax = (total_size >> 12); // frameCount of full banks
     if (total_size & 0xfff) bankmax += 1; // include last partial bank
     if (bankmax > 256)
       return false;
@@ -58,14 +57,14 @@ namespace xgm
     if (image)
       delete[]image;
     image = new UINT8[0x1000 * bankmax];
-    __memset_aarch64 (image, 0, 0x1000 * bankmax);
-    __memcpy_aarch64_simd (image + (offset & 0xfff), data, size);
+    memset(image, 0, 0x1000 * bankmax);
+    memcpy(image + (offset & 0xfff), data, size);
 
     #if FDS_MEMCPY
       if (fds_image)
         delete[] fds_image;
       fds_image = new UINT8[0x10000];
-      __memset_aarch64(fds_image, 0, 0x10000);
+      memset(fds_image, 0, 0x10000);
       for (i = 0; i < 16; i++)
         bank[i] = fds_image + 0x1000 * i;
     #else
@@ -80,7 +79,7 @@ namespace xgm
 
   void NES_BANK::Reset ()
   {
-    __memset_aarch64 (null_bank, 0, 0x1000);
+    memset(null_bank, 0, 0x1000);
     for (int i = 0; i < 16; i++)
     {
       bankswitch[i] = bankdefault[i];
@@ -88,9 +87,9 @@ namespace xgm
       #if FDS_MEMCPY
         bankswitch[i] = i;
         if (bankdefault[i] == -1 || bankdefault[i] >= bankmax)
-          __memset_aarch64(bank[i], 0, 0x1000);
+          memset(bank[i], 0, 0x1000);
         else
-          __memcpy_aarch64_simd(bank[i], image + (bankdefault[i] * 0x1000), 0x1000);
+          memcpy(bank[i], image + (bankdefault[i] * 0x1000), 0x1000);
       #endif
     }
   }

@@ -3,7 +3,6 @@
 //
 
 #include "map.h"
-#include "../opt/mem_opt.h"
 #include "tile_bmp.h"
 #include "map_data/map_data.h"
 #include "../global.h"
@@ -29,19 +28,19 @@ void fillOneTileInScreen(int posX, int posY, int bmpIdx, uint8_t *result) {
     for (int x = 0; x < 4; x++) {
         int block_start = x * 4;
         //循环展开 + simd_memcpy
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + (block_start * 16),
                 16);
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + 1 + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + ((block_start + 1) * 16),
                 16);
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + 2 + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + ((block_start + 2) * 16),
                 16);
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + 3 + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + ((block_start + 3) * 16),
                 16);
@@ -55,19 +54,19 @@ inline void fill(int i, int j, int bmpIdx, uint8_t *result) {
     for (int x = 0; x < 4; x++) {
         int block_start = x * 4;
         //循环展开 + simd_memcpy
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + (block_start * 16),
                 16);
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + 1 + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + ((block_start + 1) * 16),
                 16);
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + 2 + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + ((block_start + 2) * 16),
                 16);
-        __memcpy_aarch64_simd(
+        memcpy(
                 result + ((block_start + 3 + map_raw_offset) * map_raw_width + map_column_offset),
                 bitmaps[bmpIdx] + ((block_start + 3) * 16),
                 16);
@@ -172,7 +171,7 @@ uint8_t *renderMap(int render_y, int render_x, uint8_t *screen_buffer) {
     if(pre_rendered_map == nullptr) {
         initFullMap();
     }
-    __memset_aarch64(screen_buffer, 0, global_config::k_screen_buffer_size);
+    memset(screen_buffer, 0, global_config::k_screen_buffer_size);
     //这里的逻辑是一大坨屎山
     //fixme help! what's this code mean???
     int max_map_data_render_x = (map_height + 2 * MAP_MARGIN_SIZE) * (global_config::k_screen_height / 16);
@@ -200,7 +199,7 @@ uint8_t *renderMap(int render_y, int render_x, uint8_t *screen_buffer) {
         } else {
             current_line_length = min(render_y_end, global_config::k_screen_width);
         }
-        __memcpy_aarch64_simd(screen_buffer + screen_buffer_start_offset,
+        memcpy(screen_buffer + screen_buffer_start_offset,
                               pre_rendered_map + pre_rendered_map_start_offset,
                               current_line_length);
     }

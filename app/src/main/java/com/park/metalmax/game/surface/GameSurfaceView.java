@@ -18,17 +18,12 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d(TAG, "surfaceCreated");
+        NativeBridge.initNativeWindow(holder.getSurface());
     }
 
-    boolean init = false;
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d(TAG, "surfaceChanged,width=" + width + ",height=" + height);
-        if (init) {
-            return;
-        }
-        init = true;
-        NativeBridge.initNativeWindow(holder.getSurface(), width, height);
     }
 
     @Override

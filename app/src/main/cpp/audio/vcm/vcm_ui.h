@@ -102,10 +102,10 @@ namespace vcm
 
     std::list< ConfigGroup * > subGroup;
 
-    ConfigGroup( const std::string &label, const std::string &desc, Configuration *base=NULL );
+    ConfigGroup( const std::string &label, const std::string &desc, Configuration *base=nullptr );
     ~ConfigGroup();
     bool AddSubGroup( ConfigGroup *sub );
-    bool Insert( const std::string &id, ValueCtrl *type, ValueConv *conv=NULL );
+    bool Insert( const std::string &id, ValueCtrl *type, ValueConv *conv=nullptr );
     bool Insert( const std::string &id, ValueCtrl *type, std::vector<ValueConv *>convs );
     void UpdateData( Configuration &config, bool d ); // コンフィグ情報を出したり入れたり
     void Clear();

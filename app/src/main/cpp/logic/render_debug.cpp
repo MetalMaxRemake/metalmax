@@ -7,7 +7,6 @@
 #include "logic.h"
 #include "../charset/charsets.h"
 #include "../monster/monster.h"
-#include "../opt/mem_opt.h"
 #include "render_battle.h"
 #include "../audio/native_sound.h"
 #include "../maps/map.h"
@@ -58,7 +57,7 @@ inline void DebugRender::processSelection() {
         player->setPos(map_width / 2, map_height / 2);
         changeMap(mapId, 0, 0);
     } else if (selectPos == 5) {
-        int *currentPalette = getCurrentPalette();
+        int *currentPalette = native_graphic::getPaletteBuffer();
         //fixme
         for (int i = 0; i < palette::palette_size; i++) {
             unsigned int dd = currentPalette[i];
@@ -68,9 +67,9 @@ inline void DebugRender::processSelection() {
             unsigned int b = (dd & 0x000000FF) >> 0;
             currentPalette[i] = (a<<24) | (r << 16) | (g << 8) | b;
         }
-        refreshPalette(currentPalette);
+        native_graphic::applyNewPalette(currentPalette);
     } else if (selectPos == 6) {
-        int *currentPalette = getCurrentPalette();
+        int *currentPalette = native_graphic::getPaletteBuffer();
         //fixme
         for (int i = 0; i < palette::palette_size; i++) {
             int dd = palette::palette_rgb[i];
@@ -80,7 +79,7 @@ inline void DebugRender::processSelection() {
             int r = (dd & 0x000000FF) >> 0;
             currentPalette[i] = (a<<24) | (r << 16) | (g << 8) | b;
         }
-        refreshPalette(currentPalette);
+        native_graphic::applyNewPalette(currentPalette);
     } else if (selectPos == 7) {
         getDefaultPlayer()->godMode = !getDefaultPlayer()->godMode;
     } else if (selectPos == 8) {

@@ -56,7 +56,7 @@ namespace xgm
     tnd_table[0][0][0][0] = 0;
     tnd_table[1][0][0][0] = 0;
 
-    apu = NULL;
+    apu = nullptr;
     frame_sequence_count = 0;
     frame_sequence_length = 7458;
     frame_sequence_steps = 4;
@@ -115,7 +115,7 @@ namespace xgm
       trkinfo[2].output = (damp<<1)|dac_lsb;
       break;
     default:
-      return NULL;
+      return nullptr;
     }
     return &trkinfo[trk];
   }
@@ -193,7 +193,7 @@ namespace xgm
 
   }
 
-  // ŽOŠp”gƒ`ƒƒƒ“ƒlƒ‹‚ÌŒvŽZ –ß‚è’l‚Í0-15
+  // ï¿½Oï¿½pï¿½gï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½ÌŒvï¿½Z ï¿½ß‚ï¿½lï¿½ï¿½0-15
   UINT32 NES_DMC::calc_tri (UINT32 clocks)
   {
     static UINT32 tritbl[32] = 
@@ -219,10 +219,10 @@ namespace xgm
     return ret;
   }
 
-  // ƒmƒCƒYƒ`ƒƒƒ“ƒlƒ‹‚ÌŒvŽZ –ß‚è’l‚Í0-127
-  // ’áƒTƒ“ƒvƒŠƒ“ƒOƒŒ[ƒg‚Å‡¬‚·‚é‚ÆƒGƒCƒŠƒAƒXƒmƒCƒY‚ªŒƒ‚µ‚¢‚Ì‚Å
-  // ƒmƒCƒY‚¾‚¯‚Í‚±‚ÌŠÖ”“à‚Å‚ƒNƒƒbƒN‡¬‚µAŠÈˆÕ‚ÈƒTƒ“ƒvƒŠƒ“ƒOƒŒ[ƒg
-  // •ÏŠ·‚ðs‚Á‚Ä‚¢‚éB
+  // ï¿½mï¿½Cï¿½Yï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½ÌŒvï¿½Z ï¿½ß‚ï¿½lï¿½ï¿½0-127
+  // ï¿½ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½[ï¿½gï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆƒGï¿½Cï¿½ï¿½ï¿½Aï¿½Xï¿½mï¿½Cï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚ï¿½
+  // ï¿½mï¿½Cï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½ÌŠÖï¿½ï¿½ï¿½ï¿½Åï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ÈˆÕ‚ÈƒTï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½[ï¿½g
+  // ï¿½ÏŠï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½B
   UINT32 NES_DMC::calc_noise(UINT32 clocks)
   {
     UINT32 env = envelope_disable ? noise_volume : envelope_counter;
@@ -724,12 +724,12 @@ namespace xgm
 
     case 0x4012:
       adr_reg = val&0xff;
-      // ‚±‚±‚Ådaddress‚ÍXV‚³‚ê‚È‚¢
+      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½daddressï¿½ÍXï¿½Vï¿½ï¿½ï¿½ï¿½È‚ï¿½
       break;
 
     case 0x4013:
       len_reg = val&0xff;
-      // ‚±‚±‚Ålength‚ÍXV‚³‚ê‚È‚¢
+      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lengthï¿½ÍXï¿½Vï¿½ï¿½ï¿½ï¿½È‚ï¿½
       break;
 
     default:
