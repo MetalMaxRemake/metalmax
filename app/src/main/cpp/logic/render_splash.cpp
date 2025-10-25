@@ -2,8 +2,8 @@
 // Created by parkyu on 2023/5/13.
 //
 
+#include <string.h>
 #include "render_splash.h"
-#include "../opt/mem_opt.h"
 #include "../graphic/bitmap_render.h"
 #include "../graphic/palette_data.h"
 #include "../splash/splash.h"
@@ -76,7 +76,7 @@ void SplashRender::tikLogic() {
 }
 
 uint8_t *SplashRender::render(uint8_t *screenBuffer) {
-    __memset_aarch64(screenBuffer,
+    memset(screenBuffer,
                      palette::k_palette_black,
                      global_config::k_screen_width * global_config::k_screen_height);
     if (splash_scene == 0) {

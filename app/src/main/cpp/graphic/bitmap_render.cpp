@@ -2,8 +2,8 @@
 // Created by youngpark on 2023/5/20.
 //
 
+#include <string.h>
 #include "bitmap_render.h"
-#include "../opt/mem_opt.h"
 #include "palette_data.h"
 #include "../logic/logic.h"
 
@@ -30,7 +30,7 @@ namespace bitmap_render {
                 //this line is out of screen
                 continue;
             }
-            __memcpy_aarch64_simd(
+            memcpy(
                     screen_buffer + dst_start_offset + line_index * global_config::k_screen_width,
                     bitmap_buffer + src_start_offset + line_index * bitmap_width,
                     src_copy_length);

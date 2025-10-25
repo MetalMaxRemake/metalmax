@@ -4,7 +4,6 @@
 
 #include "opensl.h"
 #include "native_sound.h"
-#include "../opt/mem_opt.h"
 #include "../global.h"
 
 #include <SLES/OpenSLES.h>
@@ -13,6 +12,7 @@
 #include <assert.h>
 #include <cstdlib>
 #include <unistd.h>
+#include <string.h>
 
 #define SAMPLE_RATE 16000
 
@@ -107,7 +107,7 @@ static short *slientBuf;
 void createBufferQueueAudioPlayer(int sampleRate) {
     SLresult result;
     slientBuf = (short *) malloc(sizeof(short) * 1024);
-    __memset_aarch64(slientBuf, 0, sizeof(short) * 1024);
+    memset(slientBuf, 0, sizeof(short) * 1024);
     if (sampleRate >= 0) {
         bqPlayerSampleRate = sampleRate * 1000;
     }

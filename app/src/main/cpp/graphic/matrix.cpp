@@ -3,7 +3,6 @@
 //
 
 #include "matrix.h"
-#include "mem_opt.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

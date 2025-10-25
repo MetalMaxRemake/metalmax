@@ -4,7 +4,6 @@
 
 #include "monster.h"
 #include "monster_data/monster_data.h"
-#include "../opt/mem_opt.h"
 #include "../graphic/graphic_process.h"
 #include "../graphic/bitmap_render.h"
 

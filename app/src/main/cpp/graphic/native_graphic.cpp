@@ -4,7 +4,7 @@
 //
 
 #include "native_graphic.h"
-#include "../opt/matrix.h"
+#include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,16 +14,13 @@
 
 #include "../maps/map.h"
 #include "../charset/charsets.h"
-#include "../opt/mem_opt.h"
 #include "../maps/map_data/map_data.h"
 #include "palette_data.h"
-#include "../perf.h"
 #include "../sprite/sprite.h"
 #include <EGL/egl.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <unistd.h>
-#include "../perf.h"
 
 namespace software_render {
 
@@ -46,7 +43,7 @@ namespace software_render {
         if (!native_graphic::isRenderRunning()) {
             return;
         }
-        __memset_aarch64(dstBuffer, 0,
+        memset(dstBuffer, 0,
                          mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
         float scale = (float) mNativeWindowBuffer.height /
                       (global_config::k_screen_height * 1.f); //计算图像宽度缩放比例
@@ -158,7 +155,7 @@ namespace opengl_render {
                 width / 2.0f, height / 2.0f, 0,
                 width / 2.0f, -height / 2.0f, 0
         };
-        __memcpy_aarch64_simd(quadCoords, tempQuadCoords, 12 * sizeof(float));
+        memcpy(quadCoords, tempQuadCoords, 12 * sizeof(float));
         float tempTextureCoords[] = {
                 0,
                 1,
@@ -169,7 +166,7 @@ namespace opengl_render {
                 1,
                 1,
         };
-        __memcpy_aarch64_simd(textureCoords, tempTextureCoords, 8 * sizeof(float));
+        memcpy(textureCoords, tempTextureCoords, 8 * sizeof(float));
     }
 
     void checkGlError(const char *glOperation) {
@@ -417,6 +414,17 @@ namespace native_graphic {
     volatile bool enableFps = true;
 
     volatile long duration = 0;
+
+    timespec time1, time2;
+
+    extern "C" void startTimestamp() {
+        clock_gettime(CLOCK_MONOTONIC, &time1);
+    }
+
+    extern "C" long getDuration() {
+        clock_gettime(CLOCK_MONOTONIC, &time2);
+        return (time2.tv_sec - time1.tv_sec) * 1000 + (time2.tv_nsec - time1.tv_nsec) / 1000000;
+    }
 
     int getFps() {
         float fps = 1000.0f / (duration * 1.f);

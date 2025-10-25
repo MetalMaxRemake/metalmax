@@ -7,7 +7,6 @@
 #include "logic.h"
 #include "../charset/charsets.h"
 #include "../monster/monster.h"
-#include "../opt/mem_opt.h"
 #include "render_battle.h"
 #include "../audio/native_sound.h"
 #include "../maps/map.h"

@@ -6,7 +6,6 @@
 #include <memory.h>
 #include <string.h>
 #include "nsf.h"
-#include "../../../../opt/mem_opt.h"
 
 namespace xgm
 {
@@ -121,7 +120,7 @@ static int is_sjis_prefix(int c)
     int wp=0;
 
     char fpath[sizeof(this->filename)];
-    __memcpy_aarch64_simd(fpath,this->filename,sizeof(this->filename));
+    memcpy(fpath,this->filename,sizeof(this->filename));
     char *fname = strrchr(fpath,'\\');
     if(fname!=nullptr) *(fname++) = '\0'; else fname = fpath;
 
@@ -433,7 +432,7 @@ static int is_sjis_prefix(int c)
 
     // load the NSF or NSFe
 
-    __memcpy_aarch64_simd (magic, image, 4);
+    memcpy(magic, image, 4);
     magic[4] = '\0';
 
     if (strcmp ("NESM", magic))
@@ -455,20 +454,20 @@ static int is_sjis_prefix(int c)
     load_address = image[0x08] | (image[0x09] << 8);
     init_address = image[0x0a] | (image[0x0B] << 8);
     play_address = image[0x0c] | (image[0x0D] << 8);
-    __memcpy_aarch64_simd (title_nsf, image + 0x0e, 32);
+    memcpy(title_nsf, image + 0x0e, 32);
     title_nsf[31] = '\0';
     title = title_nsf;
-    __memcpy_aarch64_simd (artist_nsf, image + 0x2e, 32);
+    memcpy(artist_nsf, image + 0x2e, 32);
     artist_nsf[31] = '\0';
     artist = artist_nsf;
-    __memcpy_aarch64_simd (copyright_nsf, image + 0x4e, 32);
+    memcpy(copyright_nsf, image + 0x4e, 32);
     copyright_nsf[31] = '\0';
     copyright = copyright_nsf;
     ripper = ""; // NSFe only
     text = nullptr; // NSFe only
     text_len = 0; // NSFe only
     speed_ntsc = image[0x6e] | (image[0x6f] << 8);
-    __memcpy_aarch64_simd (bankswitch, image + 0x70, 8);
+    memcpy(bankswitch, image + 0x70, 8);
     speed_pal = image[0x78] | (image[0x79] << 8);
     pal_ntsc = image[0x7a];
     soundchip = image[0x7b];
@@ -487,11 +486,11 @@ static int is_sjis_prefix(int c)
     if(speed_pal  ==0) speed_pal   = 19997;
     if(speed_dendy==0) speed_dendy = speed_pal;
 
-    __memcpy_aarch64_simd (extra, image + 0x7c, 4);
+    memcpy(extra, image + 0x7c, 4);
 
     delete[]body;
     body = new UINT8[size - 0x80];
-    __memcpy_aarch64_simd (body, image + 0x80, size - 0x80);
+    memcpy(body, image + 0x80, size - 0x80);
     bodysize = size - 0x80;
 
     song = start - 1;
@@ -525,7 +524,7 @@ static int is_sjis_prefix(int c)
     // store entire file for string references, etc.
     delete[] nsfe_image;
     nsfe_image = new UINT8[size+1];
-    ::__memcpy_aarch64_simd(nsfe_image, image, size);
+    ::memcpy(nsfe_image, image, size);
     nsfe_image[size] = 0; // null terminator for safety
     image = nsfe_image;
 
@@ -540,7 +539,7 @@ static int is_sjis_prefix(int c)
           return false;
         }
 
-        __memcpy_aarch64_simd (magic, image, 4);
+        memcpy(magic, image, 4);
         magic[4] = '\0';
 
         if (strcmp ("NSFE", magic))
@@ -587,7 +586,7 @@ static int is_sjis_prefix(int c)
         }
 
         char cid[5];
-        __memcpy_aarch64_simd (cid, chunk+4, 4);
+        memcpy(cid, chunk+4, 4);
         cid[4] = 0;
 
         chunk_offset += 8;
@@ -626,8 +625,8 @@ static int is_sjis_prefix(int c)
           regn_pref = CONVERT_REGN_PREF[pal_ntsc & 3];
 
           // other variables contained in other banks
-          __memset_aarch64 (bankswitch, 0, 8);
-          __memset_aarch64 (extra, 0, 4);
+          memset(bankswitch, 0, 8);
+          memset(extra, 0, 4);
           song = start - 1;
 
           // body should follow in 'DATA' chunk
@@ -664,7 +663,7 @@ static int is_sjis_prefix(int c)
 
           delete[]body;
           body = new  UINT8[chunk_size];
-          __memcpy_aarch64_simd (body, chunk, chunk_size);
+          memcpy(body, chunk, chunk_size);
           bodysize = chunk_size;
 
           // DATA chunk read

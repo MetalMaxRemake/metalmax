@@ -26,8 +26,7 @@ message(STATUS "MAP_DATA_SRC = ${MAP_DATA_SRC}")
 
 add_library(metalmax
         SHARED
-        bridge.cpp perf.cpp
-        opt/matrix.cpp opt/memcpy-advsimd.S opt/memset.S
+        bridge.cpp
         ${MAIN_SRC}
         ${MONSTER}
         ${LOGIC_SRC}

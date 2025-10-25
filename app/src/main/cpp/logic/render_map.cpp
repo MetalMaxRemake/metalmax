@@ -15,7 +15,6 @@
 #include "status/character.h"
 #include "../maps/tile_bmp.h"
 #include "../maps/map_data/map_data.h"
-#include "../opt/mem_opt.h"
 #include "../graphic/palette_data.h"
 #include "../audio/mm_sound.h"
 #include "../graphic/native_graphic.h"

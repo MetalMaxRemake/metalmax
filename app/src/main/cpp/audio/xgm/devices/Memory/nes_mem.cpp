@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <string.h>
 #include "nes_mem.h"
-#include "../../../../opt/mem_opt.h"
 
 namespace xgm
 {
@@ -15,17 +14,17 @@ namespace xgm
 
   void NES_MEM::Reset ()
   {
-    __memset_aarch64 (image, 0, 0x800);
-    //__memset_aarch64 (image + 0x6000, 0, 0x2000); // �������ĂĂ����ď��������Ă܂���B
+    memset(image, 0, 0x800);
+    //memset(image + 0x6000, 0, 0x2000); // �������ĂĂ����ď��������Ă܂���B
   }
 
   bool NES_MEM::SetImage (UINT8 * data, UINT32 offset, UINT32 size)
   {
-    __memset_aarch64 (image, 0, 0x10000);
+    memset(image, 0, 0x10000);
     if( offset + size < 0x10000 )
-      __memcpy_aarch64_simd (image + offset, data, size );
+      memcpy(image + offset, data, size );
     else 
-      __memcpy_aarch64_simd (image + offset, data, 0x10000 - offset);
+      memcpy(image + offset, data, 0x10000 - offset);
     return true;
   }
 
@@ -68,7 +67,7 @@ namespace xgm
   void NES_MEM::SetReserved (const UINT8* data, UINT32 size)
   {
     assert(size <= PLAYER_RESERVED_SIZE);
-    ::__memcpy_aarch64_simd(image + PLAYER_RESERVED, data, size);
+    ::memcpy(image + PLAYER_RESERVED, data, size);
   }
 
   bool NES_MEM::WriteReserved (UINT32 adr, UINT32 val)

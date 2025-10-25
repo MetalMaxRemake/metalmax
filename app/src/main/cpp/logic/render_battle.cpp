@@ -3,9 +3,9 @@
 //
 
 #include <cstdio>
+#include <string.h>
 #include "render_battle.h"
 #include "../monster/monster.h"
-#include "../opt/mem_opt.h"
 #include "../charset/charsets.h"
 #include "../audio/native_sound.h"
 #include "../monster/monster_data/monster_data.h"
@@ -13,7 +13,7 @@
 #include "../graphic/palette_data.h"
 
 void renderBackground(uint8_t *screenBuffer) {
-    __memset_aarch64(screenBuffer, palette::k_palette_black, global_config::k_screen_width * global_config::k_screen_height);
+    memset(screenBuffer, palette::k_palette_black, global_config::k_screen_width * global_config::k_screen_height);
 }
 
 void renderHumanMenu(uint8_t *screenBuffer) {
@@ -69,7 +69,7 @@ uint8_t * BattleRender::render(uint8_t *screenBuffer) {
         renderAsciText(screenBuffer, info, 10, 162);
     } else {
         if(splashClk % 3 == 0 && splashCount < 5) {
-            __memset_aarch64(screenBuffer, 8, global_config::k_screen_width * global_config::k_screen_height);
+            memset(screenBuffer, 8, global_config::k_screen_width * global_config::k_screen_height);
         }
     }
     return screenBuffer;

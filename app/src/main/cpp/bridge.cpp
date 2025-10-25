@@ -6,7 +6,6 @@
 #include "graphic/native_graphic.h"
 #include "audio/native_sound.h"
 #include "charset/charsets.h"
-#include "opt/mem_opt.h"
 #include "logic/logic.h"
 
 const char *BRIDGE_TAG = "bridge";
