@@ -190,7 +190,7 @@ void MapRender::renderDoor(uint8_t *screenBuffer) const {
 }
 
 void MapRender::resetPalette() const {
-    int *currentPalette = native_graphic::getCurrentPalette();
+    int *currentPalette = native_graphic::getPaletteBuffer();
     for (int i = 0; i < palette::palette_size; i++) {
         int dd = palette::palette_rgb[i];
         int b = (dd & 0x00FF0000) >> 16;
@@ -202,7 +202,7 @@ void MapRender::resetPalette() const {
 }
 
 void MapRender::fadeIn() const {
-    int *currentPalette = native_graphic::getCurrentPalette();
+    int *currentPalette = native_graphic::getPaletteBuffer();
     for (int i = 0; i < palette::palette_size; i++) {
         unsigned int origindd = palette::palette_rgb[i];
         unsigned int o_b = (origindd & 0x00FF0000) >> 16;
@@ -228,7 +228,7 @@ void MapRender::fadeIn() const {
 }
 
 void MapRender::fadeOut() const {
-    int *currentPalette = native_graphic::getCurrentPalette();
+    int *currentPalette = native_graphic::getPaletteBuffer();
     for (int i = 0; i < palette::palette_size; i++) {
         unsigned int dd = currentPalette[i];
         unsigned int b = (dd & 0x00FF0000) >> 16;

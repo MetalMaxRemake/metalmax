@@ -18,13 +18,23 @@ namespace native_graphic {
 
     void initGraphic(ANativeWindow *window);
 
-    int *getCurrentPalette();
-
     void refreshPalette(int *currentPalette);
 
     void releaseGraphic();
 
     int getFps();
+
+
+    //for internal usage
+    bool isRenderRunning();
+
+    uint8_t *getScreenBuffer();
+
+    ANativeWindow *getNativeWindow();
+
+    int *getPaletteBuffer();
+
+    void requireLogicRender();
 
 }
 

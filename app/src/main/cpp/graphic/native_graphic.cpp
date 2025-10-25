@@ -25,6 +25,66 @@
 #include <unistd.h>
 #include "../perf.h"
 
+namespace software_render {
+    const char *TAG = "software_render";
+
+
+    void onSoftDraw() {
+        //direct draw to buffer
+        uint8_t *screenBuffer = native_graphic::getScreenBuffer();
+        if (screenBuffer == nullptr) {
+            return;
+        }
+        ANativeWindow *nativeWindow = native_graphic::getNativeWindow();
+        ANativeWindow_Buffer mNativeWindowBuffer;
+        ANativeWindow_lock(nativeWindow, &mNativeWindowBuffer, nullptr);
+        int *dstBuffer = static_cast<int *>(mNativeWindowBuffer.bits);
+        int dstHeight = mNativeWindowBuffer.height;
+        int dstWidth =
+                dstHeight * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
+        int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.width) / 2;
+        if (!native_graphic::isRenderRunning()) {
+            return;
+        }
+        __memset_aarch64(dstBuffer, 0,
+                         mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
+        float scale = (float) mNativeWindowBuffer.height /
+                      (global_config::k_screen_height * 1.f); //计算图像宽度缩放比例
+        float scaleLeft = scale - (int) scale; //求出缩放比例的小数部分
+        int addArg = (scaleLeft > 0.5) ? 1 : 0;
+        int x, y;
+
+        int *palette_texture_pixels = native_graphic::getPaletteBuffer();
+
+        for (int hnum = 0; hnum < dstHeight; ++hnum) //按照从左到右，从上到下的顺序进行转换
+        {
+            y = (int) (hnum / scale) + addArg;   //计算当前临近坐标的y值
+            for (int wnum = 0; wnum < dstWidth; ++wnum) {
+                x = (int) (wnum / scale) + addArg; //计算当前临近坐标的x值
+                dstBuffer[hnum * mNativeWindowBuffer.stride + wnum +
+                          offset] = palette_texture_pixels[screenBuffer[
+                        y * global_config::k_screen_width + x]];
+            }
+        }
+        ANativeWindow_unlockAndPost(nativeWindow);
+    }
+
+    void init() {
+        LOGD(TAG, "init()");
+        ANativeWindow *nativeWindow = native_graphic::getNativeWindow();
+        uint8_t *screenBuffer = native_graphic::getScreenBuffer();
+        ANativeWindow_acquire(nativeWindow);
+        while (native_graphic::isRenderRunning()) {
+
+            onSoftDraw();
+            native_graphic::requireLogicRender();
+        }
+        if (nativeWindow) {
+            ANativeWindow_release(nativeWindow);
+        }
+    }
+}
+
 
 namespace native_graphic {
 
@@ -62,11 +122,23 @@ namespace native_graphic {
  */
     const int palette_texture_size = 256;
 
-    uint8_t *(*renderBuffer)(uint8_t *screenBuffer);
+    uint8_t *(*renderBufferCallback)(uint8_t *screenBuffer);
 
-    uint8_t *currentScreenBuffer;
+    uint8_t *screenBuffer;
 
-    extern volatile bool graphicRunning;
+    volatile bool renderRunning = true;
+
+    bool isRenderRunning() {
+        return renderRunning;
+    }
+
+    uint8_t *getScreenBuffer() {
+        return screenBuffer;
+    }
+
+    ANativeWindow *getNativeWindow() {
+        return mANativeWindow;
+    }
 
     const int COORDS_PER_VERTEX = 3;
     const int COORDS_PER_TEXTURE = 2;
@@ -81,6 +153,10 @@ namespace native_graphic {
     unsigned int paletteTextureId;
     unsigned int mainTextureId;
     int *palette_texture_pixels;
+
+    int *getPaletteBuffer() {
+        return palette_texture_pixels;
+    }
 
     const char *FRAGMENT_SHADER = "precision mediump float;"
                                   "varying vec2 v_texCoord;"
@@ -238,7 +314,7 @@ namespace native_graphic {
     }
 
     void onGLDraw() {
-        if (currentScreenBuffer == nullptr) {
+        if (screenBuffer == nullptr) {
             return;
         }
         glClear(GL_COLOR_BUFFER_BIT);
@@ -263,7 +339,7 @@ namespace native_graphic {
         checkGlError("uniforms");
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, global_config::k_screen_width,
                         global_config::k_screen_height, GL_ALPHA,
-                        GL_UNSIGNED_BYTE, currentScreenBuffer);
+                        GL_UNSIGNED_BYTE, screenBuffer);
         checkGlError("emu render");
         glDrawElements(GL_TRIANGLES, 6,
                        GL_UNSIGNED_SHORT, drawOrder);
@@ -273,44 +349,8 @@ namespace native_graphic {
         eglSwapBuffers(eglDisplay, surface);
     }
 
-    void onSoftDraw() {
-        //direct draw to buffer
-        if (currentScreenBuffer == nullptr) {
-            return;
-        }
-        uint8_t *screenBuffer = (uint8_t *) currentScreenBuffer;
-        ANativeWindow_Buffer mNativeWindowBuffer;
-        ANativeWindow_lock(mANativeWindow, &mNativeWindowBuffer, nullptr);
-        int *dstBuffer = static_cast<int *>(mNativeWindowBuffer.bits);
-        int dstHeight = mNativeWindowBuffer.height;
-        int dstWidth =
-                dstHeight * (global_config::k_screen_width * 1.f / global_config::k_screen_height);
-        int offset = (mNativeWindowBuffer.stride - mNativeWindowBuffer.width) / 2;
-        if (!graphicRunning) {
-            return;
-        }
-        __memset_aarch64(dstBuffer, 0,
-                         mNativeWindowBuffer.stride * mNativeWindowBuffer.height * sizeof(int)); //对数组清零
-        float scale = (float) mNativeWindowBuffer.height /
-                      (global_config::k_screen_height * 1.f); //计算图像宽度缩放比例
-        float scaleLeft = scale - (int) scale; //求出缩放比例的小数部分
-        int addArg = (scaleLeft > 0.5) ? 1 : 0;
-        int x, y;
-        for (int hnum = 0; hnum < dstHeight; ++hnum) //按照从左到右，从上到下的顺序进行转换
-        {
-            y = (int) (hnum / scale) + addArg;   //计算当前临近坐标的y值
-            for (int wnum = 0; wnum < dstWidth; ++wnum) {
-                x = (int) (wnum / scale) + addArg; //计算当前临近坐标的x值
-                dstBuffer[hnum * mNativeWindowBuffer.stride + wnum +
-                          offset] = palette_texture_pixels[screenBuffer[
-                        y * global_config::k_screen_width + x]];
-            }
-        }
-        ANativeWindow_unlockAndPost(mANativeWindow);
-    }
-
     void setRenderCallback(uint8_t *(*renderScreenBuffer)(uint8_t *screenBuffer)) {
-        renderBuffer = renderScreenBuffer;
+        renderBufferCallback = renderScreenBuffer;
     }
 
     void initEGL(ANativeWindow *window) {
@@ -373,21 +413,13 @@ namespace native_graphic {
         }
     }
 
-    void software() {
-        LOGD(TAG, "use software");
-        graphicRunning = true;
-        bool first = true;
-        long totalDuration = 0;
-        int count = 0;
-        ANativeWindow_acquire(mANativeWindow);
-        while (graphicRunning) {
-            calculateFps(first, totalDuration, count);
-            onSoftDraw();
-            renderBuffer(currentScreenBuffer);
-        }
-        if (mANativeWindow) {
-            ANativeWindow_release(mANativeWindow);
-        }
+    bool first = true;
+    long totalDuration = 0;
+    int count = 0;
+
+    void requireLogicRender() {
+        calculateFps(first, totalDuration, count);
+        renderBufferCallback(screenBuffer);
     }
 
     volatile bool needRefreshPalette = false;
@@ -396,18 +428,18 @@ namespace native_graphic {
         LOGD(TAG, "use opengl");
         initEGL(mANativeWindow);
         initGL();
-        graphicRunning = true;
+        renderRunning = true;
         bool first = true;
         long totalDuration = 0;
         int count = 0;
-        while (graphicRunning) {
+        while (renderRunning) {
             calculateFps(first, totalDuration, count);
             if (needRefreshPalette) {
                 needRefreshPalette = false;
                 initGL();
             }
             onGLDraw();
-            renderBuffer(currentScreenBuffer);
+            renderBufferCallback(screenBuffer);
         }
         releaseEGL();
     }
@@ -417,12 +449,6 @@ namespace native_graphic {
         LOGE(TAG, "current version not support vulkan");
         exit(-1);
     }
-
-/**
- * 控制gl线程运行
- * 每个v-sync判断一次
- */
-    volatile bool graphicRunning = true;
 
     const static uint8_t SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
 
@@ -438,8 +464,9 @@ namespace native_graphic {
                                          window_width,
                                          window_height,
                                          WINDOW_FORMAT_RGBA_8888);
+        renderRunning = true;
         if (global_config::k_render_mode == SOFTWARE) {
-            software();
+            software_render::init();
         } else if (global_config::k_render_mode == OPEN_GL) {
             openGL();
         } else if (global_config::k_render_mode == VULKAN) {
@@ -452,12 +479,8 @@ namespace native_graphic {
         mANativeWindow = window;
         pthread_t id;
         initPalette();
-        currentScreenBuffer = (uint8_t *) malloc(global_config::k_screen_buffer_size);
+        screenBuffer = (uint8_t *) malloc(global_config::k_screen_buffer_size);
         pthread_create(&id, nullptr, render_thread_task, mANativeWindow);
-    }
-
-    int *getCurrentPalette() {
-        return palette_texture_pixels;
     }
 
     void refreshPalette(int *newPalette) {
@@ -467,9 +490,9 @@ namespace native_graphic {
 
     void releaseGraphic() {
         LOGD(TAG, "releaseGraphic");
-        graphicRunning = false;
+        renderRunning = false;
         free(config);
-        free(currentScreenBuffer);
+        free(screenBuffer);
         free(palette_texture_pixels);
     }
 

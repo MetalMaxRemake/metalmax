@@ -58,7 +58,7 @@ inline void DebugRender::processSelection() {
         player->setPos(map_width / 2, map_height / 2);
         changeMap(mapId, 0, 0);
     } else if (selectPos == 5) {
-        int *currentPalette = native_graphic::getCurrentPalette();
+        int *currentPalette = native_graphic::getPaletteBuffer();
         //fixme
         for (int i = 0; i < palette::palette_size; i++) {
             unsigned int dd = currentPalette[i];
@@ -70,7 +70,7 @@ inline void DebugRender::processSelection() {
         }
         native_graphic::refreshPalette(currentPalette);
     } else if (selectPos == 6) {
-        int *currentPalette = native_graphic::getCurrentPalette();
+        int *currentPalette = native_graphic::getPaletteBuffer();
         //fixme
         for (int i = 0; i < palette::palette_size; i++) {
             int dd = palette::palette_rgb[i];
