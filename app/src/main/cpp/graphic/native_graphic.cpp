@@ -426,16 +426,14 @@ namespace native_graphic {
 
     const static uint8_t SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
 
-
-//定义线程函数
-    void *gl_thread(void *arg) {
+    void *render_thread_task(void *arg) {
         int32_t n_window_width = ANativeWindow_getWidth(mANativeWindow);
         int32_t n_window_height = ANativeWindow_getHeight(mANativeWindow);
         if (n_window_width > 0 && n_window_height > 0) {
             window_height = n_window_height;
             window_width = n_window_width;
         }
-        LOGD("gl_init", "window w&h: %d, %d", window_height, window_width);
+        LOGD(TAG, "window w&h: %d, %d", window_height, window_width);
         ANativeWindow_setBuffersGeometry(mANativeWindow,
                                          window_width,
                                          window_height,
@@ -450,14 +448,12 @@ namespace native_graphic {
         return nullptr;
     }
 
-    void initGraphic(ANativeWindow *window, int width, int height) {
+    void initGraphic(ANativeWindow *window) {
         mANativeWindow = window;
-        window_width = width;
-        window_height = height;
         pthread_t id;
         initPalette();
         currentScreenBuffer = (uint8_t *) malloc(global_config::k_screen_buffer_size);
-        pthread_create(&id, nullptr, gl_thread, mANativeWindow);
+        pthread_create(&id, nullptr, render_thread_task, mANativeWindow);
     }
 
     int *getCurrentPalette() {

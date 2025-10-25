@@ -13,9 +13,10 @@
 #include "../global.h"
 
 namespace native_graphic {
+
     void setRenderCallback(uint8_t *(*getBuffer)(uint8_t *screenBuffer));
 
-    void initGraphic(ANativeWindow *window, int width, int height);
+    void initGraphic(ANativeWindow *window);
 
     int *getCurrentPalette();
 
@@ -24,6 +25,7 @@ namespace native_graphic {
     void releaseGraphic();
 
     int getFps();
+
 }
 
 #endif //METALMAX_NATIVE_GRAPHIC_H

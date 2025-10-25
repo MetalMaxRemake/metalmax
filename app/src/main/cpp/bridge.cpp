@@ -15,12 +15,10 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_initNativeWindow(JNIEnv *env,
                                                      jclass clazz,
-                                                     jobject surface,
-                                                     jint width,
-                                                     jint height) {
-    LOGD(BRIDGE_TAG, "initNativeWindow:%d, %d", width, height);
+                                                     jobject surface) {
+    LOGD(BRIDGE_TAG, "initNativeWindow");
     ANativeWindow *mANativeWindow = ANativeWindow_fromSurface(env, surface);
-    native_graphic::initGraphic(mANativeWindow, width, height);
+    native_graphic::initGraphic(mANativeWindow);
 }
 extern "C"
 JNIEXPORT void JNICALL

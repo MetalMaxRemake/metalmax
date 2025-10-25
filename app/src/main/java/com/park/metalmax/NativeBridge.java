@@ -8,7 +8,7 @@ public class NativeBridge {
         System.loadLibrary("metalmax");
     }
 
-    public static native void initNativeWindow(Surface surface, int width, int height);
+    public static native void initNativeWindow(Surface surface);
     public static native void releaseNativeWindow();
     public static native void slInit();
     public static native void slRelease();
