@@ -34,7 +34,13 @@ namespace native_graphic {
 
     int *getPaletteBuffer();
 
+    size_t getPaletteSize();
+
     void requireLogicRender();
+
+    int getWindowWidth();
+    int getWindowHeight();
+
 
 }
 

@@ -26,8 +26,8 @@
 #include "../perf.h"
 
 namespace software_render {
-    const char *TAG = "software_render";
 
+    const char *TAG = "software_render";
 
     void onSoftDraw() {
         //direct draw to buffer
@@ -85,11 +85,10 @@ namespace software_render {
     }
 }
 
+namespace opengl_render {
+    const char *TAG = "opengl_render";
 
-namespace native_graphic {
-
-    const char *TAG = "native_graphic";
-/*
+    /*
      * Here specify the attributes of the desired configuration.
      * Below, we select an EGLConfig with at least 8 bits per color
      * component compatible with on-screen windows
@@ -112,34 +111,6 @@ namespace native_graphic {
     EGLContext context;
     EGLDisplay eglDisplay;
 
-
-    static ANativeWindow *mANativeWindow;
-    static ANativeWindow_Buffer nwBuffer;
-
-    volatile int32_t window_height, window_width;
-/**
- * OpenGL
- */
-    const int palette_texture_size = 256;
-
-    uint8_t *(*renderBufferCallback)(uint8_t *screenBuffer);
-
-    uint8_t *screenBuffer;
-
-    volatile bool renderRunning = true;
-
-    bool isRenderRunning() {
-        return renderRunning;
-    }
-
-    uint8_t *getScreenBuffer() {
-        return screenBuffer;
-    }
-
-    ANativeWindow *getNativeWindow() {
-        return mANativeWindow;
-    }
-
     const int COORDS_PER_VERTEX = 3;
     const int COORDS_PER_TEXTURE = 2;
 
@@ -152,11 +123,6 @@ namespace native_graphic {
     unsigned int program;
     unsigned int paletteTextureId;
     unsigned int mainTextureId;
-    int *palette_texture_pixels;
-
-    int *getPaletteBuffer() {
-        return palette_texture_pixels;
-    }
 
     const char *FRAGMENT_SHADER = "precision mediump float;"
                                   "varying vec2 v_texCoord;"
@@ -274,9 +240,12 @@ namespace native_graphic {
 
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+
+
         //palette!
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, palette_texture_size, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                     palette_texture_pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_graphic::getPaletteSize(), 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     native_graphic::getPaletteBuffer());
         glTexParameteri(GL_TEXTURE_2D,
                         GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D,
@@ -291,6 +260,8 @@ namespace native_graphic {
     }
 
     void onGLSurfaceChange() {
+        int window_width = native_graphic::getWindowWidth();
+        int window_height = native_graphic::getWindowHeight();
         orthoM(projMatrix, 0, -window_width / 2.0f, +window_width / 2.0f, -window_height / 2.0f,
                +window_height / 2.0f, -2.0f, 2.0f);
         glViewport(0, 0, window_width, window_height);
@@ -314,6 +285,7 @@ namespace native_graphic {
     }
 
     void onGLDraw() {
+        uint8_t *screenBuffer = native_graphic::getScreenBuffer();
         if (screenBuffer == nullptr) {
             return;
         }
@@ -349,12 +321,8 @@ namespace native_graphic {
         eglSwapBuffers(eglDisplay, surface);
     }
 
-    void setRenderCallback(uint8_t *(*renderScreenBuffer)(uint8_t *screenBuffer)) {
-        renderBufferCallback = renderScreenBuffer;
-    }
-
-    void initEGL(ANativeWindow *window) {
-        mANativeWindow = window;
+    void initEGL() {
+        ANativeWindow *nativeWindow = native_graphic::getNativeWindow();
         //初始化EGL
         EGLint configCount;
         eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -366,7 +334,7 @@ namespace native_graphic {
         config = (EGLConfig *) malloc(configCount * sizeof(EGLConfig));
         eglChooseConfig(eglDisplay, surface_attribs, config, configCount, &configCount);
         eglGetConfigAttrib(eglDisplay, config[0], EGL_NATIVE_VISUAL_ID, &format);
-        surface = eglCreateWindowSurface(eglDisplay, config[0], mANativeWindow, nullptr);
+        surface = eglCreateWindowSurface(eglDisplay, config[0], nativeWindow, nullptr);
         context = eglCreateContext(eglDisplay, config[0], nullptr, context_attrib_list);
         eglMakeCurrent(eglDisplay, surface, surface, context);
     }
@@ -374,6 +342,65 @@ namespace native_graphic {
     void releaseEGL() {
         eglReleaseThread();
         eglTerminate(eglDisplay);
+        free(config);
+    }
+
+    void init() {
+        LOGD(TAG, "init");
+        initEGL();
+        initGL();
+        while (native_graphic::isRenderRunning()) {
+            onGLDraw();
+            native_graphic::requireLogicRender();
+        }
+        releaseEGL();
+    }
+}
+
+
+namespace native_graphic {
+
+    const char *TAG = "native_graphic";
+
+    static ANativeWindow *mANativeWindow;
+    static ANativeWindow_Buffer nwBuffer;
+
+    volatile int32_t window_height, window_width;
+/**
+ * OpenGL
+ */
+    const int palette_texture_size = 256;
+
+    uint8_t *(*renderBufferCallback)(uint8_t *screenBuffer);
+
+    uint8_t *screenBuffer;
+
+    volatile bool renderRunning = true;
+
+    int *palette_texture_pixels;
+
+    bool isRenderRunning() {
+        return renderRunning;
+    }
+
+    uint8_t *getScreenBuffer() {
+        return screenBuffer;
+    }
+
+    ANativeWindow *getNativeWindow() {
+        return mANativeWindow;
+    }
+
+    int *getPaletteBuffer() {
+        return palette_texture_pixels;
+    }
+
+    size_t getPaletteSize() {
+        return palette_texture_size;
+    }
+
+    void setRenderCallback(uint8_t *(*renderScreenBuffer)(uint8_t *screenBuffer)) {
+        renderBufferCallback = renderScreenBuffer;
     }
 
     void initPalette() {
@@ -422,35 +449,22 @@ namespace native_graphic {
         renderBufferCallback(screenBuffer);
     }
 
+    int getWindowWidth() {
+        return window_width;
+    }
+
+    int getWindowHeight() {
+        return window_height;
+    }
+
     volatile bool needRefreshPalette = false;
 
-    void openGL() {
-        LOGD(TAG, "use opengl");
-        initEGL(mANativeWindow);
-        initGL();
-        renderRunning = true;
-        bool first = true;
-        long totalDuration = 0;
-        int count = 0;
-        while (renderRunning) {
-            calculateFps(first, totalDuration, count);
-            if (needRefreshPalette) {
-                needRefreshPalette = false;
-                initGL();
-            }
-            onGLDraw();
-            renderBufferCallback(screenBuffer);
-        }
-        releaseEGL();
-    }
 
     void vulkan() {
         LOGD(TAG, "use vulkan");
         LOGE(TAG, "current version not support vulkan");
         exit(-1);
     }
-
-    const static uint8_t SOFTWARE = 0, OPEN_GL = 1, VULKAN = 2;
 
     void *render_thread_task(void *arg) {
         int32_t n_window_width = ANativeWindow_getWidth(mANativeWindow);
@@ -465,11 +479,11 @@ namespace native_graphic {
                                          window_height,
                                          WINDOW_FORMAT_RGBA_8888);
         renderRunning = true;
-        if (global_config::k_render_mode == SOFTWARE) {
+        if (global_config::k_render_mode == global_config::RenderMode::kSoftware) {
             software_render::init();
-        } else if (global_config::k_render_mode == OPEN_GL) {
-            openGL();
-        } else if (global_config::k_render_mode == VULKAN) {
+        } else if (global_config::k_render_mode == global_config::RenderMode::kOpenGL) {
+            opengl_render::init();
+        } else if (global_config::k_render_mode == global_config::RenderMode::kVulkan) {
             vulkan();
         }
         return nullptr;
@@ -491,7 +505,6 @@ namespace native_graphic {
     void releaseGraphic() {
         LOGD(TAG, "releaseGraphic");
         renderRunning = false;
-        free(config);
         free(screenBuffer);
         free(palette_texture_pixels);
     }
