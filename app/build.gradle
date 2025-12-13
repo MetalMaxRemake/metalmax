@@ -5,6 +5,7 @@ plugins {
 android {
     namespace 'com.park.metalmax'
     compileSdk 33
+    ndkVersion "23.2.8568313"
 
     defaultConfig {
         applicationId "com.park.metalmax"

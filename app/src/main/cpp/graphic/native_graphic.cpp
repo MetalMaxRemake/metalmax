@@ -491,8 +491,6 @@ namespace native_graphic {
         return window_height;
     }
 
-    volatile bool needRefreshPalette = false;
-
     void vulkan() {
         LOGD(TAG, "use vulkan");
         LOGE(TAG, "current version not support vulkan");
@@ -539,7 +537,6 @@ namespace native_graphic {
 
     void applyNewPalette(int *newPalette) {
         LOGD(TAG, "applyNewPalette");
-        needRefreshPalette = true;
         palette_texture_pixels = newPalette;
     }
 
