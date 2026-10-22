@@ -1,179 +1,161 @@
-//
-// Created by parkyu on 2023/5/9.
-//
-
-#include <unistd.h>
-#include <__threading_support>
-#include <cstdlib>
-#include <typeinfo>
 #include "logic.h"
-#include "../maps/map.h"
-#include "../charset/charsets.h"
-#include "../graphic/native_graphic.h"
-#include "render_map.h"
 #include "render.h"
+#include "render_map.h"
 #include "render_splash.h"
+#include "../graphic/native_graphic.h"
+#include "../charset/charsets.h"
+#include <pthread.h>
+#include <unistd.h>
+#include <atomic>
+#include <vector>
+#include <cstdio>
 
-const uint8_t up = 0b0001;
-const uint8_t down = 0b0010;
-const uint8_t left = 0b0100;
-const uint8_t right = 0b1000;
+namespace metalmax {
+    const uint8_t up = 1, down = 2, left = 4, right = 8;
+    static std::vector<base_render *> stack;
+    static std::vector<base_render *> retired;
+    static map_render *s_map_render = nullptr;
+    static pthread_mutex_t logic_mutex;
+    static pthread_once_t mutex_once = PTHREAD_ONCE_INIT;
+    static pthread_t logic_thread;
+    static bool started = false;
+    static std::atomic<bool> running(false), paused(true);
+    static std::atomic<uint8_t> direct_key(0), function_key(0);
+    static uint8_t last_direct = 0, last_function = 0;
 
-uint8_t tik_clk = 16;
-
-BaseRender *renderStack[10];
-MapRender *mapRender;
-int stackIdx = 0;
-volatile bool logicRunning = true;
-
-template<class Base, typename Derived>
-
-bool instanceOf(const Derived &object) {
-    return !dynamic_cast<Base *>(object);
-}
-
-void push(BaseRender *baseRender) {
-    bool isMapRender = instanceOf<MapRender>(baseRender);
-    if (isMapRender) {
-        mapRender = (MapRender *) baseRender;
+    static void init_mutex() {
+        pthread_mutexattr_t attr;
+        pthread_mutexattr_init(&attr);
+        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&logic_mutex, &attr);
+        pthread_mutexattr_destroy(&attr);
     }
-    if (stackIdx > 0 && top() != nullptr) {
-        top()->onUnFocus();
+
+    void lock_logic() {
+        pthread_once(&mutex_once, init_mutex);
+        pthread_mutex_lock(&logic_mutex);
     }
-    renderStack[stackIdx++] = baseRender;
-    if (stackIdx > 0 && top() != nullptr) {
-        top()->onFocus();
+
+    void unlock_logic() { pthread_mutex_unlock(&logic_mutex); }
+
+    base_render *top() { return stack.empty() ? nullptr : stack.back(); }
+
+    void push(base_render *render) {
+        if (!render) { return; }
+        lock_logic();
+        if (stack.size() >= 32) {
+            retired.push_back(render);
+            unlock_logic();
+            return;
+        }
+        if (top()) { top()->on_un_focus(); }
+        if (auto *map = dynamic_cast<map_render *>(render)) { s_map_render = map; }
+        stack.push_back(render);
+        render->on_focus();
+        unlock_logic();
     }
-}
 
-BaseRender *top() {
-    return renderStack[stackIdx - 1];
-}
-
-void pop() {
-    if (stackIdx > 0 && top() != nullptr) {
-        top()->onUnFocus();
+    void pop() {
+        lock_logic();
+        base_render *old = top();
+        if (old) {
+            old->on_un_focus();
+            old->on_close();
+            stack.pop_back();
+            if (old == s_map_render) { s_map_render = nullptr; }
+            retired.push_back(old);
+            if (top()) { top()->on_focus(); }
+        }
+        unlock_logic();
     }
-    delete top();
-    stackIdx--;
-    if (stackIdx > 0 && top() != nullptr) {
-        top()->onFocus();
+
+    int get_current_map() { return s_map_render ? s_map_render->get_map_id() : -1; }
+
+    void change_map(int map_id, int x, int y) {
+        lock_logic();
+        if (s_map_render) {
+            while (top() && top() != s_map_render) { pop(); }
+            s_map_render->update_map(map_id, x, y);
+        }
+        unlock_logic();
     }
-}
 
-int getCurrentMap() {
-    if (mapRender != nullptr) {
-        return mapRender->getMapId();
-    }
-    return -1;
-}
+    void update_direct_key(uint8_t key) { direct_key.store(key); }
 
-void changeMap(int mapId, int x, int y) {
-    if (mapRender != nullptr) {
-        mapRender->updateMap(mapId, x, y);
-    }
-}
+    void update_function_key(uint8_t key) { function_key.store(key); }
 
-void tikLogic();
-
-void processKey();
-
-void processLogic();
-
-void initLogicThread();
-
-uint8_t *renderScreen(uint8_t *buffer);
-
-void initLogic() {
-    if (!logicRunning) {
-        return;
-    }
-    native_graphic::setRenderCallback(&renderScreen);
-    SplashRender *splashRender = new SplashRender;
-    push(splashRender);
-    tikLogic();
-    initLogicThread();
-}
-
-/**
- * very important
- */
-void tikLogic() {
-    processKey();
-    processLogic();
-}
-
-void renderFps(uint8_t *currentBuffer) {
-    char fpsInfo[110];
-    sprintf(fpsInfo, "FPS %d", native_graphic::getFps());
-    renderAsciText(currentBuffer, fpsInfo, 0, 0);
-}
-
-uint8_t *renderScreen(uint8_t *screenBuffer) {
-    for (int i = 0; i < stackIdx; i++) {
-        if (renderStack[i] != nullptr) {
-            screenBuffer = renderStack[i]->render(screenBuffer);
+    void set_logic_paused(bool value) {
+        paused.store(value);
+        if (value) {
+            direct_key = 0;
+            function_key = 0;
         }
     }
-    renderFps(screenBuffer);
-    return screenBuffer;
-}
 
-uint8_t directKey = 0;
-uint8_t functionKey = 0;
-
-uint8_t last_directKey = 0;
-uint8_t last_functionKey = 0;
-
-void updateDirectKey(uint8_t key) {
-    directKey = key;
-}
-
-void updateFunctionKey(uint8_t key) {
-    functionKey = key;
-}
-
-void processLogic() {
-    top()->tikLogic();
-}
-
-void processKey() {
-    if (top()->processKey(directKey, functionKey)) {
-        last_directKey = directKey;
-        last_functionKey = functionKey;
-        return;
+    static void collect() {
+        for (auto *render: retired) { delete render; }
+        retired.clear();
     }
-    uint8_t diff_directKey = 0;
-    uint8_t diff_functionKey = 0;
-    if (directKey > last_directKey) {
-        diff_directKey = (directKey | last_directKey) & ~(directKey & last_directKey);
-    }
-    if (functionKey > last_functionKey) {
-        diff_functionKey = (functionKey | last_functionKey) & ~(functionKey & last_functionKey);
-    }
-    if (diff_directKey | diff_functionKey) {
-        top()->processKeyClick(diff_directKey, diff_functionKey);
-    }
-    last_directKey = directKey;
-    last_functionKey = functionKey;
-}
 
-//定义线程函数
-void *logic_thread(void *arg) {
-    logicRunning = true;
-    while (logicRunning) {
-        tikLogic();
-        usleep(tik_clk * 1000);
+    static void tick() {
+        lock_logic();
+        uint8_t direct = direct_key.load(), function = function_key.load();
+        base_render *render = top();
+        if (render && !render->process_key(direct, function)) {
+            if (top() == render) {
+                render->process_key_click(direct & ~last_direct, function & ~last_function);
+            }
+        }
+        last_direct = direct;
+        last_function = function;
+        if (top()) { top()->tik_logic(); }
+        collect();
+        unlock_logic();
     }
-    return nullptr;
-}
 
-void releaseLogicThread() {
-    logicRunning = false;
-}
+    static uint8_t *render_screen(uint8_t *buffer) {
+        lock_logic();
+        for (auto *render: stack) { buffer = render->render(buffer); }
+        char fps[32];
+        snprintf(fps, sizeof(fps), "FPS %d", native_graphic::get_fps());
+        render_asci_text(buffer, fps, 0, 0);
+        unlock_logic();
+        return buffer;
+    }
 
-void initLogicThread() {
-    pthread_t id;
-    //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, nullptr, logic_thread, nullptr);
-}
+    static void *logic_task(void *) {
+        while (running.load()) {
+            if (!paused.load()) { tick(); }
+            usleep(16000);
+        }
+        return nullptr;
+    }
+
+    void init_logic() {
+        lock_logic();
+        native_graphic::set_render_callback(render_screen);
+        if (!started) {
+            push(new splash_render);
+            running = true;
+            if (pthread_create(&logic_thread, nullptr, logic_task, nullptr) ==
+                0) { started = true; }
+            else {
+                running = false;
+                log_e("logic", "Cannot create logic thread");
+            }
+        }
+        unlock_logic();
+    }
+
+    void release_logic_thread() {
+        running = false;
+        if (started) {
+            pthread_join(logic_thread, nullptr);
+            started = false;
+        }
+        lock_logic();
+        while (top()) { pop(); }
+        collect();
+        unlock_logic();
+    }
+} // namespace metalmax

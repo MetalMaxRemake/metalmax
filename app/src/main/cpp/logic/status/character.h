@@ -2,37 +2,42 @@
 // Created by youngpark on 2023/5/21.
 //
 
-#ifndef METALMAX_CHARACTER_H
-#define METALMAX_CHARACTER_H
+#ifndef metalmax_character_h
+#define metalmax_character_h
 
 #include "../../global.h"
 
+namespace metalmax {
 extern uint8_t direct_up;
 extern uint8_t direct_down;
 extern uint8_t direct_left;
 extern uint8_t direct_right;
 
-class Character {
+    class character {
 public:
-    Character();
-    int name;
-    bool godMode = false;
-    int hp;
+        character();
+
+        int name = 0;
+        bool god_mode = false;
+        int hp = 80;
     //x is left or right, y is up or down
-    int x, y;
+    int16_t x = 91, y = 232;
     //x is left or right, y is up or down
-    int renderX, renderY;
-    bool steping;
+    int16_t render_x = 1456, render_y = 3712;
+        bool steping = false;
     uint8_t direct;//0-up 1-down 2-left 3-right
-    bool inDoor = false;
-    int halfStep;
-    int bitmapId;
-    uint8_t* bitmap[4][2];
-    uint8_t* currentBitmap;
+        bool in_door = false;
+        int half_step;
+        int bitmap_id = 9;
+
+        uint8_t *current_bitmap();
     void tik();
-    void setPos(int x, int y);
+
+        void set_pos(int x, int y);
+
 };
 
-Character *getDefaultPlayer();
+    character *get_default_player();
 
+} // namespace metalmax
 #endif //METALMAX_CHARACTER_H

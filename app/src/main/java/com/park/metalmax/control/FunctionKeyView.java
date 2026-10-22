@@ -59,8 +59,10 @@ public class FunctionKeyView extends KeyView {
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
-        switch (event.getAction()) {
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                TA = TB = A = B = X = Y = false;
                 if (TARect.contains(x, y)) {
                     TA = true;
                 }
@@ -81,24 +83,8 @@ public class FunctionKeyView extends KeyView {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (TARect.contains(x, y)) {
-                    TA = false;
-                }
-                if (TBRect.contains(x, y)) {
-                    TB = false;
-                }
-                if (ARect.contains(x, y)) {
-                    A = false;
-                }
-                if (BRect.contains(x, y)) {
-                    B = false;
-                }
-                if (XRect.contains(x, y)) {
-                    X = false;
-                }
-                if (YRect.contains(x, y)) {
-                    Y = false;
-                }
+            case MotionEvent.ACTION_CANCEL:
+                TA = TB = A = B = X = Y = false;
                 break;
         }
         key = 0;

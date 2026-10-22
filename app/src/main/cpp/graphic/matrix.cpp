@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void orthoM(float m[], int mOffset,
+namespace metalmax {
+void ortho_m(float m[], int m_offset,
             float left, float right, float bottom, float top,
             float near, float far) {
 
@@ -20,20 +21,21 @@ void orthoM(float m[], int mOffset,
     float tx = -(right + left) * r_width;
     float ty = -(top + bottom) * r_height;
     float tz = -(far + near) * r_depth;
-    m[mOffset + 0] = x;
-    m[mOffset + 5] = y;
-    m[mOffset +10] = z;
-    m[mOffset +12] = tx;
-    m[mOffset +13] = ty;
-    m[mOffset +14] = tz;
-    m[mOffset +15] = 1.0f;
-    m[mOffset + 1] = 0.0f;
-    m[mOffset + 2] = 0.0f;
-    m[mOffset + 3] = 0.0f;
-    m[mOffset + 4] = 0.0f;
-    m[mOffset + 6] = 0.0f;
-    m[mOffset + 7] = 0.0f;
-    m[mOffset + 8] = 0.0f;
-    m[mOffset + 9] = 0.0f;
-    m[mOffset + 11] = 0.0f;
+    m[m_offset + 0] = x;
+    m[m_offset + 5] = y;
+    m[m_offset +10] = z;
+    m[m_offset +12] = tx;
+    m[m_offset +13] = ty;
+    m[m_offset +14] = tz;
+    m[m_offset +15] = 1.0f;
+    m[m_offset + 1] = 0.0f;
+    m[m_offset + 2] = 0.0f;
+    m[m_offset + 3] = 0.0f;
+    m[m_offset + 4] = 0.0f;
+    m[m_offset + 6] = 0.0f;
+    m[m_offset + 7] = 0.0f;
+    m[m_offset + 8] = 0.0f;
+    m[m_offset + 9] = 0.0f;
+    m[m_offset + 11] = 0.0f;
 }
+} // namespace metalmax

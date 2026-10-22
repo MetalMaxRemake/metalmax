@@ -2,11 +2,13 @@
 // Created by parkyu on 2023/5/18.
 //
 
-#ifndef METALMAX_GRAPHIC_PROCESS_H
-#define METALMAX_GRAPHIC_PROCESS_H
+#ifndef metalmax_graphic_process_h
+#define metalmax_graphic_process_h
 #include "../global.h"
 
-uint8_t *horizontalFlip(uint8_t *source, int width, int height);
-uint8_t *verticalFlip(uint8_t *source, int width, int height);
+namespace metalmax {
+uint8_t *horizontal_flip(uint8_t *source, int width, int height);
+uint8_t *vertical_flip(uint8_t *source, int width, int height);
 
+} // namespace metalmax
 #endif //METALMAX_GRAPHIC_PROCESS_H

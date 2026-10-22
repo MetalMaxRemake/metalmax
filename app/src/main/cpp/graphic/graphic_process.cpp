@@ -6,7 +6,8 @@
 #include <string.h>
 #include "graphic_process.h"
 
-uint8_t *horizontalFlip(uint8_t *source, int width, int height) {
+namespace metalmax {
+uint8_t *horizontal_flip(uint8_t *source, int width, int height) {
     uint8_t tmp;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width / 2; j++) {
@@ -18,7 +19,7 @@ uint8_t *horizontalFlip(uint8_t *source, int width, int height) {
     return source;
 }
 
-uint8_t *verticalFlip(uint8_t *source, int width, int height) {
+uint8_t *vertical_flip(uint8_t *source, int width, int height) {
     uint8_t *line = (uint8_t *) malloc(width);
     for (int i = 0; i < height / 2; ++i) {
         memcpy(line, source + i * width, width);
@@ -28,3 +29,4 @@ uint8_t *verticalFlip(uint8_t *source, int width, int height) {
     free(line);
     return source;
 }
+} // namespace metalmax

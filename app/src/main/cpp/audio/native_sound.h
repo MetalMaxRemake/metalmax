@@ -2,16 +2,16 @@
 // Created by youngpark on 2023/4/4.
 //
 
-#ifndef SUPERCUBE_NATIVE_SLES_H
-#define SUPERCUBE_NATIVE_SLES_H
+#ifndef supercube_native_sles_h
+#define supercube_native_sles_h
 
-extern "C" void initSL();
-extern "C" void releaseSL();
-extern "C" short *getAudioBuffer();
-extern "C" void changeAudio(int audioIdx);
-extern "C" void renderEffect(int effectAudioId);
-extern "C" int getAudioCount();
-extern "C" int getAudioIdx();
+extern "C" void init_sl();
+extern "C" void release_sl();
+extern "C" short *get_audio_buffer();
+extern "C" void change_audio(int audio_idx);
+extern "C" void render_effect(int effect_audio_id);
+extern "C" int get_audio_count();
+extern "C" int get_audio_idx();
 
 
 #endif //SUPERCUBE_NATIVE_SLES_H

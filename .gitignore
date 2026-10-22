@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Reproducible bin2c intermediates; generated .h files are versioned.
+/tools/build/
+/tools/__pycache__/

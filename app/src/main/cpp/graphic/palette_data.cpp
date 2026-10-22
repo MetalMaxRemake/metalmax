@@ -1,4 +1,4 @@
-namespace palette {
+namespace metalmax::palette {
     int palette_rgb[256]={
             -77426,-93432,-8795632,-16777216,-13798656
             ,-14703106,-6184543,-5618688,-1,-10987432

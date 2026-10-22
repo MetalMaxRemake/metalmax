@@ -1,0 +1,2134 @@
+[
+  {
+    "path": "MetalMaxRe-master/core/src/main/gen/me/afoolslove/metalmaxre/gamescript/SpriteScriptBaseListener.java",
+    "sha256": "967b525c211e7a5061ddf5286d7b5725e41f3f060e1d3f8f4f53c62979210f31"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/gen/me/afoolslove/metalmaxre/gamescript/SpriteScriptBaseVisitor.java",
+    "sha256": "2f3f85235003b9428a53e2bda3f101a205dd1bcea9e12f90b185f28f50bc9dc2"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/gen/me/afoolslove/metalmaxre/gamescript/SpriteScriptLexer.java",
+    "sha256": "f4762689af1cfb7168c11acf154e52b19abe15151ad29d55dd62d9e1c441c2ae"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/gen/me/afoolslove/metalmaxre/gamescript/SpriteScriptListener.java",
+    "sha256": "af9c2b74553dbb3350a6433c930f1b39707ad152ad46afa6ad1a769905af4d78"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/gen/me/afoolslove/metalmaxre/gamescript/SpriteScriptParser.java",
+    "sha256": "657dca6512024466dc62ac18689aa4682b1262008c779335e5e1535c912404fc"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/gen/me/afoolslove/metalmaxre/gamescript/SpriteScriptVisitor.java",
+    "sha256": "d1eebcf7d5a0cdedf719bf295b692c682feb21361ac3c4a45c0e8ae799a23622"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/AttackRange.java",
+    "sha256": "a357d0f1e915b2572202d007bc02be7f0c3ec314e65418183ec5e9015fae051a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/EditorRomBufferWrapper.java",
+    "sha256": "49245efecfe74d48d4f1a90baaba5717100cc9bf054c40b90d8d1588e3729736"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/GameHeader.java",
+    "sha256": "54dab013e02a8e862bd862ad0bd47b552ba4a810b911fe688231918ea4dee469"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/InteractType.java",
+    "sha256": "b5994c081c54e5b56ae86f63cf0ca2c17930f5a4c2e56acec4ec02bc950b41d7"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/MetalMaxRe.java",
+    "sha256": "1304b602859d6b37c6e37679f2d92cbb6d0d390b32a8cff07112da8d93b20542"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/MultipleMetalMaxRe.java",
+    "sha256": "166d6211f707cb9691b8a561f225431b4f1b4f716dffdffdaeda9aac0f5f8a94"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/RedirectDataAddressManager.java",
+    "sha256": "7d1908c474f6a763c4b6feae553f003ac8c573431c01dcaf6e2321f8634af22f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/RomBuffer.java",
+    "sha256": "1b6a5515aa2b88ff414786a6e63823a6f9ef45d1751ea7abf63db7cb9546443d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/RomBufferWrapper.java",
+    "sha256": "0536c6bf91af5b236fa9ec70ddc37d12daa57e05e0b0049c6999f9ece3519393"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/RomBufferWrapperAbstractEditor.java",
+    "sha256": "c31cf64fcbbe726526047ac948898762ef1973eb109044be5c46c7335d762765"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/RomVersion.java",
+    "sha256": "b3e2212eba7fcba57c54c59f1bafc261045a375bd536b04e3ba3d0b5f948f43c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/Trainer.java",
+    "sha256": "3c15a2d9b237cd2ae73beab1c4441a2756ac7582ab6081e135e98ee015e91061"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/AbstractEditor.java",
+    "sha256": "3831f5eb0a8423ebf070445101b5f9dd6432e61cd320ddec230c69136726cb34"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/Editor.java",
+    "sha256": "6ac08a00a656266debfab5a18355a697b390ac06b7660e99ee72965d568e965c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/EditorManagerImpl.java",
+    "sha256": "6b9057f1a37a722ffc34c498a57a6881ef3bf4ad8a25fc341c44f431593d2fc3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/IEditorManager.java",
+    "sha256": "5bde1f1d0f53ea585082b4b921dbca4dec269c71706c97519706a1fe88bcc3a1"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/IRomEditor.java",
+    "sha256": "6bdc5abf9f88028a9d4c5aaef7049f327791a344555df3a1edfa06fc0a8812b5"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/audio/AudioEditorImpl.java",
+    "sha256": "efa3ce6c4c2570e3b067eff5c1c91418c84871634bc5583956c42b11ffabc459"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/audio/AudioProperties.java",
+    "sha256": "e6c7cc1a2aa46fb376d1e1d951f9f034d5262dfd954dde5b879b30efe747e3f1"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/audio/IAudioEditor.java",
+    "sha256": "ab466382cd123ae1e82834dcae3dfb670c4a6981e7f5b183dea8f93f5e24fe45"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/computer/Computer.java",
+    "sha256": "6cd11742ab2cfebd818df4d37aa00b1a9c5d01c240645a44f9b4f11280075e4a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/computer/ComputerEditorImpl.java",
+    "sha256": "f578bc200947e2a54fe3890300a08063fa03d46ea474c1c158110969626b4d10"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/computer/IComputerEditor.java",
+    "sha256": "2defa8de8561a330e2aa9c72d2afd8914c9d3bb7aef50ea02ac1acf18963df44"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/data/DataValueEditorImpl.java",
+    "sha256": "758c93cb54b489643d7c0cf712e8033e8d3176cf9fd8e78b7c2fa38da6f741cd"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/data/IDataValueEditor.java",
+    "sha256": "75767d05a0301ef75f729d5f7c11894a23018853ada068108aa7c38289fe3202"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/elevator/ElevatorEditorImpl.java",
+    "sha256": "49adbf1e1a1aefa3038b770e891494cf94403c9d2c2ba4fe3a009958910505a0"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/elevator/IElevatorEditor.java",
+    "sha256": "014446a0b97633825fa8a7858c695bcd5026ccf5f1aa80364ca87725bc2991ff"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/items/IItemEditor.java",
+    "sha256": "5654111ff5c9f794219ad10b3a7c3ddf6db57065b87ff65ddbf6890b129dd3cc"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/items/Item.java",
+    "sha256": "799065155eb76324c7c0e5619d0bd457fb814a305698649b60380c70e15d4e3c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/items/ItemEditorImpl.java",
+    "sha256": "6958fffa5e2fc183e75584d5f57dfd11879f00896f01df4ef7dd157e0955e713"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/items/ItemType.java",
+    "sha256": "afa2b31587f5826555f06e1522c3e58d939b74dd9ec592710f27d5b18766b5f0"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/list/IListEditor.java",
+    "sha256": "013cb39233794a5535a892ff96cf9b02aa14c2a9cd3439cd0bc39f58ccae654f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/list/ItemValue.java",
+    "sha256": "9d236dba3cefc99b468de0029260f28fa8e2e2cd44819cc251af2754f645be05"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/list/ListEditorImpl.java",
+    "sha256": "6c83027e60390538dc84a209e664678573754cab00b10fa8a1ceafa185319963"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/list/VendorItem.java",
+    "sha256": "4b10a1aba8343b9a329d4c807cc86638fa6b635ef2c29ef4f833087a1786c00c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/list/VendorItemList.java",
+    "sha256": "a519419164720b6edb062c1642fc43959feebafd8ff649532b5031281807f18e"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/CameraMapPoint.java",
+    "sha256": "0c2a4519e25949bbc08a6a033ba2bb75a428441126b9121c8a9b9f5714826af8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/DogSystemEditorImpl.java",
+    "sha256": "1a7e5199af380fb1010d0c27df3bbee4f7af9612e487cd472c38674466137905"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/IDogSystemEditor.java",
+    "sha256": "a9e95d60260825ad506d29f7375fc69e37e087dd37255862a52ef2b65f9afb97"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/IMapEditor.java",
+    "sha256": "b5631c74e728517782a33fbb32fa1b32051d7e2cb37bedd7dfba56cf343c0f44"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/IMapEntranceEditor.java",
+    "sha256": "5de815b0a1b4f9dce03abf5abb98fdae709f4d66bb7747d83e0339224f13d560"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/IMapPropertiesEditor.java",
+    "sha256": "1156387f09fafa076dd8a6cf203cd2443728b98f8a253a8fa930b8d3c0c7de02"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapBorder.java",
+    "sha256": "1111c8316df6b7ff7e95a9a4b3b0d79f4b9eb94d6b7e9398249f4939cfc7f55d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapBorderType.java",
+    "sha256": "0d673da9083658d2373fa4f0021f03e0de4d9e518b5171ebd6d6b9d56a55a3f4"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapBuilder.java",
+    "sha256": "1a978611764dcd3207a9634a87612824f9e2474f0480c131342477b3c4369afc"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapCheckPoints.java",
+    "sha256": "4e9a3d9da94a1e609526fed3ddbf83dabec9c8c2e3d965dd782a62364c7db796"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapEditorImpl.java",
+    "sha256": "fad57d4f137bfa5207e99793d6c8c8c9ba2c930a925fd372bc1392010493e2f8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapEntrance.java",
+    "sha256": "fc1ed2ab6c846fd91f52c12c7e241ac166c6729b71da8fde785111a767f331c0"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapEntranceEditorImpl.java",
+    "sha256": "367a4d1b6534e0a9b926bccfe12a5c421b24b3ddb7516aa47864e5f9fc5522d3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapPoint.java",
+    "sha256": "e5dbb862f53c4f108fe1f34c71b8f5c40105cab3dae1d41bf1e7050bff692902"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapProperties.java",
+    "sha256": "1d2d9bf9f52795b39ea528391939ae1d75ca655f36bd23fea46c15ac4709b740"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapPropertiesEditorImpl.java",
+    "sha256": "27caab282494d84fd8c517b7ccaac2b5dab4224dd4c336908ea253e80943a49f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/MapTile.java",
+    "sha256": "91aa03712d1a8f0ddf07fd4a789f8a90ae3b0df608318690edb38e008075abb5"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/WorldMapProperties.java",
+    "sha256": "afd1692b5db5da70ba8a559bee1644ae5cfed172bb1b5fad6d87eff7877d976e"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/events/EventTile.java",
+    "sha256": "2c28dd27e25039f3b7782dab6e4511495fc0e878f69056a070ed16e78df3c178"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/events/EventTilesEditorImpl.java",
+    "sha256": "5c8c20771dbe97aaceb33f80bb5dc3857738ddac2c6ad1bf5cb3e6c19b37bd39"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/events/IEventTilesEditor.java",
+    "sha256": "fdb2f71402b940df8032cfd8db217b89271e071cfc6c30107b5866a107154be2"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/events/WorldEventTile.java",
+    "sha256": "a3cd8fd2dd2bd1b2ef09298f04ebcd9539a5b571ebae828343078d79d13d1336"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/events/WorldMapInteractiveEvent.java",
+    "sha256": "c662bcf7bc76fd29d2918f3cb7e30f141abf6c3b72aa0251cf55b4d025f6530d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/ITileSetEditor.java",
+    "sha256": "3d6b6721746d3434c06ec49cc51589b344f7c3b14332c9249616c6a06db589a7"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/Tile.java",
+    "sha256": "f2346a228e4bd7772684458e3a37468072cda79111560899403b660c6eb49adc"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/TileAttributeSet.java",
+    "sha256": "fb27d346d0fe438d79f0b3c7f928ef2f2e62c3313fa53ec548f4062b7db27c86"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/TileCombination.java",
+    "sha256": "a4a8c841da2006a0bd07a22a181cd152e8297647b96efe6055aa9933242431f8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/TileCombinationSet.java",
+    "sha256": "32118a786bb054d7dc46fb22880f8feeaeb87cfc76b16d75ebd3b61bc8625dfe"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/TileImage.java",
+    "sha256": "2b58012a65c933ad6041bb291a0a27f464fdc0be09556407c5d514e83c46a181"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/TileSetEditorImpl.java",
+    "sha256": "8d323d6f8b137273332ac8744ba45bd92414cd00291a6e66fad8e3797759d6f3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/tileset/XXTileSet.java",
+    "sha256": "97eec709981ccfbf96b3b6f0399f66d9c2a80f29716d269a15607f65e12f3ad8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/world/IWorldMapEditor.java",
+    "sha256": "c7547b0193f7b1a269b5341c1428ddfbace775edbc11e29a5cc7a97c131fab1d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/world/LineDirection.java",
+    "sha256": "e61f642aeea506e566a121d97d6bd824bb2dca2b4b96c1461bf96519a21b63e3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/map/world/WorldMapEditorImpl.java",
+    "sha256": "e8bc5490a5306d631fc3aa151db41f1a4c093b1da64953cf605cb2e5aa3f3dc4"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/AbstractMonsterGroup.java",
+    "sha256": "f003e01f8a5a7c15568c8727ca971e4f15a64f9e061705038212fc8fd58fbeee"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/IMonsterEditor.java",
+    "sha256": "3b147489f44a1a6d27fac3848f4f119f366ec420a845ec715a5507d495682e5a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/IMonsterModelEditor.java",
+    "sha256": "a6b454f42349413b1cd904c9795f11ae576db9a6bc28da920c1b61bfe0574970"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/IMonsterProbabilityEditor.java",
+    "sha256": "4d9b24e346d55ece9ec5c1da3a76314fa4f6cafc351196c76eff23e12a852d51"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/Monster.java",
+    "sha256": "b81ab2c95b17b345d74f4ad4534f1f30fec9716cdc282eb6c3f63f54da761710"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterEditorImpl.java",
+    "sha256": "21dce709761fe94aafffbb30880e95365e5ee850edcf78acdff7cca7b3f3e727"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterGroup.java",
+    "sha256": "44c41ecfe30b359e442d8f57ba87c48685a3b9526e4495056bdafa8a25224e50"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterModel.java",
+    "sha256": "4410b7bbafc2536a52cf4dff52b19b684157f8930e62282e7fb8fa6e474b68ca"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterModelImpl.java",
+    "sha256": "13c3abc0cd3db3b9e9a1e657da7ab496795c53ea53451a27478ec250fd3f58a0"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterModelType.java",
+    "sha256": "dce85be660fdb169fd94c3af34a9952e9f0855e85f04f3a07d962714929c352c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterProbability.java",
+    "sha256": "3869d21223c8bb0de241223f791ea3c93a68dc1fd14651fe6501ce118424d8f6"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterProbabilityEditorImpl.java",
+    "sha256": "2cf43e37abde9048e574fb416a687e48b133ca6edaa9cc47ba425c72ffc42bc7"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterRealm.java",
+    "sha256": "56012c140a22e2ac5c5405ddfed77d0192152b1960ec35a6b49984f721c8833a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/MonsterType.java",
+    "sha256": "698a5d6decb914bb511e6d2054013dbb85f7b2677a296eea135ba3c752d8a0ac"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/SpecialMonsterGroup.java",
+    "sha256": "016730a7558a8945df89a5a2e8d075db7f7bdabf4edc236f8d6f01bbd44afa3f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/monster/WantedMonster.java",
+    "sha256": "159e722bdcadcabdd47a6d4f61d614d59e112512c9088c6aa9d432a53ef22a3c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/palette/Color.java",
+    "sha256": "1cfe9fd5d98f0dab5dc787072b71b7d6bd20fce5eee81a0c4b5c60b27a82b78b"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/palette/IPaletteEditor.java",
+    "sha256": "4fae115f64c54595a5dbdaf311640eefdcedb73420455804af1246d8b9ea38ab"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/palette/Palette.java",
+    "sha256": "ee37b9f317fe5df0fbd06bba9a97151df0a08c9866eda62a44d3e829b6049110"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/palette/PaletteEditorImpl.java",
+    "sha256": "1573c96fb22f7164f1c37c9825b1a37157fb9b36ac9ee1751fe9f78edd712925"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/palette/PaletteRow.java",
+    "sha256": "f0add003de6157dad74ecc3639242fd870255e608102043b16f7b7d2070ec146"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/palette/SystemPalette.java",
+    "sha256": "78a8bb3555b6072536e63025c019eebffdddce38166fa55690f158e13482d942"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/IPlayerEditor.java",
+    "sha256": "6c2c0dc9175be8f585b0529084951901bd776c58a4bcba558fb400dc1f48b625"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/IPlayerExpEditor.java",
+    "sha256": "b7db4f6536a2c153ee3bee8a58a14961edc54abedb2294d5144c5be214fc851d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/Player.java",
+    "sha256": "eb1a81ec1ebb5f982f77e3e5bab999a74dfaf0ba2b522a43a8e94f7580c1003f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerArmor.java",
+    "sha256": "3fdf5e1625a3a94c6fb46f21c8a53584dbd52c001f77e533cccb6b1db122dc4e"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerDeBuff.java",
+    "sha256": "a2739b50ef20495b439efd10e9f3f1981cf83e4bffe032b6c4659af5f6dc8523"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerEditorImpl.java",
+    "sha256": "e28e6f8e9a1b83883bb686f13dd6e4a00f27f89c999d870403d9cc3ce5aba9fe"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerEquipmentItem.java",
+    "sha256": "8b4dcef4c45661f7f4b8b186af72d87edab48bdddde47e0022e99fa1437c8adb"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerExpEditorImpl.java",
+    "sha256": "707e250fc10bda3d7c65c6f5b11cdd38ed555250e9f4521ac7428337a7056758"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerInitialAttributes.java",
+    "sha256": "58fe3443ff9e74baf2c6eb38beec1798a7bbc0be192a670ea44231a66b416586"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerItem.java",
+    "sha256": "c5cc887be5d3bc075f771d6b6a004b1a9e506a470f43c00b65fb5da2fa2cfbf8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/player/PlayerWeapon.java",
+    "sha256": "93028722359c88e28cd4626c41b7ef8ead002c841aaf4fd5ce9783aae3a3bca1"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/save/ISaveEditor.java",
+    "sha256": "bbcd5deac1bc7909cc0d3616eca7cdfe84e70ce4bfbdd0b06b724191ba9c7cac"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/save/SaveData.java",
+    "sha256": "15f2da32c7d8b2012eb47eb03c5a3e3ef0f50e0aa62623668c78563ae33e7512"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/save/SaveEditorImpl.java",
+    "sha256": "3ff5e81589fe93c97ccdff3dd76d45b976709b8434c3e600a238de5471f6cd6d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/save/SavePlayerAttribute.java",
+    "sha256": "8366d62d856df445ac9080265c9292dce1922c4c39a62c7e31c71a03cc27ded3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/save/SaveTankAttribute.java",
+    "sha256": "660f07182aa6e9e3859b446d196ebdb2b2d9f347c06c4da36b9f5ea1bb15ed1d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/BattleSpriteModel.java",
+    "sha256": "af93217cb693afe56c53bfeb615ef0778b313c0c84b33754291f14c193b2d81e"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/ISpriteEditor.java",
+    "sha256": "c55f6c3421fee0b3cd6be8bb7d0f01e2df839d2c813fe76d490c6195acece681"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/ISpriteModelEditor.java",
+    "sha256": "0b76b1785316046dad601057c5dad42dab1ffd5e8c3b30cdc8a1237632f84f7b"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/Sprite.java",
+    "sha256": "69c50f38c7105ee3ced6b420324f953f4e483edb1123ab28117a93ca2efcaef3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/SpriteEditorImpl.java",
+    "sha256": "349a70a078b0660b6b747910b77f952694c3759f6e993ce5bc5bca0327d317c7"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/SpriteModel.java",
+    "sha256": "57bb9700714591ca75f2f3cf1744fd957dc0b3a05ed2ddaac3a99dc098ed2105"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/SpriteModelEditorImpl.java",
+    "sha256": "5b5985a2f705172f4045b6855f97317b2a32536b1976254e8c04c5bc6200617d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/SystemSpriteModel.java",
+    "sha256": "85ce2e174036aa72cbb5bce490499e313294fbb99f4879aefffcbcebde3025f1"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/script/ISpriteScriptEditor.java",
+    "sha256": "dbd5f54d7ce170232358e57da8180031e672b288a2fb7f134e5cf0e9e5648ffa"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/script/SpriteScript.java",
+    "sha256": "138687e68f8ffc0bd8a701700a2ee84bec92b6a7029c15a2f49d01c115867804"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/script/SpriteScriptAction.java",
+    "sha256": "94bc8f713ea53fe6b9428b753ee1f00a7825d72f69f9874d8b42345932f6acb3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/script/SpriteScriptActionType.java",
+    "sha256": "214aecc62d483bf00a0c38a10a1fea0032fb11abc4f382be4297296038ab64cb"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/script/SpriteScriptBuilder.java",
+    "sha256": "b9b29e6802ceedead36392eeec2cab0069425b601269de2c5c3d04d6f40c8454"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/sprite/script/SpriteScriptEditorImpl.java",
+    "sha256": "0dec38dfd08b2799862ca980d0b3d7773e4b432abf3fe5f72560793ea06da144"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/EquipmentDamaged.java",
+    "sha256": "3b73ea989bcef8f52ae36c2b0963307e89c1227f7e25edffa2db14633c75d9a9"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/ITankEditor.java",
+    "sha256": "c56e5323c800668d1895e4e288500114b15e76257680e88d0012f5f8a35ee468"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/Tank.java",
+    "sha256": "ab1633ec0b45408214e3014fbf326320ad8238ce4fee3e8d058257e8c775d3ac"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankCUnit.java",
+    "sha256": "5a258641503a57492cbc325a1a9a35fbc69bf6e021e1122f9f1539c6ead8e89a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankChassis.java",
+    "sha256": "d341aaf0b2083cd762d577e1a10c59491b739287ae1c31d97e01c909cc7c7109"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankEditorImpl.java",
+    "sha256": "d6911117b73c76882a73e50ab679f9ca227ac60410ff406171c42ebe22649e75"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankEngine.java",
+    "sha256": "9760eab55ee0e7604379a37ce2f82ecde8918eb3dee448998608c2521c4281f9"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankEquipmentItem.java",
+    "sha256": "53457f51635ee6447b11652d36a498b85cfba4a784b24f89a5a4e076b64b006b"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankEquipmentSlot.java",
+    "sha256": "a239fa297ec4544819fb1a913af45019a4b3feda08441640c77873df75dbb1eb"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankInitialAttribute.java",
+    "sha256": "b79406eb363d291e51678b888dc6e4b4a69aa93411ea8e8ab380590ec8ce579c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankItem.java",
+    "sha256": "9e087b6cda3d61d478f7e62dc16b19911298874cf0b17cb46560041ac9dcc76a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankShellCapacity.java",
+    "sha256": "7169dfeba9bf9643aaf9d0576c0b22ed273c01900212b17b1b9621b3d27a8b28"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankWeapon.java",
+    "sha256": "4789ad1d6151827a3d27447b0c788129dee822c526f5b9835872a5318da755c7"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TankWeaponSlot.java",
+    "sha256": "3685c65cd9c71826793cb8d4423465c96f957e59de605317dcda3391c6d99a53"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/tank/TaxTankInitialAttribute.java",
+    "sha256": "91182bff1be4e3cc630ac3d4f9a52eeeb0fc0543d8ea99e148f0f6902f4b4cbb"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/AbstractBaseText.java",
+    "sha256": "703cc381d9a5d334a6eb85714854ebcebecea4d9528bab1cc1ccf9d569dc74fc"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/IBaseText.java",
+    "sha256": "5b886e4a6482d18101addba0d26268aaf24095f7042192bdb2316f8ab63c911c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/ITextEditor.java",
+    "sha256": "639cbab6a336d838980c56bd9fe388d6bcaf5a0e4191298190b0d46a254406e5"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/Text.java",
+    "sha256": "1ce6001fce9a053dbf4b1c1dd42e737ca0bd55efa57aefa626742c61a097c95e"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/TextBuilder.java",
+    "sha256": "902976ca3c1038eef6a37bdadf18e4df8d869f5153143d54d467e3bc73cc4562"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/TextEditorImpl.java",
+    "sha256": "2a9914a0064890b54a14cffb41975379da62e85358868bb1242e4065e89b1ddb"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/action/ByteAction.java",
+    "sha256": "e3574fad32189b82a1c1e8d3635c36912adeb585bfac0dc73e433b665a0614b4"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/action/ByteArrayAction.java",
+    "sha256": "708b8c1b855e9e6bf3f6cd26e580db8a0f90c38bf500542ece19e3e8e74d760c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/action/SelectAction.java",
+    "sha256": "8d38e8df074acfbb75e2793f53591626e0b3a1f186318cde4618f18ca535a95a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/action/SpaceAction.java",
+    "sha256": "22253c0263d9109920794900efedf7da0c0a459b2d8f1af1ca4916b9ee65b216"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/action/SpriteAction.java",
+    "sha256": "e7a37be3b9ab8339276e89c417d6e8b23718fcb393fdef46d6df9e2d69264a93"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/action/TextSpeedAction.java",
+    "sha256": "099dbad93d205a0afe6c058e97826117004a0c2cd64065111ca349e323409e9a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/action/WaitTimeAction.java",
+    "sha256": "1a1cf690473e14a8e18aed67a5db8bf4673214259853fae753b9b6cf89b13eeb"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/mapping/CharMapCN.java",
+    "sha256": "71f43ccf255ba3a26ac2246fa268ece8068d18cb1afa70b34289fc7e5f31e1fb"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/mapping/CharMapJP.java",
+    "sha256": "392cd78555a92c1206f4cfce6d46dfa256fae0cf3bf6b671f42eafcf5e83dc18"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/text/mapping/ICharMap.java",
+    "sha256": "a7c10b64e6b81bb6bc70c59441e26c730a57af71f506d53a1b3b2b013b1a6dd6"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/title/ITitleEditor.java",
+    "sha256": "f6230027b2fd781d19a0bf29335e0099dd0af44373137bb8dd2f7d41c23e27db"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/title/TitleEditorImpl.java",
+    "sha256": "d6d4c91efddf104db02114bdb2a9ac34ad4d86884bd44a5da9c4c081bcc0e283"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/treasure/ITreasureEditor.java",
+    "sha256": "7eb49a2082948a23037f7f64587b292398f00059837ed7709a1837b6ed115566"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/treasure/Treasure.java",
+    "sha256": "a0880091feb6a8cb3ac77db176d2e38e88b8642ece07ee50653fbeecc9983c9c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/editors/treasure/TreasureEditorImpl.java",
+    "sha256": "3313e9c8985bc8f3773be2e06d8b792d66227a6452e3d9a44889cfb265741c2f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/Event.java",
+    "sha256": "38f610dc163ea4db896bc06c654c09f4a70b562346975b6e44463bcd6ba09ee6"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/EventHandler.java",
+    "sha256": "1049c9aeafc498d3aecd1d201293c9ee3b77d0019b1fb5fd2e75048b96ead6f3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/EditorDogSystemEvent.java",
+    "sha256": "b4874b0efb44d49d781c09691aa8ed04c0780f355127c9e4673a68aebfe4e095"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/EditorEvent.java",
+    "sha256": "d2fd2da3b22ca016b7c64614b6c6b6cc8b9648fcd7312148215289da8aa3f34b"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/computer/EditorComputerEvent.java",
+    "sha256": "aa191a8a2267e49fc370b090da920ed95f147d1c5c7202e5412e50bef24f1140"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/data/EditorDataValueEvent.java",
+    "sha256": "dce11d238bffb10000487262f675198bfe64e04e13db9c2372c5f2fb33523011"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/editor/EditorApplyEvent.java",
+    "sha256": "b1371cac71872e97e26dccccebaa7e9ff9f51c4b9231e837325d4a920d9a4a52"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/editor/EditorDisabledEvent.java",
+    "sha256": "27f22c66e5f2634836324af02771f48da265a65d8923a7381c4f81bc0fd7b924"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/editor/EditorEnabledEvent.java",
+    "sha256": "b55fd2f596fa26425bbb81e94289caa88554fa39fdcadbff41fb4936ec13f3aa"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/editor/EditorLoadEvent.java",
+    "sha256": "72f0960bcdef3f340c84196dea07a8ce519d67b747c7dc796c37b015ac38c12a"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/event/editors/editor/EditorManagerEvent.java",
+    "sha256": "59cd7f88ba3cf87c336a4def05169ba244766b7664a36d10fb9dcfab58ef61c9"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/BaseSpriteScript.java",
+    "sha256": "f674adb611089ffd3c9ef4adc8b44ac82d0ec58195f4c8d90578e9597cd5a6dc"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/ChangeTankMapScript.java",
+    "sha256": "ba5c1cd78446179d2bbae38475ab82999bee49e6cd29303394e8e476270c5c22"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/EmptyScript.java",
+    "sha256": "739aa83bb5830cd9f5662ae69b7ece4f699aeea1a63aa3285f5902a8a7a3b3b3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/GiveScript.java",
+    "sha256": "773bbf122e51279ea5d8f8fa251ea2632ee2dc7e47f515f3cb67309898b326d8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/HenshinScript.java",
+    "sha256": "786937f156cb49da0106cf155d15f8da01084969067b83a3d39aa05109c21bb7"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/MedalScript.java",
+    "sha256": "1b5509ff6eca3d9a0e2223978d22365333e949fee31f11c30b6fbf3c1492b42b"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/MenuScript.java",
+    "sha256": "8cb058ed49f2a8d7a9bd04b30bf08d42d51d3cb94bca1cb61e7646094347d848"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/MoneyScript.java",
+    "sha256": "8fb08c65214d2657f751b9b7c960cc4c2be2603ef8e081fa648a117585b7ff33"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/NpcScript.java",
+    "sha256": "6aeaa35491e5b7ce3ad6f1d126c3d844fb44abbc81e69901971a39b8d8d40812"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/PlayerScript.java",
+    "sha256": "0bbe9f7f974b2cb1bfc759eff00f32892d20b80fd2071e3da57d2331eef3f54f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/RootScript.java",
+    "sha256": "1b6739ab2d7b26595d63499f13fbe2b72fd9029bd8fa6df92bc10d1e15c651af"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/SpriteScriptDecompiler.java",
+    "sha256": "2b9f32f6f46c578aaa5e0fb30c0ee1d35e4b5e643d2c5bdf58dbee3ac7e8ff9f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/SpriteScriptVisitorImpl.java",
+    "sha256": "593f0cd0ed6c8210dd75eed2b7684e957a1260d1f45797bbe824b86a737aee58"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/SwapScript.java",
+    "sha256": "1e4fe32a30d88240398e1d65cc90e66499a7417c7e261fa93ee2481e6c77e8ed"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/TypeScript.java",
+    "sha256": "8d34ce8513cfea8b10e0b43a300dd749e2db2cbfbc07f67822dd4113fd5ff31f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/UnknownScript.java",
+    "sha256": "475abf7ecdcf71486d2b64eb53659343a36af8c430814eec82c763f76f1f1b5f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/i/IBlock.java",
+    "sha256": "bd9ee631de794b0ec5aadad4841e21c443c9d495e3cfe4fc0e92e29b4a301e3f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/i/IDoBlock.java",
+    "sha256": "ca32205ea0ad0bc88237be175621fcab9933712ef5a6456b7128f189622ea6ff"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/i/ILabel.java",
+    "sha256": "d4b1e8217f9fdeb0a0b0affd9a3c3ae525179ac5fe92d45c35e5c040c23c251c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/i/IPreviewCode.java",
+    "sha256": "d8289bbcf9f63d56b04fc0fb35e528fd2f371b5af304e3e5a0d199c9874cf21b"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/BattleScript.java",
+    "sha256": "47be0d98ad3d42a03a83d7bb1dbb1161caee876d73de8852c7e4424916c56a00"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/CodeScript.java",
+    "sha256": "9fcec9231cfe9881d507dea305b5d5fbc441ee515aa65d27850424c99bc68bc2"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/ControlScript.java",
+    "sha256": "f6c76fa0f56ba2f078869f1f20aa38c926ea56717a251514d578bca4c5c6c1e5"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/ConveyorScript.java",
+    "sha256": "222a95b785545f7681897115d84fe48e12fcc811b147e34f512235eda4d0c114"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/DetectorScript.java",
+    "sha256": "c62e5e29922d601839e8427d6d3f09c81cfa037302b53e70d91f60bfd17957ee"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/EndScript.java",
+    "sha256": "9e3fefecedf80be6fcd57dddad3c7fb5fe8cae4d290c132dac6f9c4365a70d32"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/EventScript.java",
+    "sha256": "d8640fe31b9b005adfeebcfc600da498aa49dfc425d37314e63396a7f039bd41"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/FlashScreenScript.java",
+    "sha256": "5cf7a238606e3603de284c5df397c2f2cd485c73d5e464abf09555b22f61684b"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/IfScript.java",
+    "sha256": "83efa1b95d3200d4dacdfadf82f0c185bc093c7a6d7058d1a46409a06e84935d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/JmpScript.java",
+    "sha256": "43fcb4cb60627779e5973bd9ad17d2e2d0a36ac7578df73e80517919a2c92bff"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/ListScript.java",
+    "sha256": "b3da994c93be1f92a1316ad7a4ca79b6d9fcf765cd71f4848d81c957b1d565b8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/LoopScript.java",
+    "sha256": "30a5469954aba1014e3d9994a5a4d452151c96f160ef31ba6b70eb66da1be34d"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/MusicScript.java",
+    "sha256": "6b85759a01f395c0a55da9f9d82ac6c37548382c20ac0fcbc521ec6b62abe8e3"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/NextDayScript.java",
+    "sha256": "7c43f8fd85f29e403f28e6817e22b5f9346fe0fec7ccc6276b0b5199b9ab5665"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/QuakeScript.java",
+    "sha256": "89a2064fdd110b7172ca35c905d46393e972b2b38666bfb412dd5b16fb6573aa"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/RecoverScript.java",
+    "sha256": "6d1f7e53acd9102ba43b10e4f5b915509a4d9b494dbb789c6c9b67ba693997aa"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/SceneScript.java",
+    "sha256": "c6edb7c1b7c5fbcc129bbd48d933dc53cc6bf9396fb58c99f83c90d761f325ea"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/ScrollScript.java",
+    "sha256": "98f7a41336869dcde478553bcaf7d8ce8e4c54a14a00cc04c1402bf29bfb4f9e"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/SleepScript.java",
+    "sha256": "6042a3f72e3a3c4272bbc2e899789dd5fc7dba38b0d74702b14609001bbc296c"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/SpeakerScript.java",
+    "sha256": "e96ea74d3e957d4c812e859573bc410936c8c7519a1eba0772b35665de9d0b4f"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/SystemScript.java",
+    "sha256": "6f5088bde5bfdf037a31ca896ffdcde3585a579e0460f88db70ad05c4fd0e0ec"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/TeamScript.java",
+    "sha256": "5dae673e018c1252d9454879f5029b8d1f83b3edc46f5a0b119d97a701a34125"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/TextScript.java",
+    "sha256": "abcc959c342fb94a02feb8919c35365ee08006b0d1bb52defda2ec06c06bc2f9"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/TilesScript.java",
+    "sha256": "9d3e8d1733d3b3922dc6602bb32dcfd01833c1877c2f382536878b0e81bbe780"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/TreasureScript.java",
+    "sha256": "a87b6e4cb73c670c13dac5547a881e8471c149ed3ad1cbae04228a434ead8221"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/gamescript/system/WaitScript.java",
+    "sha256": "3136666af1802d3f3b591d29b10c8590ba0335981d74e8fc731edbba7b94da90"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/helper/MonsterModelHelper.java",
+    "sha256": "54793268f855ad3562359f62a3ee4f4c6e55aa730de2b05517e878e15cb2ee95"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/helper/SaveHelper.java",
+    "sha256": "d20e03b5aea483304d40655647abd064b97eeba4c9234a70a61be9c64de21d8e"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/helper/SpriteModelHelper.java",
+    "sha256": "9130a9eacd9f3af5c9bf500b1e721494bde9f530efc11936a78f6bac368fc7d1"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/helper/TileSetHelper.java",
+    "sha256": "54a25341a10a5f8598ae17cc9ee3e478c33b9548ca561c0e924c69d5b8bb27e7"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/io/BitInputStream.java",
+    "sha256": "33c13d2dce9fed4615414f1843588f3d8955e9b5f8321e425ebc0414f037ed44"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/io/BitOutputStream.java",
+    "sha256": "92e924f4828ee34ef8576b185d71bf717c58cf30ad35d31106ff2a32270ddfff"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/log/appender/LevelStringListAppender.java",
+    "sha256": "952beeb97224bef5fec800c29a3b070f2455fce444f4634148c43169ece84304"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/IPatchManager.java",
+    "sha256": "796915e87fc9e24001a7d6234754e26bc5a6a3fdaf582d824a552241472b7483"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/IPatchSegment.java",
+    "sha256": "84f303b7be48f36c8b8d40975d658f1b973b74b38f42690cdb699beac5496aca"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/IPatchSegmentWrapper.java",
+    "sha256": "55dcbc809c81188d722154b57cded201bc55d42894c8a34aca6cedc79b2e8294"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/IRomPatch.java",
+    "sha256": "c77baa5710ccdc9e85d638d44120c855922f04cdc1e9cf85c04d6e696b7b9868"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/PatchManagerImpl.java",
+    "sha256": "b68a24ff7704f1929b0ca337e66f2a81dc12601c59e67183e8d0c27a0ffcc5cf"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/PatchSegmentImpl.java",
+    "sha256": "4e1b9797e21b9bdf320bc70f61e88003f923db9d181e13880675fa591a0cc5d5"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/PatchSegmentWrapperImpl.java",
+    "sha256": "47794ea8120db29e862e0caab4fdb46133ca30c68618acc11c85d04e078e29c0"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/patch/RomPatchImpl.java",
+    "sha256": "4d48f7f1f67625e0320af7a2c4018608ec7015d688627c95c1483d5e939cafb0"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/BufferedImageUtils.java",
+    "sha256": "00fd8a5942ba05cabc32d950fb00cd3cb5a3829a3733035e9c767b0e36caaea8"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/ColorMatcher.java",
+    "sha256": "c3dcc0496fb8210b4b5bd65e7f27ae2233d9e2cd4e593f829f5ab074fd9e6cb4"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/DataAddress.java",
+    "sha256": "49c07de33d7e5c4a032ff68526276b374a0734e2fddb4ecce22f6d9d24a90fa6"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/ExceptionUtils.java",
+    "sha256": "e94ea422ae5013cbea65b94a05f069af8a32580a1e1e5f737dc9cfc1888ceec5"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/GameMode.java",
+    "sha256": "9b2ca7731bf145b7a9ad5835a5d93110b9415cdd48036893990f6bf3a9da3a32"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/ItemList.java",
+    "sha256": "a644a4435b08654f8da66c0ebd9ce92ba5b154e52975a858af0cba1723e204bd"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/ListSingleMap.java",
+    "sha256": "68af9cc308b4022c3905d273499e9ee0d265ec5ff91d3e0cd3906e3c295132fa"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/NumberR.java",
+    "sha256": "d80d178b616626d06c994945a1fd6f781be21e51d5639173796038fdc6c835d2"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/Point2B.java",
+    "sha256": "efbee77bef5446ce43bb4500d8ecee60c1376211fdd57af6e0d436458982dc52"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/PreferencesUtils.java",
+    "sha256": "e9b46a938174bec6efe37347f710440a18155d67168e8f2f0b6233356b0a8210"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/ResourceManager.java",
+    "sha256": "8498da74211686dc6cef744fe7a427a882d07eb1636a2b4d2e83f0811e1f9e25"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/SingleMapEntry.java",
+    "sha256": "e1c04e14d8507be8c851f7926d49d6f147914bb66f7bd8d8ffc3466a06d43185"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/SystemSprite.java",
+    "sha256": "4b77b408a8dbb931843efa2312fe235fd52920f0cd0c367b2e9109cd112c0a37"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/java/me/afoolslove/metalmaxre/utils/TextUtils.java",
+    "sha256": "4ef90edb601e7fee845ee1cd250298c90b22f35313e8637834592ae37f9931a5"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/resources/event_codes.txt",
+    "sha256": "ce94449bae5f8c57537def75831cf8174b524b6e6752660ce92346dcc033d288"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/resources/fonts.txt",
+    "sha256": "264e58a5ad014d90855c18a9fda38a2a8360dac24aa0b1f9d3358dca12944ba4"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/resources/japanese_fonts.txt",
+    "sha256": "bbde3e3335e0126a4d73fbe503d570eb6a157dd3d2f8768271a19f9a0295b765"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/resources/roms/info.json",
+    "sha256": "ab84cf895aafd84f3772a43d4034456631096a29dced0d02f3bce59c349a9af6"
+  },
+  {
+    "path": "MetalMaxRe-master/core/src/main/resources/sprite_script_actions.json",
+    "sha256": "d79b94ef1a7064b40d5b758743bc0ef3f1598d045b627d42074dc0a3db06c8bd"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/android_log.h",
+    "sha256": "024cfbe7c3bf05a12756c5936ea0a908dc19401f5242e2ccb7adccdc3dc84722"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/01-222.cpp",
+    "sha256": "9e77818a3e7019ed5b91c82d75a9c7a0c826b2f57ce5c51061e284feb028fc7f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/09-034a.cpp",
+    "sha256": "9f00cc823154c7711a03923ea31ffa502c2a536849f321ae7a920f08ee0a9c88"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/103.cpp",
+    "sha256": "6dd5829eae5f95fce1330173cef7c3cb38da613ab65c326e49e7757f9f828ed2"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/106.cpp",
+    "sha256": "0d0208563a10d3dfa8f17a63b1e39b27aa8b002396f6600df3c1b6d78655b39e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/108.cpp",
+    "sha256": "346cd4decfc7c9def492cdaf1487ef316e4badcb056f964b9d75301b8490eb3f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/112.cpp",
+    "sha256": "22f2055be03d1fd561322f845490005e3df48279b5a57c228d5292f43ef092b4"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/116.cpp",
+    "sha256": "5f36ef32e3bc791dea70efc8e786b636686cc69dda99fc82490cbd490f65ec6d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/117.cpp",
+    "sha256": "6585f518e5ca63e67c54d21c51fff4a53ac4012ab2fc748df704cf02b83aaa49"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/120.cpp",
+    "sha256": "e8404455f6ee3a5a83fc3a9607ea96e42ecf27ddf74b669990c1c66cbcf6ec13"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/121.cpp",
+    "sha256": "651f7bf82f52b9d14e9531a1c9c624bd567e458f186650886b6239727f887ffd"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/12in1.cpp",
+    "sha256": "cc9727b16d4b5abc31563b9bdd6845bbfa76bd2e70ba52d38a0e1b5389e37486"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/15.cpp",
+    "sha256": "a8732b1d874cffa779d75d0105b709c75a5edba77293a27a11b9fb7bcf659ca8"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/151.cpp",
+    "sha256": "2ce6feee65fdf053ebcd998945b5fef842115076da454b3c9e6296c8a0417be2"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/156.cpp",
+    "sha256": "e9a67b7836e515cb2f3619c8a183acad623f0f189d895afd8bbe917c943cf8fd"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/158B.cpp",
+    "sha256": "a201b44b593aa3a4b2ed99cdd7da01eb8efd7fb1d753746340763b2b32fbc577"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/164.cpp",
+    "sha256": "b578d1d494bdb3b8db9abef69e1a3106b0f68492af7e61c2faa6b1130e3193cf"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/168.cpp",
+    "sha256": "96bdc8b0568d059809ff143d479922ef24d17bda229982c747c3584d2a3aba26"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/170.cpp",
+    "sha256": "b86910b5306187a2e3dfaa32e5d13d15cd6b54948c22cac4d28c5f33936d6f67"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/175.cpp",
+    "sha256": "aaa2ba0c02fb4665de21fd626031de7e823c6e7c523a893e84ae1f812b1cfb8d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/176.cpp",
+    "sha256": "d3f3776628204e7ba8f8e72d1c959fff10574a33ab883953e9b3ba9276698704"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/177.cpp",
+    "sha256": "9735b808a36088cec29e5eb8485d87561f3be42a2fb2160b429c343e24c9809e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/178.cpp",
+    "sha256": "dd043554d1570fc872f79099947635254482f8762ca1cddd573674756a5b2902"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/18.cpp",
+    "sha256": "5a405afef8ef60bb3eb8336d4cfaadf8b1028a2b65d081472ad565a28d022d09"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/183.cpp",
+    "sha256": "dc265e852eeff22162a48d928df30e2538df0591887a07281864045ab0595be9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/185.cpp",
+    "sha256": "f3b3a5387362155516ed1e07b51c0b4e941752312b4d4c481a2c2fa6fdf78efc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/186.cpp",
+    "sha256": "6657b5bb6428f9e35d657472df661c6816dfa018625bb9f0c4fcc85b371180c7"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/187.cpp",
+    "sha256": "a5599d904290a5c1ab52bb349c65f80a45f7caab9b39557699b2e99aa0880c83"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/189.cpp",
+    "sha256": "48216e6053675f27295d7f99affcc725fc00ada3a23c1b7ea2d0c986208322eb"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/193.cpp",
+    "sha256": "5d6c314a8f114591b788957d72058a71657f24d5f3cf4d3f5351711a9d1cb09b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/199.cpp",
+    "sha256": "e7731db6154ff0d0a97bf67c7a034663701db4b3aa20ccf42be6b9993bc4b091"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/206.cpp",
+    "sha256": "0d8685110d68e8c0dabdb305ad7f5e42dd4732b4ca370803da839c70ea6346c7"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/208.cpp",
+    "sha256": "fd0d75b748260c4d3bfaa46a346fecc6383cf569b226b9ff5a60b9eed6e3fb01"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/222.cpp",
+    "sha256": "aee687bcd70b97514a4da6f30e4539b8df89ef151d756c5ba99e7015fd3b5a45"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/225.cpp",
+    "sha256": "f8af3510c4b9fe260c6f1947103a429da23b1e48476af5e483e104d9f00ed70f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/228.cpp",
+    "sha256": "96042e8260c6c13af449234681879f6b4195e4428e524480264ce4d8e3ab1b64"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/230.cpp",
+    "sha256": "e9a800eebf1e0987a9fe573ed873d450ba30fa88f505fcf6a76febfaf5d17a3c"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/232.cpp",
+    "sha256": "59a658098caeef5c16462e3268485518177a35625e12f91f8a5221dd8377b35d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/234.cpp",
+    "sha256": "c5602e8ba7b0d69f4afc364bdea4200baefd5fe31c0c87d7c318f1569d8311e5"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/235.cpp",
+    "sha256": "c5fbe5532a4ba8c21497448d24950f3824b5ccd249a64002669e8f5a73803836"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/244.cpp",
+    "sha256": "c79c63b47c732e1cf558b3e0e3b261ca6b35797932c91192b94b42b7beead65a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/246.cpp",
+    "sha256": "2c7835bb06a6ba5078c6cebb24075de70d5f8a74dc9d0393d4c4b3ae22bcea9f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/252.cpp",
+    "sha256": "4681933aed0dd2d1df91e084beaa51b0be6e8e9ab38068a865b1e06e48c613b0"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/253.cpp",
+    "sha256": "e3144ecfe4753d7eb64f84a55425e5ad1f72db56905c7ca5dda6bd282b71f766"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/28.cpp",
+    "sha256": "d7fd2d4c93b7b817a07440d96211380034f7014b656fead8e7add4be35c4d14f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/32.cpp",
+    "sha256": "644f55d874ac9e651d30a22a74230625aa721d2d9ac1dbad0c99c8d76a134797"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/33.cpp",
+    "sha256": "06cfb1fb3b824d3f2ad7b0cc4015c3a6320c9f38361264233a73982cea1ef243"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/34.cpp",
+    "sha256": "67f075e030ff2d93bc00fac03f28e72da1598681808ee626fe92b26d2a837134"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/36.cpp",
+    "sha256": "7fac42618a3b0f666f25236812a13a634a7d84152277d002dba5b72a8d1ccafe"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/3d-block.cpp",
+    "sha256": "7eb47ba2df9a87f9c09991787af722e3d65168b41e3d41e02df906b8b3093940"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/40.cpp",
+    "sha256": "cd10ebe86ca38533c72da5b535aad010f9a1f1f42b6874289718873989635f6e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/41.cpp",
+    "sha256": "9456c4646c7ec0f28f1e8b5ecad885b88870450b93544bbf8d6e4f73a6ac9fa8"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/411120-c.cpp",
+    "sha256": "fbce1e3d11dc28ae478f0d37b65b1248e73a8861bf47df659fc1c658c0668046"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/42.cpp",
+    "sha256": "9613b26a70073170737fefa47051e5cbf050d29ef564d3cdfff24317f22cd426"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/43.cpp",
+    "sha256": "661fd8733ba2e336182bd81c8efa0ea7860b6f579c9d2ae9ed5a92a3266e8496"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/46.cpp",
+    "sha256": "0f0d63d329c73a5a33f5edfa679af3ad39ccd3c9d05972e90d40e186a50dadef"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/50.cpp",
+    "sha256": "0409e31329f0885a5c39078e4b1c042978829c3f7f0a743ddd2f2244521dbc6b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/51.cpp",
+    "sha256": "fe0cd97ed27abbf372b12c92ec9880de4345fdb24d79551323c8bbe8fce0c4f3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/57.cpp",
+    "sha256": "e9c40c279589995458dcb0461ce9f31990f2e4baf85ad9785a2fa604665164a7"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/603-5052.cpp",
+    "sha256": "855c88174dbdbb4d1e37400f35da6f8343c21b1313241be4b0b7e72655ad66a3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/62.cpp",
+    "sha256": "4db5c5af63788b0e8cebc0fe328657aee3c40f7bf1b4316fd1a9cea995b0c5ed"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/65.cpp",
+    "sha256": "bc1a80c53379c6ad94e007f7cd1d8bd61b7e41f9c0f154e37038c5e20550f6ca"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/67.cpp",
+    "sha256": "1183d7bd5f4067c9f9ec2409fbc34ef05fac29ee215e82c36ddb55d35bd9a1a1"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/68.cpp",
+    "sha256": "7ed572220a884b605c14590fd4410c5ba23c7ecbdfd9d969d689dc74ec967fd6"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/69.cpp",
+    "sha256": "fa7ecd2f14bd8b49b142ed43be7a166bc6ad2449d42b2d7c29edd6ec3a00f5bc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/71.cpp",
+    "sha256": "eeaa1e16c781cfe40a45ca7083fb70ab0a75fb4b83767b226cc95e27f1fe24cf"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/72.cpp",
+    "sha256": "ffaf2e4bc4a588bc9070293ce0f77eb1a196106621abc7dc0f7d2b1cd1dc2354"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/77.cpp",
+    "sha256": "5c3406dcfd9f255392a88233410f8b3625743ea9449fcbe4cdb1c12dc5b598f1"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/79.cpp",
+    "sha256": "0cee62efacad3e2fbecfb371166bfea817738996da152a044765cf5b95ff587e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/80.cpp",
+    "sha256": "6a170fd8ece8bf2edaf7b8b3e38dd132540295fb94887f6ab4a8dc929df00c4b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/8157.cpp",
+    "sha256": "a870559a3f406cea63063b9f9289dd75bd09f5e54357b2451602d6486182a8e9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/82.cpp",
+    "sha256": "7161c7dfaa7df31296c6abef7b6973f761d9617a141a99d5bbb58f9ef840f7af"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/8237.cpp",
+    "sha256": "d593ffe75462f89267b993171df69f8775deb87bad548ceff846a3635064f1a3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/830118C.cpp",
+    "sha256": "7c804b489cf46cc75b0ea5961ae18cac618cf479632548309099c218dcc36f48"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/88.cpp",
+    "sha256": "7b3c06257238221c940ff2b4e6ef29d4d7e2a8ff24ebe21a96c933634f3ee095"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/8in1.cpp",
+    "sha256": "f72c7fb462428ba94b2a7a6ee0723bec319331d055a755783729243bbcd61175"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/90.cpp",
+    "sha256": "d9de2bdbe7dc2479e7038f70ce8617d518eb394162946eb5bd90a7810a8e9692"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/91.cpp",
+    "sha256": "e0c62a10724869021c902354b3e4021fbf0c7d85b377ea01884625ce54b6bc4f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/96.cpp",
+    "sha256": "52c8539940521b99074f5e849c57687cef163205da1499228721a3cd35e2e425"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/99.cpp",
+    "sha256": "35941c8736f920850f20426292537ef43b42dc512ec383e13648499fca8912f0"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/BMW8544.cpp",
+    "sha256": "880d60c79df9e26942a517efd8609a6f7207af496896dc352613dacdc6519585"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/F-15.cpp",
+    "sha256": "44f5a19e3d74b2906159e105ce7e53ceb21b65237407ef58e05f19a3a879d1ff"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/__dummy_mapper.cpp",
+    "sha256": "f86b7934806e8d112da5e535006a350a2fa5c5dc3819e1e5c27edf9b23cac946"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/a9746.cpp",
+    "sha256": "fade4006ae95737fca337217d6865bac3692ff76775a61cc3fa0ee96c1fd9364"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ac-08.cpp",
+    "sha256": "1f13a270190a4fb5fb1dcad15bcc17ae2d934bae89a3570a78d051e393f696db"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/addrlatch.cpp",
+    "sha256": "acec457c3d28419392efc96e144b45b32938fb0cf3481069e1fd8b4dfa652036"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ax5705.cpp",
+    "sha256": "803b724dfb21d0c04471cb40dd87452d8dad32d6b1f7904e6ce30cc4c227d96b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bandai.cpp",
+    "sha256": "658f2c6a0088969e3c3891d6855dcb9dfe5b67e64ac55d7fea2901fb82e704c1"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bb.cpp",
+    "sha256": "84b833740ffb447494105608800a7be2aada742e2c231310a13784977fc87c6c"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bmc13in1jy110.cpp",
+    "sha256": "e92865de72b98ab6309a4c814973b3bba6b1342b50069d3f3a8d74f5e0036b7a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bmc42in1r.cpp",
+    "sha256": "f2ee19065f40a72d821df39ce14b3c3571894765b958c9af143202c7c01f042e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bmc64in1nr.cpp",
+    "sha256": "11268d98752e21726869484dca8db3362f37d47b1a4ceb35a5bfcefabdcb751f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bmc70in1.cpp",
+    "sha256": "95b8e3b89aaa97d70eebb6c5cff44afcb7bfc3c9a2c20f91accbf09cb1c80a46"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bonza.cpp",
+    "sha256": "ca6bb8bcf04610921d6303582a623d853ecd058ce5f059d279ed296b2308403d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/bs-5.cpp",
+    "sha256": "6b6d44dbf15d9038c596cd8597e70ad86b121df67d9e30c0798a1731702494b4"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/cityfighter.cpp",
+    "sha256": "0562426f0beb4947fe0f60896e43282e0a55950d7ea984b1c7fcffb021fab0cc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/coolboy.cpp",
+    "sha256": "04350021a466fe4a76386901e043fa6f3de320ad8699cb9298d26ff0348da1ab"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/dance2000.cpp",
+    "sha256": "1df22079ec6efbe6f6111496f85460bf1e038dc51d8fe6545b27af41f7cacab0"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/datalatch.cpp",
+    "sha256": "711532b6614826c93c045d2a902deb3d17a1721f42cf82b3c06d8aa76ee0389a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/dream.cpp",
+    "sha256": "0e5c11c689de53d06f94588f774e00181557c0c7afb3e907bc199b7da5d3755b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/edu2000.cpp",
+    "sha256": "71280d64923878b36ec9dad7274b751e5818a49d683719b96916bb13b219ddd5"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/eh8813a.cpp",
+    "sha256": "13124d74f5be67e414d6bca272187eac4ebb0bfc134d31e56cf70c5d9a9ecea6"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/emu2413.h",
+    "sha256": "aef421f7580675162fdf84cb2f618b969265f161072e1229ff2ae59d5a8fdbd6"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/et-100.cpp",
+    "sha256": "6d344d7c1617a837ba4961196f1a285d48ea9da779927ce82ae54b35370dcf72"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/et-4320.cpp",
+    "sha256": "9f337149e71a44294c3b41f5365cc118aa8e270df66ac35503b46a26bd736b78"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/famicombox.cpp",
+    "sha256": "b98b059bc1bdfb77977864cd5aa8b7063ddae962610ccabac04de125ed110a79"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ffe.cpp",
+    "sha256": "7744e2209180be62ef990f6fb73792a3300d36e4704ff5057632cd85304571a5"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/fk23c.cpp",
+    "sha256": "9af9c649674e33bf719f632e84a7221a1256f2ad68c7bdb0a4312e42fcbb1ebc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ghostbusters63in1.cpp",
+    "sha256": "aacc60936d32d4b75db60ec6c513aeccde286707feffb7a7ad1817e600b48f1a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/gs-2004.cpp",
+    "sha256": "c635de47bebf1f47db9716d923f503f9175e2ff65be4e380a4fa0ec8b1bd85da"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/gs-2013.cpp",
+    "sha256": "acf038339ade0f0c5b52c83b97e55d03682b8425c23e203d3f367cc9a02eed25"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/h2288.cpp",
+    "sha256": "6e516899a0a8faa5793066837dc88fe896734c5b8084cf319de06257e04b9490"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/hp898f.cpp",
+    "sha256": "6ed30bd89cf7284b9cc9ad9635b0a771ce76edcae6d7edecfc2f74f75fc8fa5f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/inlnsf.cpp",
+    "sha256": "714ae620c820ca4fa7f703176e073a1c1f971a08d1837ba8345daafafe2a9f11"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/karaoke.cpp",
+    "sha256": "f2bd6251b9e5571e224fe166f23ca1230aba00589169ab6b88dfa4d951e5de2f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/kof97.cpp",
+    "sha256": "f723c8d129e253b54c31e4c87b89960118cafcf5e9bde776e29d60409f3be169"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7010.cpp",
+    "sha256": "c736baed228c9adda7a6e9e8185b78b716c1136cc1bb17a71924d532fd77638d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7012.cpp",
+    "sha256": "a94c75ca66773d653311839a25a07a467001d205844d736f1750ecacab6c306b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7013.cpp",
+    "sha256": "bcce852ff5037c41918e98d784c2313fbe32c97b89b0ad4a2e6ab6d9b51b7cdb"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7016.cpp",
+    "sha256": "3db9a9b9ad3b9ffd7666db6bec01fbdd78d8aaa169ca2d981335d2030abc8e53"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7017.cpp",
+    "sha256": "d3aa0830e6bf03a6487ee13eb75f83306e3092505bf7cdd0a5453f838d795c9b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7030.cpp",
+    "sha256": "c94d7068d42bc9f2bc900ac1e0064899bc21d6088e98f3ff68a98f4a25a1ed01"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7031.cpp",
+    "sha256": "4b24a8727d4be7acf65b38952b51c99f863dea649ea39a1e2b29f853a703cc83"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7032.cpp",
+    "sha256": "5c41a5831213eff22c79d270c211eef5f5eaddcb96fa404b93f16547f1b25024"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7037.cpp",
+    "sha256": "76ae501dd0f1ddad33f591b04853786a7b4031f6b6a7d082b1e8d1474ea8cf19"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/ks7057.cpp",
+    "sha256": "bb7c9ced77300ad803ff7f5e363559e0a2c5f52b405045188f0768106fdc201b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/le05.cpp",
+    "sha256": "81a61123c952ae9b73837fabd3d84f4696261e61e55a07b28ab616e1becc52e2"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/lh32.cpp",
+    "sha256": "9be2ec19ffca6eb84ac9fad3ab27388a3965f8a24fd1bde3c21c025fc80ea80a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/lh53.cpp",
+    "sha256": "7ce059fcc98261646c6e2f6e65d213898d99814ca2dca0e259b0951efa01690a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/malee.cpp",
+    "sha256": "c72a80400f57902ee3991d6e9a883fadd768297bf34592501566c49f37774cab"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/mapinc.h",
+    "sha256": "8bed99ad73bba94c2dc320691f806fae4aac7b0eb47f81ab24bb54c38d4222bc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/mihunche.cpp",
+    "sha256": "a499548e8abdfc500df03203547eb962feb876ceb09ccee3cbe9d8036df25133"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/mmc1.cpp",
+    "sha256": "63282fc1eb8bc49185dcde8c017a418f1a8fa201ecf3e753b05f32900664801a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/mmc2and4.cpp",
+    "sha256": "a1374daaea7fb01857a8b5f367b6dec19c984f3de75552079c9cc0cb1ab538cf"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/mmc3.cpp",
+    "sha256": "861f63bfd541a7d96d9acacf38510ba8ec265a7f8ccf37e33a2572df3f70c2bc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/mmc3.h",
+    "sha256": "efb4103357e771924d3c298c684752f63eb29d1514fa3156ccb126cd396682b6"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/mmc5.cpp",
+    "sha256": "3d2bdbf29b800769a5345e445ae35b4a1f30d0d2d0050844a02946352299eebc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/n106.cpp",
+    "sha256": "5a33d0154adc8a169a6f239ff5281ff1ccbb05acafa0d1b80fe7f327e3d33210"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/n625092.cpp",
+    "sha256": "03340d0081c56efefde04990483ed5dc29746781d446976088632c529787e3b6"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/novel.cpp",
+    "sha256": "dd36983d6583a0b1f682c5a2d80fec1837fb46eaafb563fcba8a7fd1f8e6ce10"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/onebus.cpp",
+    "sha256": "5ba04674e0a2a15496ef169f5c90bd38a9732a437aacb6a9cf6e80f89bc6be7e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/pec-586.cpp",
+    "sha256": "b961c199d1aa06de646d84713f68f0ef6246bdd9bcfc1167dd5b458fe149cd07"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/rt-01.cpp",
+    "sha256": "2c0de1cc4e6e53adb969aeaae972bbb1cfee16955467ea6e99817d95c15d323e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/sa-9602b.cpp",
+    "sha256": "ee2006d04cd1c64ca7e25e0129afd393000f51c717f0497b6f3bb699fcc2b85c"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/sachen.cpp",
+    "sha256": "2468b8485f46519c5915ef628eb6fb6bd46e1959955c95a1a2946f624827fbcd"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/sb-2000.cpp",
+    "sha256": "23e8b7bf3434ad409fc4fad46a19c2ac4d6b41ad4e065f5e3239156b2a416e69"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/sc-127.cpp",
+    "sha256": "1c069bc4e3133763e75663e3937d27aa98665501ae6e28490b250ffa92becda9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/sheroes.cpp",
+    "sha256": "7cb85bfbe5f15edf56a4ca4d7b090a860ecb6cbb34a675827d297b0755139360"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/sl1632.cpp",
+    "sha256": "1c3599f6742485a949e1fa0a3a6ba8f2afaea022596c43105c01eaed856cda21"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/subor.cpp",
+    "sha256": "1b819698f1a3c237f42d6e661bf6d5fceab9d43b83d7ade1e9e2a1ac7e8d0543"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/super24.cpp",
+    "sha256": "e19016059d5975e34219ecab55ee7a0987c5494b6a04f2a9c7189e973ca35ccc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/supervision.cpp",
+    "sha256": "d9f9099d205f3f0de0f68b2e29fc8edd2155e5caa885f11f25532eb2ad163756"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/t-227-1.cpp",
+    "sha256": "e8b917b8af930b57111b8733120bbdc7ac4035376bfd3c315a95fd2bbdaaaa0a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/t-262.cpp",
+    "sha256": "0eda087e8bdfe73db2530739c9e9066ef623dd351bd11e450aff3416235eb5f5"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/tengen.cpp",
+    "sha256": "0aa9e66eceb70d832b48dfcb2dd8ef291f7ff114adb1db5a7a96749f2e1f4e43"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/tf-1201.cpp",
+    "sha256": "e64146a8a968c38616af83e39602773a7d1e0cbc361abf4ccddbcee33ac11062"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/transformer.cpp",
+    "sha256": "c3db486b6f08ccb10c9704a185f3b4c8aa6874c0ad3f640af428e12df81cadbd"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/unrom512.cpp",
+    "sha256": "10375cb9d57126fa4a67885f684a425c5d219ec2f5c3f66012792f342b698827"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/vrc1.cpp",
+    "sha256": "26735172ab14b3603a56fe0e837289b9ac2817445969259185f53d0781a02d2d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/vrc2and4.cpp",
+    "sha256": "3e254098fca7c8fb8a26b0c111e925f287be702abc72ac06ce1185de074a72ec"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/vrc3.cpp",
+    "sha256": "74b29769c1df78ba0bfea0cf7351c9e6138fb67d303cd75013d5564ece2884a2"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/vrc5.cpp",
+    "sha256": "ba812e2130ee19b1ce07be20852d67f2b4c16a30ff17f3801b760068d85875c9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/vrc6.cpp",
+    "sha256": "f4fb913d095b312d52b04f7c85f8b91ffa3f9cc37f0f86767738794b74c4759e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/vrc7.cpp",
+    "sha256": "d370f107a5e4629ebfd6953afd502286d3d8c6e8f13a5af489224207326d3d77"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/vrc7p.cpp",
+    "sha256": "d5300d41706de0120ebed6d16b624b133854cc3d2484ecae6541328993f4a9a8"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/boards/yoko.cpp",
+    "sha256": "94166e1ac4bfc707e27a9fefb552238fe461686b4a8d1e153de6a11df8241b10"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/cart.cpp",
+    "sha256": "7bc9da120f637ef334ba10092eb830fbe2221231f37cea84fe960523e6f50b9a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/cart.h",
+    "sha256": "4735c1d1d807ddcb80e9c01b2c72bb50a4034e2f5e72a20d38a0bed440988281"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/cheat.cpp",
+    "sha256": "646893382da0ed9bdda998e033e55b4d5104588d7d5c5d15377896724e84ad7b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/cheat.h",
+    "sha256": "7762350942a0d4c2d426399f5ab88c6d233d39228d4ffeb2fdabf532674e3f12"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/conddebug.cpp",
+    "sha256": "f34e8af0a5d1339a64654d80de76376ae8b1f94a6cec06968045603dc078ff62"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/conddebug.h",
+    "sha256": "68e4ebd426bbb43e6278b33b9fa7d9bee45f9b86da4ade928f4b8194b080fe38"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/debug.cpp",
+    "sha256": "713381bc8d4ab860e18f6932b335ade33a911c86fe4232a7cf44cbe40c53dc48"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/debug.h",
+    "sha256": "b61d8077a0891d97ee8f2895a99251fbdb0acecad85e19e0131439f0564a5d3c"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/drawing.cpp",
+    "sha256": "d1b3c4b332ea49b91b35984b5ca73a25295ee723790e803abae09a207a7a85e5"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/drawing.h",
+    "sha256": "5d8593094ce3a5c0c41e16e7d561dffa04f0661469af695815711a78372346b9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/driver.h",
+    "sha256": "4aba9d27f47f3c98be6fdeadb824bd61c020de6e3af9f40597ffbaa4ebf6a7ed"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/emufile.cpp",
+    "sha256": "a61e611ee509e08bc7eeb0d3cccc70acfc4b1c3f405e6b3dff54749ddf95d30b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/emufile.h",
+    "sha256": "20958d3f3e523cb4410db4fb6d8cfc8d061459bdee3da9bc8ed1e1f0edd4f4cf"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/emufile_types.h",
+    "sha256": "273e56bfc59d6ca2623d4398fbe0c1046aa667623f6fa9f33498aa133707d964"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fceu.cpp",
+    "sha256": "eee0f3b9b0631724b1105b7633d2ad8e7da268b0748de4773ea9b4cd9c6ae82d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fceu.h",
+    "sha256": "a16964f9d794dd79b4750de0202e49044f170411525be0daee1b4a7bb734738a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fcoeffs.h",
+    "sha256": "6868fda0d1f9eb59f9c3723f84d4963eb76fdf57af6ebe3358e5cd9f7f160d90"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fds.cpp",
+    "sha256": "77292bd921456a99d2ea07cb64bf6728e2f1561e7ee0259d24d742ea7cb08df0"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fds.h",
+    "sha256": "c3ed0b82423329b027ff432582c1beaaea6d435b83c77db81354707c7af31b9e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/file.cpp",
+    "sha256": "2036de18c62d34f6a10869a7efc7647a067b480f6f617de5735a97fbf09b9cd0"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/file.h",
+    "sha256": "b29f72fc886e6b9893f7dc73c0dbb9b8aca8ee0b6aba743ece3e3ec5ad62eb39"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/filter.cpp",
+    "sha256": "d6df587b8994bd1c3b60cbf676a5ecafa27bbf5c69f888527ae9cf4a27295d35"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/filter.h",
+    "sha256": "e71b14799179e3dcf2af56eb1d8892bbe2bfc13cfaceebcb00151fe7a48d4701"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fir/c44100ntsc.h",
+    "sha256": "f05beb66f0e28e8d63dbf3374e13fed53ec74b127614212cfd99e0187185f13e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fir/c44100pal.h",
+    "sha256": "e9d76e43c07e0c80d1fc7226ecfccc61dd26d36e14201cdeda4810e060749eda"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fir/c48000ntsc.h",
+    "sha256": "5aa2d541c1e6c53f01d587ce794eb1eb8d6cc54835b465f8c1256c974b8a1928"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fir/c48000pal.h",
+    "sha256": "95539ead241804010d510b43c0d9a61c532c9074f0d1a780f5b6b07e1f76d6aa"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fir/c96000ntsc.h",
+    "sha256": "61ef3dd16339b3932c17e36cba576361f7dce7ea5569a66d0807a7d8b56709a8"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/fir/c96000pal.h",
+    "sha256": "c3ccbf71f9958b8db90bff1b4e8cdaa5e0a07a1772b6b0d66727e642c260d95c"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/git.h",
+    "sha256": "5660d3b9d9893c699246147faf94c1cc5f4c0dc12fd299d6fdb0e58662406fcf"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/ines-bad.h",
+    "sha256": "93846a6ad1a67b9ab10cc2e3495f15bec5928e51e52be703a92bc6115ad2aef7"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/ines-correct.h",
+    "sha256": "ca803a3e4a861b5158f7067ce248bb84c74dc7843407ee7145280b28cb32f953"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/ines.cpp",
+    "sha256": "0d720c65d97bc78234781b84d163d671d545931a59734a6d648dd1d5b98c2695"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/ines.h",
+    "sha256": "9ec4ce8b8ea010c82855e29718d51754e83cd2c8a4520ae99cdbdb9817e04cd0"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/arkanoid.cpp",
+    "sha256": "97938cca209e3291e58684bdf213872e0c6fc6bf4391d57cec6c331f76f3ddef"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/bworld.cpp",
+    "sha256": "00207f206862f3c128f2c324d9c18e1e3b74fb11bfe1045d7a8b6c36beb03683"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/cursor.cpp",
+    "sha256": "d3e9d79b45a28e27cb7c0b21ec90ec7aa201ec89438fdb01298d0e4e9ae6826d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/fkb.cpp",
+    "sha256": "3c0a1ec87614214c1cf60e29597d69e51ac5c5efe2054f6526a5f6866cab293a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/fkb.h",
+    "sha256": "64b4cd077182f6bc8e292ba3cc574cd8d7827c71224597832a850eadeeba88b6"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/ftrainer.cpp",
+    "sha256": "5f95f12d6629ccce53ffc3b28183e07f9af61123b90ff2fb9caaba0f8800333b"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/hypershot.cpp",
+    "sha256": "db468ecb0592c08de41fac3c809020af2b9e83c196305691b585da995c15fc02"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/mahjong.cpp",
+    "sha256": "15c42786e5a92a2c71572a0bae4d6f713e7fe4d87902937a0ac16c4752d8a074"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/mouse.cpp",
+    "sha256": "70952dd5b27e0d48acb4ce3e7370e1058bf975ace310a8530dafd124ec815496"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/oekakids.cpp",
+    "sha256": "69f539f96510d697f77a6b4145206317ab0d2545f78400b7c3801bc67c5c3bb0"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/pec586kb.cpp",
+    "sha256": "99c549dcecb36be9262c1bdba92b4c3fcaaa9561458bb44165baea832b407067"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/powerpad.cpp",
+    "sha256": "d82077091cb01472fec1864864551eb7b5b00c5d23c291aad7b7f7e8aed90185"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/quiz.cpp",
+    "sha256": "5e76a72daed6a1b4856c5ae7f22019142259d05713d00eb9a8470d0609541f46"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/shadow.cpp",
+    "sha256": "12d88833e7dbf6fc1e1e993bcf57449921f424c4733d5233aeb8e6739ec43fb9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/share.h",
+    "sha256": "649dc5f0c611837b4999471127ddd0316f0d6945d861a0ffd6c73b265c2409ae"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/snesmouse.cpp",
+    "sha256": "489e99033dd010e419f7d562ab06a9be05ae7c722561723e3ed632f92d5232ac"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/suborkb.cpp",
+    "sha256": "fda80e19d5750c1d3082506ff6d8802b3f6d86f2d3494a599fe2b312e9d049b3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/suborkb.h",
+    "sha256": "93fb6ad02cbc4dd138651c23466c753995ca56a03680b24974b85604871446a3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/toprider.cpp",
+    "sha256": "ebbacb73d7cb10d121a8ac23c182764c2dce305dfb37c9db4c9454ca8a3bf6f3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/zapper.cpp",
+    "sha256": "a0a7bf808f43487c84803ec8c4c4a57b8c67ed459c2d6200d328a85a9dbc8901"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input/zapper.h",
+    "sha256": "d45c458e874cd6f217b22bec4fca496de59702ed53038601df36bd122f3df852"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input.cpp",
+    "sha256": "41fc47a38912cf22b73330b02ac93261867dd6181a99585e699808242b73ec81"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/input.h",
+    "sha256": "cd124abd34b83a6d0ba1693a8a9a5bc13ab3102dccc1a11143373f2cfcb3090e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/movie.cpp",
+    "sha256": "37394f331aa5248b2ac930cc69eba3710a7690bed17127bc57915d8133536544"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/movie.h",
+    "sha256": "966721261bb205119d5b3abbc0d8e3a7e5fbba12334dfa68f1e196d2830c6ef4"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/netplay.cpp",
+    "sha256": "3eca57454287c0f88fea3e76646e1b39c0e5c714662e68e006b19b049ecae763"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/netplay.h",
+    "sha256": "884d4bb829b6d4bfb9bafcbf3f6fb0859fe94bd990bf4ade25912082bfa6a416"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/nsf.cpp",
+    "sha256": "cad9285b5a91f53a4e52bba8262afa37c0c0535a5686abb6f9b84fc86f460599"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/nsf.h",
+    "sha256": "b9789d8c1b45e697da5743d8bfb44bff1638cfcba5844c26f92a48fcd3dd0843"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/ops.inc",
+    "sha256": "9f1305c1443906a685f69ee7a3339405cef6e9fae7658910de899b51ef7b7ad4"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/palette.cpp",
+    "sha256": "6a7329f518f60053f5dc0c9c588276c2aadca6b7c8a7c513d81b18fb46b0fe22"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/palette.h",
+    "sha256": "96acb45e06a0d58939af3c2845e4d25361647dfc443138afb58c1c8211a115d3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/palettes/palettes.h",
+    "sha256": "fe8f463fc3898967b64c56d55cde70bdbe01afd812b6b4c9711a2b0a8716f2bd"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/palettes/rp2c04001.h",
+    "sha256": "baa484b7f2e8dfc890d19d693f7467557ebade1bc6553d421b4c1e5707cbc1fc"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/palettes/rp2c04002.h",
+    "sha256": "363efde3c794c89b862e74f13fe67ee788d5c0b37ba3b7e1344d9288adf86d2a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/palettes/rp2c04003.h",
+    "sha256": "4ce87c13eae343709573cd7d5965eb4625cf0fc5642e0e6faf2259ac72e000ee"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/palettes/rp2c05004.h",
+    "sha256": "453173143dfa3eaea32fbb008f48f41de2004c7c0909b2e31f68cacebbe9fd14"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/ppu.cpp",
+    "sha256": "5cd1b01c61dc9fe66ce1fc850f6ffb1db367c65cbc6a04f60d45f3e16cef288e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/ppu.h",
+    "sha256": "22a9c2b5de021810915a516b7536a28e01b6e2ab5dee54f9e07d1771ce55668f"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/pputile.inc",
+    "sha256": "80eaf10ad80a432d4dc6d89769baf9901057abeb533bb90f8ae22e52bc5a6bfa"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/sound.cpp",
+    "sha256": "a418966463b5f151b63882392aa188affdcbf1e56046fe75754a466ad2ca0647"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/sound.h",
+    "sha256": "c16d2dd99c2cc2fcc79fd4f0bf38b9d33f7d0d4947095b9c4c40bc3a5d67febe"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/state.cpp",
+    "sha256": "6c0eec7e750b9a133adf29a2c676ff1870fcb1e88f308d6c20a53f4fbbb81d70"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/state.h",
+    "sha256": "7d41b20d985e6a2cc60b4dad4aed6595c3321f99eba5c41b86921e0b819485c4"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/types-des.h",
+    "sha256": "53e5b3c61ee7a3e344cd75acf372a458a1c13ea7d2cdb42d2899a4a77aab727e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/types.h",
+    "sha256": "6c9f80862c7e43d645fc803250b141f232a7de050499f1d0b760baa1d329c493"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/unif.cpp",
+    "sha256": "40be17828c0da0bca013acf874b1efedf4ac8f7ea3587afb7b02e60058ffd54d"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/unif.h",
+    "sha256": "e2de71232a783e4b01e836711563d7bd56a2b7f68a0ae6ab3e38c038b0ccedad"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/crc32.cpp",
+    "sha256": "64ac006b70031c1462bac223c124b24d06fd7fc64d23edbe4bce055bd797d928"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/crc32.h",
+    "sha256": "1ac954bacd1ebeeb57ac0361dbdfcaa342c0f4fb80bf3df9294b1b41f63b0c83"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/endian.cpp",
+    "sha256": "86c2ed8a533564373d1a72d89c42f6725bb4c5b82d7d018f932f3e09c1b314a9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/endian.h",
+    "sha256": "bc94ba0428326042cb612b290bdfd6a70c7c6a120b7ef2cf6deec62713c2c357"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/general.cpp",
+    "sha256": "4ba87de1c80c166bfab49a9d133a6a7bcbcbe3e8ba264c7f66ba2f8fbaed0a73"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/general.h",
+    "sha256": "55fd541d0743e221f773654d4bb0a2a8414da2b7ff2ac54792a6c70168c9b3f1"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/guid.cpp",
+    "sha256": "59dd25b76b4e4ecf4fe55a8b0bc05d92a93b5e6476729db224cdb551b619fe91"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/guid.h",
+    "sha256": "4d05bf3dfe58f3e172547072707a6048eaba409a5d380f74c54585338fd49029"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/ioapi.cpp",
+    "sha256": "47347ad09a0ccc276b5096f70487cb7e74debbb15be10723a66e902480ea27d2"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/ioapi.h",
+    "sha256": "8655408534b78dc0889a45f9359fc6d2d5c8e8d8443b81ede596f954c720ef48"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/md5.cpp",
+    "sha256": "76094804bbf3397650d80a8bd86dc5eda0ded8e8d37b289c1e6359a389537454"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/md5.h",
+    "sha256": "34eb8271f8c612b9d3a585d62de8ebcaad0d245a6a0a69e8ab2dac1215fd304a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/memory.cpp",
+    "sha256": "b3e9ac13681bec9c187f86a95049f441a8408c4dd201b206726437f9e676326a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/memory.h",
+    "sha256": "50661c68b482e28aa641dec4e96f0f69fe3393e54d88b6265db0f8295162b9c4"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/unzip.cpp",
+    "sha256": "bc5e8af49327ddce8bca5f44ad53ab6475a6008d0b59ac3b4e96e75cf72ddf59"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/unzip.h",
+    "sha256": "ee687e97a74b349fd5bfb4632449b1f41884b2be8a9a9e513af4cbd4566dfed5"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/valuearray.h",
+    "sha256": "017fefa425574de99afe13890ce910bf6037bfc57fed277a5b82757c4c84c825"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/xstring.cpp",
+    "sha256": "e21cbbf1e6c5e432df086b4a248e7da5502100e9c4ce302c5ba8b6f413888069"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/utils/xstring.h",
+    "sha256": "e702cd32c1be3ce2964d75506013a4dafb0ff16b127ab4f3ffb09a4afc521d90"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/version.h",
+    "sha256": "e29e7f2b99dac5d7acba1343c378b9429e5e58bc92a4848ee7d1beac27d5caa9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/video.cpp",
+    "sha256": "bde537aa495a3cb4b0d4e83ccad6aaedb6382f7646331bf9a2596328b94c77a9"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/video.h",
+    "sha256": "52eb30e95f4689c1a7f104994fa748643e7c4a7669a034133a25ce1fc4e0c8c3"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/vsuni.cpp",
+    "sha256": "dbc7ad0cdbabbe78bf0b03ad6cc0470720c3c9fa7c230a3de02fda88408e815e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/vsuni.h",
+    "sha256": "9e95796dfc461d55ebfae50adc31e9fcbf2bc2fadcfe2352c20fd07fe254bd40"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/wave.cpp",
+    "sha256": "21c7be79b05a5992ae598a9e6b4f6de8085a95a38952263f725705c96cc69d7a"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/wave.h",
+    "sha256": "e4725b615d00ff0a1340cb061df2f99d7e174517df72d36fc085263ede9047e6"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/x6502.cpp",
+    "sha256": "8ed45e7dca40aba60a420d34723b8ce082edec77e737e5db1c6f5a4269ab4d61"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/x6502.h",
+    "sha256": "e90c34e92dd6991651394dfb1deb82f7579a381fea03a3bb4fad4a0014e8dd0e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/x6502abbrev.h",
+    "sha256": "539d56c9a740c316b6aa7072643b4e8d9d47e37a978ddffc194fe5c64961d76e"
+  },
+  {
+    "path": "fceux-android-master/app/src/main/cpp/fceux/x6502struct.h",
+    "sha256": "53d1ff9ed0ee88a0e310e2eb3a06d1744e494c6ae86ef6bdeb04a9568eb1e21f"
+  }
+]

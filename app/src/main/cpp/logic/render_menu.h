@@ -2,24 +2,26 @@
 // Created by parkyu on 2023/5/11.
 //
 
-#ifndef METALMAX_RENDER_MENU_H
-#define METALMAX_RENDER_MENU_H
+#ifndef metalmax_render_menu_h
+#define metalmax_render_menu_h
 
 #include "render.h"
 #include "render_base_menu.h"
 
-#define MAP_MENU 0
-#define START_MENU 1
+#define map_menu 0
+#define start_menu 1
 
-class MenuRender : public BaseMenuRender {
+namespace metalmax {
+class menu_render : public base_menu_render {
 private:
-    int selectPos = 0;
-    void processSelection();
+    int select_pos = 0;
+    void process_selection();
 public:
-    MenuRender(int menuType);
-    uint8_t * render(uint8_t *screenBuffer);
-    void tikLogic();
-    void processKeyClick(uint8_t directKey, uint8_t functionKey);
+    menu_render(int menu_type);
+    uint8_t * render(uint8_t *screen_buffer);
+    void tik_logic();
+    void process_key_click(uint8_t direct_key, uint8_t function_key);
 };
 
+} // namespace metalmax
 #endif //METALMAX_RENDER_MENU_H

@@ -32,18 +32,21 @@ public class MainActivity extends Activity {
         );
         super.onCreate(savedInstanceState);
         setContentView(createSurfaceView());
+        NativeBridge.setSaveDirectoryNative(getFilesDir().getAbsolutePath());
         NativeBridge.initLogic();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        NativeBridge.setPausedNative(false);
         NativeBridge.slInit();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        NativeBridge.setPausedNative(true);
         NativeBridge.slRelease();
     }
 

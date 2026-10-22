@@ -8,7 +8,8 @@
 #include "../logic/logic.h"
 #include "../graphic/palette_data.h"
 
-unsigned short water_block_id[WATER_BLOCK_COUNT] = {
+namespace metalmax {
+    unsigned short water_block_id[k_water_block_count] = {
         13, 15, 31, 35, 39, 47, 85, 112, 154, 190,
         207, 218, 277, 281, 295, 305, 344, 398, 545, 547,
         576, 626, 664, 677, 679, 683, 784, 917, 922, 929,
@@ -23,18 +24,18 @@ unsigned short pure_water_block_id[32] = {
         1864, 1881,
 };
 
-bool tile_is_water(unsigned short tileId) {
-    for (int i = 0; i < WATER_BLOCK_COUNT; i++) {
-        if (tileId == water_block_id[i]) {
+    bool tile_is_water(unsigned short tile_id) {
+        for (int i = 0; i < k_water_block_count; i++) {
+            if (tile_id == water_block_id[i]) {
             return true;
         }
     }
     return false;
 }
 
-bool tile_is_pure_water(unsigned short tileId) {
+    bool tile_is_pure_water(unsigned short tile_id) {
     for (int i = 0; i < 32; i++) {
-        if (tileId == pure_water_block_id[i]) {
+        if (tile_id == pure_water_block_id[i]) {
             return true;
         }
     }
@@ -45,7 +46,7 @@ bool tile_is_pure_water(unsigned short tileId) {
  * @param direct 复用一下方向键的方向吧
  * @param screen_buffer
  */
-void renderWave(uint8_t direct, uint8_t status, uint8_t *screen_buffer, int x, int y) {
+    void render_wave(uint8_t direct, uint8_t status, uint8_t *screen_buffer, int x, int y) {
     bitmap_render::render_bitmap_with_src_scroll(wave[status],
                                                  direct,
                                                  16,
@@ -134,3 +135,4 @@ uint8_t water[3][16 * 16] = {
                 11, 11, 11, 10, 10, 11, 11, 11, 11, 11, 11, 10, 10, 10, 11, 11,
         }
 };
+} // namespace metalmax

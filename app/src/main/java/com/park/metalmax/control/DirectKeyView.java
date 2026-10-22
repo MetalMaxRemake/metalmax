@@ -48,8 +48,10 @@ public class DirectKeyView extends KeyView {
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
-        switch (event.getAction()) {
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                key = 0;
                 if (leftRect.contains(x, y)) {
                     key |= leftVal;
                 }
@@ -65,22 +67,9 @@ public class DirectKeyView extends KeyView {
                 NativeBridge.onKeyEvent(key);
                 break;
             case MotionEvent.ACTION_UP:
-                if (leftRect.contains(x, y)) {
-                    key &= ~leftVal;
-                }
-                if (rightRect.contains(x, y)) {
-                    key &= ~rightVal;
-                }
-                if (upRect.contains(x, y)) {
-                    key &= ~upVal;
-                }
-                if (downRect.contains(x, y)) {
-                    key &= ~downVal;
-                }
+            case MotionEvent.ACTION_CANCEL:
+                key = 0;
                 NativeBridge.onKeyEvent(key);
-                break;
-            case MotionEvent.ACTION_MOVE:
-
                 break;
         }
         invalidate();

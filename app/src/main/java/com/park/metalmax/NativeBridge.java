@@ -38,4 +38,8 @@ public class NativeBridge {
     public static native void onKeyEventNative(int key);
     public static native void onFuncKeyEventNative(int key);
 
+    public static native void setSaveDirectoryNative(String directory);
+
+    public static native void setPausedNative(boolean paused);
+
 }

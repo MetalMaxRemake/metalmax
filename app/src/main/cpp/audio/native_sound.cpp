@@ -1,201 +1,119 @@
-//
-// Created by youngpark on 2023/4/4.
-//
-
-#include <stdlib.h>
-#include <assert.h>
-#include <string.h>
-#include <pthread.h>
-#include <queue>
-#include <sys/types.h>
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <stdbool.h>
-#include "xgm/xgm.h"
-#include "mm_sound.h"
+#include "native_sound.h"
 #include "opensl.h"
-#include "../global.h"
-#include <android/log.h>
+#include "mm_sound_data.h"
+#include "xgm/xgm.h"
+#include <atomic>
+#include <pthread.h>
+#include <algorithm>
+#include <cstring>
 #include <unistd.h>
 
-#define SAMPLE_RATE 16000
-constexpr const uint64_t kFramesToBuffer = 1024;
-
-#define CACHE_SIZE 3
-#define PRE_CACHE_LEN 10
-
-volatile short cachedData[CACHE_SIZE][kFramesToBuffer];
-volatile int cacheIdx = 0;
-volatile int readIdx = 0;
-volatile bool mixCache = false;
-
-struct Nsf2WavOptions;
-
-struct Nsf2WavOptions {
-    Nsf2WavOptions(const xgm::NSF &nsf)
-            : length_ms(nsf.default_playtime),
-              fade_ms(nsf.default_fadetime) {}
-
-    int32_t length_ms;
-    int32_t fade_ms;
-    int channels = 1;
-    double samplerate = SAMPLE_RATE;
-};
-
-pthread_mutex_t soundMutex;
-pthread_mutex_t cacheIdxMutex;
-xgm::NSFPlayer player1, player2;
-xgm::NSF nsf;
-
-/**
- * mix buffer2 into buffer1
- * @param buffer1
- * @param buffer2
- * @param len
- */
-void mixSoundBuffer(short *buffer1, short *buffer2, int len) {
-    for (int i = 0; i < len; i++) {
-        int pcm = ((int) buffer1[i]) + ((int) buffer2[i]);
-        if (pcm > 32767) {
-            pcm = 32767;
-        } else if (pcm < -32768) {
-            pcm = -32768;
-        }
-        buffer1[i] = (short) pcm;
-    }
-}
-
-void *nsfPlayerThread(void *) {
+namespace {
+    constexpr unsigned k_samples = 1024, k_slots = 3;
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    xgm::NSFPlayer music, effect;
+    xgm::NSF music_file, effect_file;
     xgm::NSFPlayerConfig config;
-    Nsf2WavOptions options(nsf);
-    nsf.SetDefaults(options.length_ms, options.fade_ms, nsf.default_loopnum);
-    // audio samples, native machine format
-    std::unique_ptr<int16_t[]> buf(new int16_t[kFramesToBuffer]);
+    short queue[k_slots][k_samples];
+    unsigned write_index = 0, read_index = 0, available = 0, effect_remaining = 0;
+    std::atomic<int> requested_music(0), requested_effect(-1);
+    std::atomic<bool> enabled(false);
+    pthread_once_t init_once = PTHREAD_ONCE_INIT;
+    bool ready = false;
+    int current_music = -1;
 
-    nsf.Load((unsigned char *) all_sound, all_sound_size);
-    nsf.Load((unsigned char *) all_sound, all_sound_size);
-    int count = nsf.GetSongNum();
-    __android_log_print(ANDROID_LOG_INFO, "nsfPlayerThread", "mm_song_num:%d", count);
-
-    config["MASTER_VOLUME"] = 128; /* default volume = 128 */
-    config["PLAY_ADVANCE"] = 1;
-
-    player1.SetConfig(&config);
-    player1.UpdateInfinite();
-    if (!player1.Load(&nsf)) {
-        fprintf(stderr, "Error with player1 load\n");
-        return nullptr;
-    }
-    player1.SetPlayFreq(options.samplerate);
-    player1.SetChannels(options.channels);
-
-    player2.SetConfig(&config);
-    player2.UpdateInfinite();
-    if (!player2.Load(&nsf)) {
-        fprintf(stderr, "Error with player2 load\n");
-        return nullptr;
-    }
-    player2.SetPlayFreq(options.samplerate);
-    player2.SetChannels(options.channels);
-
-    //start play!
-    player1.SetSong(0);
-    player1.Reset();
-    int fc; /* current # of frames to decode */
-    while (true) {
-        if (cacheIdx - readIdx >= CACHE_SIZE - 1) {
-            usleep(1000 * 10);
-            continue;
+    void initialize() {
+        if (!music_file.Load(const_cast<unsigned char *>(k_nsf), k_nsf_size)
+            || !effect_file.Load(const_cast<unsigned char *>(k_nsf), k_nsf_size)) { return; }
+        config["MASTER_VOLUME"] = 128;
+        config["PLAY_ADVANCE"] = 1;
+        for (auto *player: {&music, &effect}) {
+            player->SetConfig(&config);
+            player->UpdateInfinite();
+            player->SetChannels(1);
         }
-        fc = kFramesToBuffer;
-        pthread_mutex_lock(&soundMutex);
-        pthread_mutex_lock(&cacheIdxMutex);
-        player1.Render((short *) cachedData[(cacheIdx) % CACHE_SIZE], fc);
-        if (mixCache) {
-            short effectBuffer[kFramesToBuffer];
-            player2.Render((short *) effectBuffer, fc);
-            mixSoundBuffer((short *) cachedData[(cacheIdx) % CACHE_SIZE],
-                           (short *) effectBuffer,
-                           fc);
+        if (!music.Load(&music_file) || !effect.Load(&effect_file)) { return; }
+        for (auto *player: {&music, &effect}) {
+            player->SetPlayFreq(16000);
         }
-        cacheIdx++;
-        pthread_mutex_unlock(&soundMutex);
-        pthread_mutex_unlock(&cacheIdxMutex);
+        ready = true;
     }
-    return nullptr;
-}
 
-char isInited = 0;
-
-extern "C" void initSL() {
-    startSLEngine();
-    if (isInited) {
-        return;
-    }
-    isInited = 1;
-    pthread_t id;
-    //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, nullptr, nsfPlayerThread, nullptr);
-}
-
-extern "C" void releaseSL() {
-    stopSLEngine();
-}
-
-extern "C" int getAudioCount() {
-    return nsf.GetSongNum();
-}
-
-int player1AudioId = 0, player2AudioId = 63;
-/**
- * 23 - 遇到挂物
- * 63 - 按键
- * [23, 91]
- */
-extern "C" void changeAudio(int audioIdx) {
-    pthread_mutex_lock(&soundMutex);
-    player1.SetSong(audioIdx);
-    player1AudioId = audioIdx;
-    player1.Reset();
-    pthread_mutex_unlock(&soundMutex);
-}
-
-void *renderEffectThread(void *) {
-    pthread_mutex_lock(&soundMutex);
-    player2.SetSong(player2AudioId);
-    player2.Reset();
-    mixCache = true;
-    pthread_mutex_unlock(&soundMutex);
-    return nullptr;
-}
-
-extern "C" void renderEffect(int effectAudioId) {
-    player2AudioId = effectAudioId;
-    pthread_t id;
-    //创建函数线程，并且指定函数线程要执行的函数
-    pthread_create(&id, nullptr, renderEffectThread, nullptr);
-
-}
-
-extern "C" int getAudioIdx() {
-    return player1AudioId;
-}
-
-extern "C" short *getAudioBuffer() {
-    if (readIdx >= cacheIdx) {
-        return nullptr;
-    }
-    if (readIdx > 100000) {
-        pthread_mutex_lock(&cacheIdxMutex);
-        LOGD("native_sound", "reset cacheIdx");
-        if (readIdx < cacheIdx) {
-            cacheIdx %= CACHE_SIZE;
-            readIdx %= CACHE_SIZE;
-            if (readIdx >= cacheIdx) {
-                cacheIdx += CACHE_SIZE;
+    void *decode(void *) {
+        pthread_once(&init_once, initialize);
+        for (;;) {
+            if (!ready || !enabled.load()) {
+                usleep(10000);
+                continue;
             }
+            pthread_mutex_lock(&mutex);
+            int song = (requested_music.load() % 96 + 96) % 96;
+            if (song != current_music) {
+                music.SetSong(song);
+                music.Reset();
+                current_music = song;
+                available = 0;
+                read_index = write_index;
+            }
+            int sound = requested_effect.exchange(-1);
+            if (sound >= 0) {
+                effect.SetSong(sound % 96);
+                effect.Reset();
+                effect_remaining = 16;
+            }
+            if (available < k_slots) {
+                music.Render(queue[write_index], k_samples);
+                if (effect_remaining) {
+                    short scratch[k_samples];
+                    effect.Render(scratch, k_samples);
+                    for (unsigned i = 0; i < k_samples; i++) {
+                        queue[write_index][i] = std::max(-32768, std::min(32767,
+                                                                         static_cast<int>(queue[write_index][i]) +
+                                                                         scratch[i]));
+                    }
+                    effect_remaining--;
+                }
+                write_index = (write_index + 1) % k_slots;
+                available++;
+            }
+            pthread_mutex_unlock(&mutex);
+            usleep(1000);
         }
-        pthread_mutex_unlock(&cacheIdxMutex);
+        return nullptr;
     }
-    return (short *) cachedData[(readIdx++) % CACHE_SIZE];
+
+    pthread_once_t thread_once = PTHREAD_ONCE_INIT;
+
+    void start_decoder() {
+        pthread_t id;
+        if (pthread_create(&id, nullptr, decode, nullptr) == 0) { pthread_detach(id); }
+    }
+}
+extern "C" void init_sl() {
+    pthread_once(&thread_once, start_decoder);
+    enabled = true;
+    start_sl_engine();
+}
+extern "C" void release_sl() {
+    enabled = false;
+    stop_sl_engine();
+}
+extern "C" int get_audio_count() { return 96; }
+extern "C" int get_audio_idx() { return (requested_music.load() % 96 + 96) % 96; }
+extern "C" void change_audio(int song) { requested_music = (song % 96 + 96) % 96; }
+extern "C" void render_effect(int sound) { if (sound >= 0) { requested_effect = sound; }}
+extern "C" short *get_audio_buffer() {
+    // Copy before recycling the decoder slot. OpenSL copies this scratch into
+    // its own two alternating output buffers, which outlive Enqueue.
+    static short scratch[k_samples];
+    pthread_mutex_lock(&mutex);
+    if (!available) {
+        pthread_mutex_unlock(&mutex);
+        return nullptr;
+    }
+    memcpy(scratch, queue[read_index], sizeof(scratch));
+    read_index = (read_index + 1) % k_slots;
+    available--;
+    pthread_mutex_unlock(&mutex);
+    return scratch;
 }

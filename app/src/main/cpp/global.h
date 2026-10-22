@@ -2,13 +2,14 @@
 // Created by parkyu on 2023/5/11.
 //
 
-#ifndef METALMAX_GLOBAL_H
-#define METALMAX_GLOBAL_H
+#ifndef metalmax_global_h
+#define metalmax_global_h
 
 #include <android/log.h>
 #include <stdint.h>
+#include <stddef.h>
 
-namespace global_config {
+namespace metalmax::global_config {
     //this should be 16:9
     constexpr uint16_t k_screen_width = 455;
     constexpr uint16_t k_screen_height = 256;
@@ -20,17 +21,18 @@ namespace global_config {
     constexpr size_t k_screen_pixel_size = sizeof(uint8_t);
     constexpr size_t k_screen_buffer_size = k_screen_pixel_size * k_screen_width * k_screen_height;
 
-    enum RenderMode {
-        kSoftware,
-        kOpenGL,
-        kVulkan
+    enum render_mode {
+        k_software,
+        k_open_gl,
+        k_vulkan
     };
-    const RenderMode k_render_mode = RenderMode::kOpenGL;
+    const render_mode k_render_mode = render_mode::k_open_gl;
 }
+namespace global_config = metalmax::global_config;
 
-#define LOGI(LOG_TAG, ...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
-#define LOGD(LOG_TAG, ...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
-#define LOGW(LOG_TAG, ...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
-#define LOGE(LOG_TAG, ...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#define log_i(log_tag, ...) __android_log_print(ANDROID_LOG_INFO, log_tag, __VA_ARGS__)
+#define log_d(log_tag, ...) __android_log_print(ANDROID_LOG_DEBUG, log_tag, __VA_ARGS__)
+#define log_w(log_tag, ...) __android_log_print(ANDROID_LOG_WARN, log_tag, __VA_ARGS__)
+#define log_e(log_tag, ...) __android_log_print(ANDROID_LOG_ERROR, log_tag, __VA_ARGS__)
 
 #endif //METALMAX_GLOBAL_H

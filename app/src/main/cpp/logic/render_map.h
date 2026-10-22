@@ -2,52 +2,65 @@
 // Created by parkyu on 2023/5/11.
 //
 
-#ifndef METALMAX_RENDER_MAP_H
-#define METALMAX_RENDER_MAP_H
+#ifndef metalmax_render_map_h
+#define metalmax_render_map_h
+
 #include "logic.h"
 #include "render.h"
 #include "status/character.h"
 
-class MapRender : public BaseRender {
+namespace metalmax {
+class map_render : public base_render {
 private:
-    const char *TAG = "MapRender";
+    int entrance_animation = 0;
+    int next_map_id = -1;
 
-    volatile int entranceAnimation = 0;
-    volatile bool isOriginPalette = true;
+    bool may_enter_another_map(character *player, int target_x, int target_y);
 
-    //we are go to another map now
-    bool nextMapIsBack = false;
-    int nextMapId = -1;
-    int matchedEntrancesIdx = -1;
+    bool enter_another_map(character *player);
 
-    bool mayEnterAnotherMap(Character *player, int targetX, int targetY);
-    bool enterAnotherMap(Character *player);
-    bool mayExitToLastMap(Character *player, int targetX, int targetY);
-    void fadeOut() const;
-    void fadeIn() const;
-    void refreshMusic() const;
-    void triggerMonster() const;
-    void triggerDoor(Character *player) const;
-    void renderDoor(uint8_t *screenBuffer) const;
-    void renderSprite(uint8_t *screenBuffer) const;
-    void renderWater(uint8_t *screenBuffer) const;
-    void resetPalette() const;
-    void renderPlayers(uint8_t *screenBuffer, Character *player) const;
+    bool may_exit_to_last_map(character *player, int target_x, int target_y);
+
+    void refresh_music() const;
+
+    void trigger_monster() const;
+
+    void trigger_door(character *player) const;
+
+    void render_sprite(uint8_t *screen_buffer) const;
+
+    void render_water(uint8_t *screen_buffer) const;
+
+    void reset_palette() const;
+
+    int map_id = 0;
+    int camera_x = 0, camera_y = 0;
+    int next_x = 0, next_y = 0;
+    unsigned encounter_cooldown = 30;
+
+    void render_players(uint8_t *screen_buffer, character *player) const;
+
 public:
-    MapRender();
-    void updateMap(int newMapId, int x, int y);
-    int getMapId();
-    uint8_t * render(uint8_t *screenBuffer);
-    void tikLogic();
+    map_render();
 
-    bool processKey(uint8_t directKey, uint8_t functionKey);
+    void update_map(int new_map_id, int x, int y);
 
-    void processKeyClick(uint8_t directKey, uint8_t functionKey);
+    int get_map_id();
 
-    void onFocus();
-    void onUnFocus();
+    uint8_t *render(uint8_t *screen_buffer) override;
 
-    ~MapRender();
+    void tik_logic() override;
+
+    bool process_key(uint8_t direct_key, uint8_t function_key) override;
+
+    void process_key_click(uint8_t direct_key, uint8_t function_key) override;
+
+    void on_focus() override;
+
+    void on_un_focus() override;
+
+    ~map_render();
 };
 
+} // namespace metalmax
 #endif //METALMAX_RENDER_MAP_H

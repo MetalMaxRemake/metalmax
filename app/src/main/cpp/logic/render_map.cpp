@@ -1,457 +1,232 @@
-//
-// Created by parkyu on 2023/5/11.
-//
-
-#include <cstdlib>
-#include <__threading_support>
 #include "render_map.h"
-#include "../maps/map.h"
-#include "render_debug.h"
-#include "../audio/native_sound.h"
-#include "render_battle.h"
-#include "../charset/charsets.h"
-#include "../graphic/bitmap_render.h"
-#include "../sprite/sprite.h"
-#include "status/character.h"
-#include "../maps/tile_bmp.h"
-#include "../maps/map_data/map_data.h"
-#include "../graphic/palette_data.h"
-#include "../audio/mm_sound.h"
-#include "../graphic/native_graphic.h"
-#include "../monster/monster_data/monster_data.h"
 #include "render_menu.h"
+#include "render_debug.h"
+#include "render_battle.h"
+#include "status/game_state.h"
+#include "../maps/map.h"
+#include "../maps/map_data/map_data.h"
 #include "../maps/active_tile_bmp.h"
+#include "../graphic/bitmap_render.h"
+#include "../graphic/native_graphic.h"
+#include "../graphic/palette_data.h"
+#include "../sprite/map_npcs.h"
+#include "../audio/native_sound.h"
+#include "../audio/mm_sound.h"
+#include "../monster/monster_data/monster_data.h"
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+#include <ctime>
 
-//unit at tik, max 100
-#define ANIMATION_DURATION 30
-
-static const uint8_t HUMAN_PASS = 0b0001;
-static const uint8_t CAR_PASS = 0b0010;
-
-static volatile int map_render_x, map_render_y;
-static volatile int mapId;
-
-void MapRender::updateMap(int newMapId, int x, int y) {
-    if (newMapId < 0) {
-        newMapId = 0;
-    }
-    mapId = newMapId;
-    mapId = mapId % 240;
-    renderEffect(EFFECT_ENTER_ENTRANCE);
-    refreshMusic();
-    map_render_x = x * 16;
-    map_render_y = y * 16;
-    refreshCurrentMap(mapId);
-}
-
-MapRender::MapRender() {
-    LOGD("MapRender", "new!");
-    srand((unsigned) time(nullptr));
-}
-
-int MapRender::getMapId() {
-    return mapId;
-}
-
-pthread_mutex_t changeMapMutex;
-
-uint8_t *MapRender::render(uint8_t *screenBuffer) {
-    if (entranceAnimation > ANIMATION_DURATION / 2) {
-        fadeOut();
-    } else if (entranceAnimation) {
-        enterAnotherMap(getDefaultPlayer());
-        fadeIn();
-    } else if (!isOriginPalette) {
-        isOriginPalette = true;
-        resetPalette();
-    }
-    pthread_mutex_lock(&changeMapMutex);
-    Character *player = getDefaultPlayer();
-    //x is left or right, y is up or down
-    map_render_x = player->renderX - global_config::k_screen_width / 2;
-    map_render_y = player->renderY - global_config::k_screen_height / 2;
-    screenBuffer = renderMap(map_render_x, map_render_y, screenBuffer);
-    renderWater(screenBuffer);
-    renderDoor(screenBuffer);
-    renderSprite(screenBuffer);
-    renderPlayers(screenBuffer, player);
-    pthread_mutex_unlock(&changeMapMutex);
-    return screenBuffer;
-}
-
-void MapRender::renderPlayers(uint8_t *screenBuffer, Character *player) const {
-    bitmap_render::render_bitmap_with_transport(player->currentBitmap,
-                                                16, 16,
-                                                global_config::k_screen_width / 2,
-                                                global_config::k_screen_height / 2,
-                                                screenBuffer);
-}
-
-int water_status_map[4] = {1, 2, 3, 2};
-
-uint8_t water_status = 0;
-int water_status_clk = 0;
-
-void MapRender::renderWater(uint8_t *screenBuffer) const {
-    //convert render pos to tile pos
-    int tile_start_index_x = map_render_x / 16;
-    int tile_end_index_x = tile_start_index_x + global_config::k_tile_width;
-    int tile_start_index_y = map_render_y / 16;
-    int tile_end_index_y = tile_start_index_y + global_config::k_tile_height;
-    for (int tile_index_x = tile_start_index_x - 1;
-         tile_index_x < tile_end_index_x;
-         tile_index_x++) {
-        for (int tile_index_y = tile_start_index_y - 1;
-             tile_index_y < tile_end_index_y;
-             tile_index_y++) {
-            if (tile_is_pure_water(getTileIdx(tile_index_x, tile_index_y))) {
-                int render_x = tile_index_x * 16 - map_render_x;
-                int render_y = tile_index_y * 16 - map_render_y;
-
-                if (render_x > -16 && render_x < global_config::k_screen_width + 17 &&
-                    render_y > -16 && render_y < global_config::k_screen_height + 17) {
-                    bitmap_render::render_bitmap(water[water_status_map[water_status] - 1],
-                                                 global_config::k_tile_size,
-                                                 global_config::k_tile_size,
-                                                 render_x,
-                                                 render_y,
-                                                 screenBuffer);
-                    uint8_t direct = 0;
-                    if (!tile_is_water(getTileIdx(tile_index_x, tile_index_y - 1))) {
-                        direct |= up;
-                    }
-                    if (!tile_is_water(getTileIdx(tile_index_x, tile_index_y + 1))) {
-                        direct |= down;
-                    }
-                    if (!tile_is_water(getTileIdx(tile_index_x - 1, tile_index_y))) {
-                        direct |= left;
-                    }
-                    if (!tile_is_water(getTileIdx(tile_index_x + 1, tile_index_y))) {
-                        direct |= right;
-                    }
-                    renderWave(direct,
-                               water_status_map[water_status] - 1,
-                               screenBuffer,
-                               render_x,
-                               render_y);
-                }
-            }
-        }
-    }
-}
-
-void MapRender::renderSprite(uint8_t *screenBuffer) const {
-    int spriteCount = map_sprite_count[mapId];
-    for (int i = 0; i < spriteCount; i++) {
-        uint8_t x = map_sprite[mapId][i * 3];
-        uint8_t y = map_sprite[mapId][i * 3 + 1] - 1;
-        int renderY = y * 16 - map_render_y;
-        int renderX = x * 16 - map_render_x;
-        if (renderX > -16
-            && renderX < global_config::k_screen_width + 16
-            && renderY > -16
-            && renderY < global_config::k_screen_height + 16) {
-            uint8_t spriteBmpId = map_sprite[mapId][i * 3 + 2];
-            bitmap_render::render_bitmap_with_transport(sprites[spriteBmpId],
-                                                        global_config::k_tile_size,
-                                                        global_config::k_tile_size,
-                                                        renderX,
-                                                        renderY,
-                                                        screenBuffer);
-        }
-    }
-}
-
-void MapRender::renderDoor(uint8_t *screenBuffer) const {
-    Character *player = getDefaultPlayer();
-    if (player->inDoor) {
-        int map_width = map_size[mapId * 2 + 1];
-        int x = player->x;
-        int y = player->y;
-        unsigned short fillTileId = -1;
-        for (int i = y - 2; i <= y + 2; i++) {
-            unsigned short tileId = short_map_data[mapId][i * map_width + x];
-            if (tileId == 37 || tileId == 128 || tileId == 162) {
-                fillTileId = short_map_data[mapId][(i - 1) * map_width + x];
-            }
-        }
-        for (int i = y - 1; i <= y + 1; i++) {
-            unsigned short tileId = short_map_data[mapId][i * map_width + x];
-            if (tileId == 37 || tileId == 72
-                || tileId == 128 || tileId == 137
-                || tileId == 162 || tileId == 193) {
-                int renderY = i * 16;
-                int renderX = x * 16;
-                fillOneTileInScreen(renderX - map_render_x, renderY - map_render_y, fillTileId,
-                                    screenBuffer);
-            }
-        }
-
-    }
-}
-
-void MapRender::resetPalette() const {
-    int *currentPalette = native_graphic::getPaletteBuffer();
-    for (int i = 0; i < palette::palette_size; i++) {
-        int dd = palette::palette_rgb[i];
-        int b = (dd & 0x00FF0000) >> 16;
-        int g = (dd & 0x0000FF00) >> 8;
-        int r = (dd & 0x000000FF) >> 0;
-        currentPalette[i] = 0xff000000 | (r << 16) | (g << 8) | b;
-    }
-    native_graphic::applyNewPalette(currentPalette);
-}
-
-unsigned int currentFadePercent = 100;
-
-void MapRender::fadeIn() const {
-    LOGD("fadeIn", "%d", currentFadePercent);
-    if (currentFadePercent >= 100) {
-        currentFadePercent = 100;
-        return;
-    }
-    unsigned int step = 100 / (ANIMATION_DURATION);
-    native_graphic::setGlobalFadePercent(currentFadePercent);
-    currentFadePercent += step;
-}
-
-void MapRender::fadeOut() const {
-    LOGD("fadeOut", "%d", currentFadePercent);
-    if (currentFadePercent <= 0) {
-        currentFadePercent = 0;
-        return;
-    }
-    unsigned int step = 100 / (ANIMATION_DURATION);
-    native_graphic::setGlobalFadePercent(currentFadePercent);
-    currentFadePercent -= step;
-}
-
-void MapRender::tikLogic() {
-    Character *player = getDefaultPlayer();
-    player->tik();
-    if (entranceAnimation) {
-        isOriginPalette = false;
-        entranceAnimation--;
-    }
-    water_status_clk++;
-    if (water_status_clk > 60) {
-        water_status_clk = 0;
-        water_status++;
-        water_status %= 4;
-    }
-}
-
-void MapRender::onUnFocus() {
-}
-
-void MapRender::refreshMusic() const {
-    uint8_t currentMusic = map_music[mapId] - 3;
-    if (getAudioIdx() != currentMusic) {
-        changeAudio(currentMusic);
-    }
-}
-
-void MapRender::onFocus() {
-    refreshMusic();
-}
-
-void MapRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
-    renderEffect(EFFECT_PUSH_BUTTON);
-    if (functionKey & a) {
-        MenuRender *menuRender = new MenuRender(MAP_MENU);
-        push(menuRender);
-    }
-    if (functionKey & ta) {
-        mapId++;
-        //todo this is debug code
-        int map_height = map_size[mapId * 2];
-        int map_width = map_size[mapId * 2 + 1];
-        getDefaultPlayer()->setPos(map_width / 2, map_height / 2);
-        updateMap(mapId, 0, 0);
-    }
-    if (functionKey & tb) {
-        changeAudio(getAudioIdx() + 1);
-    }
-    if (functionKey & keyX) {
-        DebugRender *debugRender = new DebugRender;
-        push(debugRender);
-    }
-}
-
-bool canHumanPass(int targetX, int targetY) {
-    unsigned short tileIdx = getTileIdx(targetX, targetY);
-    uint8_t currentTileFeature = feature[tileIdx];
-    return currentTileFeature & HUMAN_PASS;
-}
-
-struct Pos {
-    int mapId;
-    int x, y;
+namespace metalmax {
+struct last_position {
+    uint8_t map, x, y;
 };
+static std::vector<last_position> history;
+static unsigned water_tick = 0;
 
-Pos lastPosStack[10];
-int lastPosStackTop = 0;
+map_render::map_render() { srand(static_cast<unsigned>(time(nullptr))); }
 
-bool MapRender::processKey(uint8_t directKey, uint8_t functionKey) {
-    Character *player = getDefaultPlayer();
-    if (entranceAnimation) {
-        return true;
-    }
-    if (player->steping || directKey == 0 || entranceAnimation) {
-        return functionKey == 0;
-    }
-    int targetX = player->x;
-    int targetY = player->y;
-    int nextDirect = direct_down;
-    if (directKey & up) {
-        targetY--;
-        nextDirect = direct_up;
-    }
-    if (directKey & down) {
-        targetY++;
-        nextDirect = direct_down;
-    }
-    if (directKey & right) {
-        targetX++;
-        nextDirect = direct_right;
-    }
-    if (directKey & left) {
-        targetX--;
-        nextDirect = direct_left;
-    }
-    //fixme tile_map.c 's feature data was TOTALLY WRONG!!!
-    if (canHumanPass(targetX, targetY) || true) {
-        if (mayEnterAnotherMap(player, targetX, targetY)) {
-            player->direct = nextDirect;
-        } else if (mayExitToLastMap(player, targetX, targetY)) {
-            player->direct = nextDirect;
-        } else {
-            player->x = targetX;
-            player->y = targetY;
-            triggerMonster();
-            triggerDoor(player);
+map_render::~map_render() {}
+
+void map_render::update_map(int map, int x, int y) {
+    map_id = (map % 240 + 240) % 240;
+    auto *p = get_default_player();
+    p->set_pos(std::max(0, std::min(x, static_cast<int>(map_size[map_id * 2 + 1]) - 1)),
+              std::max(0, std::min(y, static_cast<int>(map_size[map_id * 2]) - 1)));
+    refresh_current_map(map_id);
+    map_npcs::load(map_id);
+    encounter_cooldown = 30;
+    game_state::get().map = map_id;
+    game_state::get().x = p->x;
+    game_state::get().y = p->y;
+    refresh_music();
+}
+
+int map_render::get_map_id() { return map_id; }
+
+void map_render::refresh_music() const {
+    int track = static_cast<int>(map_music[map_id]) - 3;
+    if (track >= 0 && track != get_audio_idx()) { change_audio(track); }
+}
+
+void map_render::on_focus() { refresh_music(); }
+
+void map_render::on_un_focus() {}
+
+void map_render::reset_palette() const { native_graphic::set_global_fade_percent(100); }
+
+void map_render::render_players(uint8_t *screen, character *p) const {
+    bitmap_render::render_bitmap_with_transport(p->current_bitmap(), 16, 16, p->render_x - camera_x,
+                                                p->render_y - camera_y, screen);
+}
+
+void map_render::render_sprite(uint8_t *screen) const { map_npcs::render(screen, camera_x, camera_y); }
+
+void map_render::render_water(uint8_t *screen) const {
+    const int states[4] = {0, 1, 2, 1};
+    int frame = states[(water_tick / 60) % 4];
+    int first_x = camera_x / 16 - 1, first_y = camera_y / 16 - 1;
+    for (int y = first_y; y < first_y + global_config::k_tile_height + 3; y++) {
+        for (int x = first_x; x < first_x + global_config::k_tile_width + 3; x++) {
+            if (!tile_is_pure_water(get_tile_idx(x, y))) { continue; }
+            int sx = x * 16 - camera_x, sy = y * 16 - camera_y;
+            game_data::draw_image(game_data::k_water_image+frame,sx,sy,screen);
+            uint8_t shore = 0;
+            if (!tile_is_water(get_tile_idx(x, y - 1))) { shore |= up; }
+            if (!tile_is_water(get_tile_idx(x, y + 1))) { shore |= down; }
+            if (!tile_is_water(get_tile_idx(x - 1, y))) { shore |= left; }
+            if (!tile_is_water(get_tile_idx(x + 1, y))) { shore |= right; }
+            render_wave(shore, frame, screen, sx, sy);
         }
-    } else {
-        player->direct = nextDirect;
-    }
-    return functionKey == 0;
-}
-
-void MapRender::triggerDoor(Character *player) const {
-    int map_width = map_size[mapId * 2 + 1];
-    unsigned short tileId = short_map_data[mapId][getDefaultPlayer()->y * map_width +
-                                                  getDefaultPlayer()->x];
-    if ((tileId == 37 || tileId == 72
-         || tileId == 128 || tileId == 137
-         || tileId == 162 || tileId == 193
-        )
-        && (!player->inDoor)) {
-        renderEffect(EFFECT_DOOR);
-        player->inDoor = true;
-    } else if (player->inDoor) {
-        renderEffect(EFFECT_DOOR);
-        player->inDoor = false;
     }
 }
 
-void MapRender::triggerMonster() const {
-    if (getDefaultPlayer()->godMode || rand() % 100 > 10) {
-        return;
+void map_render::trigger_door(character *p) const {
+    unsigned attr = game_data::map_attribute(map_id,p->x,p->y);
+    bool door = (attr & 252) == 0x3c;
+    if (door != p->in_door) {
+        render_effect(effect_door);
+        p->in_door = door;
     }
-    int monsterGroupId = 0;
-    if (mapId == 0) {
-        int monsterArea = (getDefaultPlayer()->y / 16) * 16 + (getDefaultPlayer()->x / 16);
-        monsterGroupId = monster_distribution_world[monsterArea];
-    } else if (mapId >= 0x80) {
-        monsterGroupId = monster_distribution_4_samll_maps[mapId - 0x80];
-    }
-    if (monsterGroupId == 0) {
-        return;
-    }
-    int hitMonsterIdx = rand() % 0x0A;
-    int monsterId = monster_group[monsterGroupId * 0x0A + hitMonsterIdx];
-    if (monsterId == 0) {
-        return;
-    }
-    BattleRender *battleRender = new BattleRender(monsterId);
-    push(battleRender);
 }
 
-bool MapRender::mayExitToLastMap(Character *player, int targetX, int targetY) {
-    uint8_t startX = movable_offset[mapId * 2];
-    uint8_t startY = movable_offset[mapId * 2 + 1];
-    uint8_t endX = startX + movable_size[mapId * 2];
-    uint8_t endY = startY + movable_size[mapId * 2 + 1];
-    if (targetX < startX
-        || targetY < startY
-        || targetX > endX
-        || targetY > endY) {
-        entranceAnimation = ANIMATION_DURATION;
-        nextMapIsBack = true;
+uint8_t *map_render::render(uint8_t *screen) {
+    auto *p = get_default_player();
+    camera_x = p->render_x - (global_config::k_screen_width - 16) / 2;
+    camera_y = p->render_y - (global_config::k_screen_height - 16) / 2;
+    render_map(camera_x, camera_y, screen);
+    render_water(screen);
+    render_sprite(screen);
+    render_players(screen, p);
+    return screen;
+}
+
+void map_render::tik_logic() {
+    auto *p = get_default_player();
+    p->tik();
+    map_npcs::tick();
+    water_tick++;
+    if (entrance_animation) {
+        entrance_animation--;
+        if (entrance_animation == 15) { enter_another_map(p); }
+        int percent = entrance_animation >= 15 ? (entrance_animation - 15) * 100 / 15 :
+                      (15 - entrance_animation) * 100 / 15;
+        native_graphic::set_global_fade_percent(percent);
+        if (!entrance_animation) { reset_palette(); }
+    }
+}
+
+void map_render::process_key_click(uint8_t, uint8_t function) {
+    if (entrance_animation) { return; }
+    if (function & a) {
+        push(new menu_render(map_menu));
+        return;
+    }
+    if (function & key_x) {
+        push(new debug_render);
+        return;
+    }
+    if (function & ta) {
+        int map = (map_id + 1) % 240;
+        update_map(map, map_size[map * 2 + 1] / 2, map_size[map * 2] / 2);
+        history.clear();
+    }
+    if (function & tb) { change_audio(get_audio_idx() + 1); }
+}
+
+bool map_render::process_key(uint8_t direct, uint8_t function) {
+    auto *p = get_default_player();
+    if (entrance_animation) { return true; }
+    if (p->steping || !direct) { return !function; }
+    int dir = direct & up ? 0 : direct & down ? 1 : direct & left ? 2 : 3;
+    static const int dx[4] = {0, 0, -1, 1}, dy[4] = {-1, 1, 0, 0};
+    p->direct = dir;
+    p->half_step=0;
+    int x = p->x + dx[dir], y = p->y + dy[dir];
+    if (may_enter_another_map(p, x, y) || may_exit_to_last_map(p, x, y)) { return true; }
+    if (!map_npcs::passable(map_id, x, y)) { return !function; }
+    if (map_npcs::blocks(x, y) && !map_npcs::push_npc(x, y, dir)) { return !function; }
+    p->x = x;
+    p->y = y;
+    p->steping = true;
+    trigger_door(p);
+    trigger_monster();
+    return !function;
+}
+
+bool map_render::may_enter_another_map(character *p, int x, int y) {
+    const auto &range_t = game_data::map_entrances(map_id);
+    for (unsigned i = 0; i < range_t.count; i++) {
+        const auto &e = game_data::entrance_at(range_t.offset + i);
+        if (e.x != x || e.y != y || (p->x == x && p->y == y)) { continue; }
+        if (e.map >= 240) { continue; }
+        if (history.size() >= 64) { history.erase(history.begin()); }
+        history.push_back({uint8_t(map_id),uint8_t(p->x),uint8_t(p->y)});
+        next_map_id = e.map;
+        next_x = e.to_x;
+        next_y = e.to_y;
+        entrance_animation = 30;
+        render_effect(effect_enter_entrance);
         return true;
     }
     return false;
 }
 
-bool MapRender::enterAnotherMap(Character *player) {
-    if (!nextMapIsBack && nextMapId == -1 && matchedEntrancesIdx == -1) {
-        return false;
-    }
-    LOGD(TAG, "enterAnotherMap(): %d %d %d", nextMapId, matchedEntrancesIdx, nextMapIsBack);
-    pthread_mutex_lock(&changeMapMutex);
-    if (nextMapIsBack) {
-        --lastPosStackTop;
-        player->setPos(lastPosStack[lastPosStackTop].x, lastPosStack[lastPosStackTop].y);
-        updateMap(lastPosStack[lastPosStackTop].mapId, 0, 0);
+bool map_render::may_exit_to_last_map(character *, int x, int y) {
+    int sx = movable_offset[map_id * 2], sy = movable_offset[map_id * 2 + 1];
+    bool outside = x < sx || y < sy || x > sx + movable_size[map_id * 2] ||
+                   y > sy + movable_size[map_id * 2 + 1]
+                   || x < 0 || y < 0 || x >= map_size[map_id * 2 + 1] || y >= map_size[map_id * 2];
+    if (!outside) { return false; }
+    const auto &border_t = game_data::map_border(map_id);
+    if (border_t.type == 0) {
+        if (history.empty()) { return true; }
+        const auto pos = history.back();
+        history.pop_back();
+        next_map_id = pos.map;
+        next_x = pos.x;
+        next_y = pos.y;
     } else {
-        player->setPos(entrances[mapId][matchedEntrancesIdx * 5 + 2],
-                       entrances[mapId][matchedEntrancesIdx * 5 + 3]);
-        updateMap(nextMapId, 0, 0);
+        int direction = 0;
+        if (border_t.type == 2) {
+            direction = y < sy ? 0 : y > sy + movable_size[map_id * 2 + 1] ? 1 : x < sx ? 2 : 3;
+        }
+        const auto &target = border_t.targets[direction];
+        if (target.map >= 240) { return true; }
+        next_map_id = target.map;
+        next_x = target.x;
+        next_y = target.y;
     }
-
-    //reset
-    nextMapIsBack = false;
-    nextMapId = -1;
-    matchedEntrancesIdx = -1;
-    pthread_mutex_unlock(&changeMapMutex);
+    entrance_animation = 30;
     return true;
 }
 
-bool MapRender::mayEnterAnotherMap(Character *player, int targetX, int targetY) {
-    int currentOnEntranceMapId = -1;
-    int matchedIdx = -1;
-    for (int i = 0; i < entrance_count[mapId]; i++) {
-        uint8_t entrance_x = entrances[mapId][i * 5];
-        uint8_t entrance_y = entrances[mapId][i * 5 + 1];
-        if (player->x == entrance_x && player->y == entrance_y) {
-            currentOnEntranceMapId = entrances[mapId][i * 5 + 4];
-        }
-        if (targetX == entrance_x && targetY == entrance_y) {
-            matchedIdx = i;
-            nextMapId = entrances[mapId][i * 5 + 4];
-        }
-    }
-    if (matchedIdx != -1 && nextMapId != currentOnEntranceMapId) {
-        matchedEntrancesIdx = matchedIdx;
-        entranceAnimation = ANIMATION_DURATION;
-        bool isBack = false;
-        for (int j = 0; j < lastPosStackTop; j++) {
-            if (lastPosStack[j].mapId == nextMapId) {
-                lastPosStackTop = j;
-                isBack = true;
-                break;
-            }
-        }
-        if (!isBack) {
-            lastPosStack[lastPosStackTop].x = targetX;
-            lastPosStack[lastPosStackTop].y = targetY;
-            lastPosStack[lastPosStackTop++].mapId = mapId;
-        }
-        return true;
-    }
-    return false;
+bool map_render::enter_another_map(character *) {
+    if (next_map_id < 0) { return false; }
+    int map = next_map_id;
+    next_map_id = -1;
+    update_map(map, next_x, next_y);
+    return true;
 }
 
-MapRender::~MapRender() {
-    LOGD("MapRender", "delete");
+void map_render::trigger_monster() const {
+    auto *p = get_default_player();
+    if (p->god_mode || encounter_cooldown) {
+        const_cast<map_render *>(this)->encounter_cooldown = encounter_cooldown ? encounter_cooldown - 1
+                                                                             : 0;
+        return;
+    }
+    if (rand() % 100 >= 11) { return; }
+    int group = 0;
+    if (!map_id) { group = monster_distribution_world[(p->y / 16) * 16 + p->x / 16]; }
+    else if (map_id >= 128) { group = monster_distribution_4_samll_maps[map_id - 128]; }
+    else { return; }
+    if (group >= 93) { return; }
+    int monster = monster_group[group * 10 + rand() % 10];
+    if (monster > 0 && monster < monster_count) {
+        const_cast<map_render *>(this)->encounter_cooldown = 12;
+        push(new battle_render(monster));
+    }
 }
+} // namespace metalmax

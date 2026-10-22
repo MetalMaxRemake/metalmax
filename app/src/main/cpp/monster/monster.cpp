@@ -1,24 +1,12 @@
-//
-// Created by youngpark on 2023/5/11.
-//
-
 #include "monster.h"
 #include "monster_data/monster_data.h"
-#include "../graphic/graphic_process.h"
-#include "../graphic/bitmap_render.h"
-
-uint8_t *renderMonster(int monsterId, int rawIdx, int columnIdx, uint8_t *result) {
-    int monster_width = monster_size[monsterId * 2 + 1];
-    int monster_height = monster_size[monsterId * 2];
-    return bitmap_render::render_bitmap(monster_model[monsterId],
-                        monster_width, monster_height,
-                        columnIdx, rawIdx, result);
+#include "../data/game_data.h"
+namespace metalmax {
+uint8_t *render_monster(int id,int y,int x,uint8_t *screen) {
+    if (id>=0 && id<131) { game_data::draw_image(game_data::k_monster_image+id,x,y,screen); }
+    return screen;
 }
-
-//health	attack	defense	armor护甲	speed	hitRate	battleLevel	experience	gold	dropsItem	attribute	resistance	ability	attackMode
-//stride = 14
-
-
-uint8_t getMonsterProperty(int monsterId, int type) {
-    return monster_properties[monsterId * MONSTER_PROPERTY_STRIDE + type];
+uint8_t get_monster_property(int id,int type) {
+    return id>=0 && id<131 && type>=0 && type<14 ? monster_properties[id*14+type] : 0;
 }
+} // namespace metalmax

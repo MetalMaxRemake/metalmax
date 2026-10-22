@@ -7,20 +7,23 @@
 #include "audio/native_sound.h"
 #include "charset/charsets.h"
 #include "logic/logic.h"
+#include "logic/status/game_state.h"
 
-const char *BRIDGE_TAG = "bridge";
+using namespace metalmax;
+const char *bridge_tag = "bridge";
 
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_park_metalmax_NativeBridge_initNativeWindowNative(JNIEnv *env,
                                                            jclass clazz,
                                                            jobject surface) {
-    LOGD(BRIDGE_TAG, "initNativeWindow");
-    ANativeWindow *nativeWindow = ANativeWindow_fromSurface(env, surface);
-    if (nativeWindow == nullptr) {
+    log_d(bridge_tag, "initNativeWindow");
+    ANativeWindow *native_window = ANativeWindow_fromSurface(env, surface);
+    if (native_window == nullptr) {
         return JNI_FALSE;
     }
-    if (!native_graphic::initGraphic(nativeWindow)) {
+    if (!native_graphic::init_graphic(native_window)) {
+        ANativeWindow_release(native_window);
         return JNI_FALSE;
     }
     return JNI_TRUE;
@@ -29,41 +32,54 @@ Java_com_park_metalmax_NativeBridge_initNativeWindowNative(JNIEnv *env,
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_releaseNativeWindowNative(JNIEnv *env, jclass clazz) {
-    LOGD(BRIDGE_TAG, "releaseNativeWindow");
-    native_graphic::releaseGraphic();
+    log_d(bridge_tag, "releaseNativeWindow");
+    native_graphic::release_graphic();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_slInitNative(JNIEnv *env, jclass clazz) {
-    LOGD(BRIDGE_TAG, "slInit");
-    initSL();
+    log_d(bridge_tag, "slInit");
+    init_sl();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_slReleaseNative(JNIEnv *env, jclass clazz) {
-    LOGD(BRIDGE_TAG, "slRelease");
-    releaseSL();
+    log_d(bridge_tag, "slRelease");
+    release_sl();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_initLogicNative(JNIEnv *env, jclass clazz) {
-    LOGD(BRIDGE_TAG, "initLogic");
-    initLogic();
+    log_d(bridge_tag, "initLogic");
+    init_logic();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_onKeyEventNative(JNIEnv *env, jclass clazz, jint key) {
-    LOGD(BRIDGE_TAG, "onKeyEvent");
-    updateDirectKey(key);
+    log_d(bridge_tag, "onKeyEvent");
+    update_direct_key(key);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_park_metalmax_NativeBridge_onFuncKeyEventNative(JNIEnv *env, jclass clazz, jint key) {
-    LOGD(BRIDGE_TAG, "onFuncKeyEvent");
-    updateFunctionKey(key);
+    log_d(bridge_tag, "onFuncKeyEvent");
+    update_function_key(key);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_setSaveDirectoryNative(JNIEnv *env, jclass, jstring directory) {
+    const char *path = env->GetStringUTFChars(directory, nullptr);
+    if (path) {
+        game_state::set_save_directory(path);
+        env->ReleaseStringUTFChars(directory, path);
+    }
+}
+extern "C" JNIEXPORT void JNICALL
+Java_com_park_metalmax_NativeBridge_setPausedNative(JNIEnv *, jclass, jboolean paused) {
+    set_logic_paused(paused);
 }

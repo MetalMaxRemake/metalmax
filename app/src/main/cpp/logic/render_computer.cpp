@@ -6,29 +6,31 @@
 #include "render_computer.h"
 #include "../charset/charsets.h"
 
-uint8_t *ComputerRender::render(uint8_t *screenBuffer) {
+namespace metalmax {
+uint8_t *computer_render::render(uint8_t *screen_buffer) {
     char info[100];
-    if(type == -1) {
-        sprintf(info, "NOTHING WAS FOUND!");
+    if (type == -1) {
+        snprintf(info, sizeof(info), "NOTHING WAS FOUND!");
     } else {
-        sprintf(info, "COMPUTER TYPE = %d", type);
+        snprintf(info, sizeof(info), "COMPUTER TYPE = %d", type);
     }
     int start = 192;
-    int textHeight = 8;
-    renderAsciText(screenBuffer, info, 108, start + textHeight * 1);
-    return screenBuffer;
+    int text_height = 8;
+    render_asci_text(screen_buffer, info, 108, start + text_height * 1);
+    return screen_buffer;
 }
 
-void ComputerRender::processKeyClick(uint8_t directKey, uint8_t functionKey) {
-    if (functionKey != 0) {
+void computer_render::process_key_click(uint8_t direct_key, uint8_t function_key) {
+    if (function_key != 0) {
         pop();
     }
 }
 
-void ComputerRender::tikLogic() {
+void computer_render::tik_logic() {
 
 }
 
-ComputerRender::ComputerRender(int type) {
+computer_render::computer_render(int type) {
     this->type = type;
 }
+} // namespace metalmax
