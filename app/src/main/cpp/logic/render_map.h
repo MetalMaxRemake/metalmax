@@ -29,6 +29,8 @@ private:
 
     void render_sprite(uint8_t *screen_buffer) const;
 
+    void render_tanks(uint8_t *screen_buffer) const;
+
     void render_water(uint8_t *screen_buffer) const;
 
     void reset_palette() const;

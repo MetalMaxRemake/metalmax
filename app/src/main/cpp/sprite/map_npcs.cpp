@@ -4,9 +4,14 @@
 #include "../logic/status/character.h"
 #include "../logic/render_dialogue.h"
 #include "../logic/render_battle.h"
+#include "../logic/story_runtime.h"
+#include "../logic/status/game_state.h"
+#include "../audio/mm_sound.h"
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+
+extern "C" void render_effect(int effect_audio_id);
 
 namespace metalmax::map_npcs {
 static std::vector<npc> actors;
@@ -82,9 +87,88 @@ void npc::wander(int x1,int y1,int x2,int y2) {
     if (x1>=0 && (tile_x+dx[dir]<x1 || tile_x+dx[dir]>=x2 || tile_y+dy[dir]<y1 || tile_y+dy[dir]>=y2)) { return; }
     move(dir);
 }
-void load(int map) {
+
+    void npc::play(int anim) {
+        set_frame(anim & 1);
+        animation_ticks = std::max<uint8_t>(16, static_cast<uint8_t>((anim + 1) * 8));
+    }
+
+    void npc::patrol(int type) {
+        static const uint8_t path[5][4] = {{3, 1, 2, 0},
+                                           {0, 3, 1, 2},
+                                           {2, 0, 3, 1},
+                                           {1, 2, 0, 3},
+                                           {3, 3, 2, 2}};
+        move(path[type % 5][(animation_ticks++ / 4) & 3]);
+    }
+
+    void npc::enter_tank() {
+        attributes |= 0x10;
+        int tank_id = game_state::tank_at(map, tile_x, tile_y);
+        if (tank_id < 0) {
+            for (unsigned i = 0; i < game_state::k_tank_count; i++) {
+                const auto &tank = game_state::get().tanks[i];
+                if (tank.owned && tank.map == map && !tank.riding) {
+                    tank_id = i;
+                    break;
+                }
+            }
+        }
+        if (tank_id >= 0) { game_state::move_tank(tank_id, map, tile_x, tile_y, direction); }
+        visible = false;
+    }
+
+    void npc::exit_tank(int value) {
+        change_model(value, false);
+        visible = true;
+    }
+
+    void npc::become_player(int player) {
+        change_model(9 + (player & 3), false);
+        story_runtime::player_hide();
+    }
+
+    void npc::throw_anim(int, int target_npc) {
+        animation_ticks = 32;
+        render_effect(effect_enter_entrance);
+        if (target_npc >= 0 && target_npc < static_cast<int>(actors.size())) {
+            actors[target_npc].visible = false;
+        }
+    }
+
+    void npc::explode() {
+        render_effect(effect_enter_entrance);
+        animation_ticks = 24;
+    }
+
+    void npc::hurt() {
+        auto *player = get_default_player();
+        if (abs(player->x - tile_x) + abs(player->y - tile_y) <= 1) {
+            auto &state = game_state::get().players[0];
+            state.hp = std::max<int>(0, state.hp - 10);
+        }
+    }
+
+    bool npc::move_tank() {
+        int tank_id = -1;
+        for (unsigned i = 0; i < game_state::k_tank_count; i++) {
+            const auto &tank = game_state::get().tanks[i];
+            if (tank.owned && tank.map == map && !tank.riding) {
+                tank_id = i;
+                break;
+            }
+        }
+        if (tank_id < 0) { return true; }
+        auto &tank = game_state::get().tanks[tank_id];
+        game_state::move_tank(tank_id, map, tile_x, tile_y, direction);
+        return move_to(tank.x, tank.y);
+    }
+
+    void load(int map, int group) {
     actors.clear();if (map<0 || map>=240) { return; }
-    const auto &range_t=game_data::map_npcs(map);actors.reserve(range_t.count);
+        int source_group = group >= 0 ? group : map;
+        const auto &range_t = game_data::map_npcs(source_group);
+        actors.reserve(range_t.count);
     for (unsigned i=0;i<range_t.count;i++) {
         npc n;n.data=game_data::npc(range_t.offset+i);n.map=map;
         n.direction=n.data.type&3;n.model=n.data.type>>2;n.model_type=n.data.talk1&3;

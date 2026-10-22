@@ -3,9 +3,7 @@
 #include "../data/resource_decode.h"
 #include <cstring>
 #include <algorithm>
-
 namespace {
-
 #include "source_data/audio_editor_01a010.h"
 #include "source_data/audio_editor_03aef0.h"
 #include "source_data/audio_editor_03aff6.h"

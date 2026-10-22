@@ -2,6 +2,7 @@
 #include "render.h"
 #include "render_map.h"
 #include "render_splash.h"
+#include "render_debug.h"
 #include "../graphic/native_graphic.h"
 #include "../charset/charsets.h"
 #include <pthread.h>
@@ -12,6 +13,7 @@
 
 namespace metalmax {
     const uint8_t up = 1, down = 2, left = 4, right = 8;
+    static constexpr uint8_t k_debug_key = 0x10;
     static std::vector<base_render *> stack;
     static std::vector<base_render *> retired;
     static map_render *s_map_render = nullptr;
@@ -101,6 +103,16 @@ namespace metalmax {
         lock_logic();
         uint8_t direct = direct_key.load(), function = function_key.load();
         base_render *render = top();
+        if ((function & k_debug_key) && !(last_function & k_debug_key) &&
+            !dynamic_cast<debug_render *>(render)) {
+            push(new debug_render);
+            last_direct = direct;
+            last_function = function;
+            if (top()) { top()->tik_logic(); }
+            collect();
+            unlock_logic();
+            return;
+        }
         if (render && !render->process_key(direct, function)) {
             if (top() == render) {
                 render->process_key_click(direct & ~last_direct, function & ~last_function);

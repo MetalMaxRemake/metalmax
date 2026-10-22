@@ -345,12 +345,31 @@ monster_data_t monster(unsigned i){if(i>=131)i=0;const auto *p=k_monster_stats+i
     values=read('values/data.json')['VALUES'];path='item/item_data/value_table.h';emit(path,b''.join(u24(values.get(str(i),0)) for i in range(256)),'k_item_values')
     cpp('item/value_resources.cpp',[path],'''namespace metalmax::game_data {uint32_t value(unsigned i){return i<256?resource_decode::u24(k_item_values+i*3):0;}}
 ''')
+    # Tank initial state is structured once into its own module. Runtime uses
+    # the generated header, never the JSON source.
+    tanks=read('tanks/data.json')
+    order=['NO_1','NO_2','NO_3','NO_4','NO_5','NO_6','NO_7','NO_8']
+    tank_records=bytearray()
+    for name in order:
+        t=tanks['tankInitAttributes'][name]
+        tank_records.extend(bytes(t['equipment']))
+        tank_records.extend(bytes([t['equipmentState'],t['shells']]))
+        for key in ['defense','maxDefense','weight','sp']:
+            tank_records.extend(u16(t[key]))
+        tank_records.extend(bytes([t.get('map',255),t.get('x',0),t.get('y',0),t['slot']]))
+    emit('tank/tank_data/tank_initial.h',bytes(tank_records),'k_tank_initial')
+    emit('tank/tank_data/tank_meta.h',bytes([tanks['defenseUpStep'],tanks['shellsUpStep'],tanks['maxShells']])+bytes(tanks['weaponShellCapacities']),'k_tank_meta')
     treasures=read('treasures/data.json')['treasures'];headers=[];cases=[]
     for i,t in enumerate(treasures):
         path=f'logic/treasure_data/treasure_{i:03d}.h';sym=emit(path,bytes(t[k] for k in ['map','x','y','item']),f'k_treasure_{i}');headers.append(path);cases.append(f'case {i}:memcpy(&t,{sym},4);break;')
     cpp('logic/treasure_resources.cpp',headers,'''namespace metalmax::game_data {treasure_data_t treasure(unsigned i){treasure_data_t t={};switch(i){__CASES__ default:break;}return t;}}
 '''.replace('__CASES__',''.join(cases)))
     path='computer/computer_data.h';raw=bytes(nums(LEGACY/'computer/computer_data.cpp','computers'));emit(path,raw,'k_computers');textfile(path,'#ifndef METALMAX_COMPUTER_DATA_H\n#define METALMAX_COMPUTER_DATA_H\n#include <stdint.h>\n#define computer_count 123\n#ifdef METALMAX_DEFINE_COMPUTER_DATA\nextern const uint8_t computers[492]={'+','.join(map(str,raw))+'};\n#else\nextern const uint8_t computers[492];\n#endif\n#endif\n');textfile('computer/computer_data.cpp','#define METALMAX_DEFINE_COMPUTER_DATA\n#include "computer_data.h"\n')
+    teleports=read('teleports/data.json')['teleportLocations'];teleport_bytes=bytearray()
+    for i in range(16):
+        t=teleports[i] if i<len(teleports) else {}
+        teleport_bytes.extend(bytes([t.get('map',255),t.get('x',0),t.get('y',0)]))
+    emit('computer/computer_data/teleport_locations.h',bytes(teleport_bytes),'k_teleport_locations')
     # NSF stays under audio with its own header, not a central generated folder.
     emit('audio/mm_sound_data.h',(PROJECT/'tools/inputs/all_sound.bin').read_bytes(),'k_nsf')
     # Cold reverse-engineered source ranges are split by editor owner; one

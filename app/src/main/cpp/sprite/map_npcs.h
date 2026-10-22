@@ -29,11 +29,34 @@ struct npc : script_host {
     void set_bank(int value) override { bank=value; }
     void model_delta(int value) override { model=(model+value)&63; }
     void wander(int x1,int y1,int x2,int y2) override;
+
+    void play(int anim) override;
+
+    void patrol(int type) override;
+
+    void enter_tank() override;
+
+    void exit_tank(int model) override;
+
+    void become_player(int player) override;
+
+    void throw_anim(int b1, int npc) override;
+
+    void explode() override;
+
+    void hurt() override;
+
+    bool move_tank() override;
     bool busy() const override { return moving; }
     int x() const override { return tile_x; }
     int y() const override { return tile_y; }
+
+    int current_map() const override { return map; }
+
+    int facing() const override { return direction; }
 };
-void load(int map);
+
+    void load(int map, int group = -1);
 void tick();
 void render(uint8_t *buffer,int camera_x,int camera_y);
 npc *at(int x,int y);

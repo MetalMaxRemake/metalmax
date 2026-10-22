@@ -11,6 +11,7 @@ public:
 private:
     game_data::shop_data_t data={};
     int selected=0;
+    int shop_type = 0, page = 0;
 };
 } // namespace metalmax
 #endif

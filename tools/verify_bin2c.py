@@ -48,7 +48,8 @@ for i in range(1904):
 for image in json.loads((BUILD/'pixel-hashes.json').read_text()):
     assert actual[image['id']]==(image['width'],image['height'],image['sha256']),image['name']
 water=nums(CPP/'maps/active_tile_bmp.cpp','water')
-for i in range(3):assert actual[2038+i]==(16,16,hashlib.sha256(bytes(water[i*256:(i+1)*256])).hexdigest())
+water_start=2038
+for i in range(3):assert actual[water_start+i]==(16,16,hashlib.sha256(bytes(water[i*256:(i+1)*256])).hexdigest())
 ref=PROJECT.parent/'metalmax-reverse/resources'
 tileset=json.loads((ref/'editor_state/tileSetEditor.json').read_text());props=json.loads((ref/'editor_state/mapPropertiesEditor.json').read_text())['mapProperties']
 data=(HOST/'decoded-maps.bin').read_bytes();position=0;cells=0

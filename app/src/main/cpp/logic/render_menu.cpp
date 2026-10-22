@@ -1,5 +1,6 @@
 #include "render_menu.h"
 #include "render_inventory.h"
+#include "render_tank.h"
 #include "render_dialogue.h"
 #include "map_interaction.h"
 #include "status/game_state.h"
@@ -19,7 +20,7 @@ void menu_render::process_selection() {
             interact_with_npc();
             break;
         case 1:
-            push(new inventory_render(true));
+            push(new equipment_render);
             break;
         case 2:
             push(new status_render);
@@ -31,6 +32,12 @@ void menu_render::process_selection() {
             push(new inventory_render);
             break;
         case 5:
+            push(new tank_status_render);
+            break;
+        case 6:
+            push(new tank_equipment_render);
+            break;
+        case 7:
             push(new dialogue_render(game_state::save() ? "战斗记录保存了。" : "保存失败。"));
             break;
     }
@@ -38,7 +45,7 @@ void menu_render::process_selection() {
 
 void menu_render::process_key_click(uint8_t direct, uint8_t function) {
     if (direct & up) { select_pos = std::max(0, select_pos - 1); }
-    if (direct & down) { select_pos = std::min(5, select_pos + 1); }
+    if (direct & down) { select_pos = std::min(7, select_pos + 1); }
     if (function & b) {
         pop();
         return;
@@ -47,12 +54,12 @@ void menu_render::process_key_click(uint8_t direct, uint8_t function) {
 }
 
 uint8_t *menu_render::render(uint8_t *screen) {
-    memset(screen + 144 * global_config::k_screen_width, palette::k_palette_black,
-           112 * global_config::k_screen_width);
-    static const char *labels[] = {"交谈", "装备", "状态", "调查", "物品", "保存"};
-    for (int i = 0; i < 6; i++) {
-        render_utf_8_text(screen, labels[i], 32, 152 + i * 16, 128, 16);
-        if (i == select_pos) { render_select_pos(screen, 16, 154 + i * 16); }
+    memset(screen + 112 * global_config::k_screen_width, palette::k_palette_black,
+           144 * global_config::k_screen_width);
+    static const char *labels[] = {"交谈", "装备", "状态", "调查", "物品", "战车", "车装", "保存"};
+    for (int i = 0; i < 8; i++) {
+        render_utf_8_text(screen, labels[i], 32, 120 + i * 16, 128, 16);
+        if (i == select_pos) { render_select_pos(screen, 16, 122 + i * 16); }
     }
     return screen;
 }

@@ -9,13 +9,8 @@
 #include "../../data/game_data.h"
 
 namespace metalmax {
-uint8_t direct_up = 0;
-uint8_t direct_down = 1;
-uint8_t direct_left = 2;
-uint8_t direct_right = 3;
 
     static character *warrior;
-    static constexpr int k_pixels_per_tick = 2;
 
     static int step_toward(int value, int target) {
         int delta = target - value;
@@ -35,17 +30,17 @@ uint8_t direct_right = 3;
         // tiles all come from the fixed04/05 banks, independent of the map bank.
         game_data::decode_sprite(0, bitmap_id, direct, half_step, frame);
         return frame;
-}
+    }
 
 //x is left or right, y is up or down
     void character::set_pos(int nx, int ny) {
-    x = nx;
-    y = ny;
+        x = nx;
+        y = ny;
         render_x = x * 16;
         render_y = y * 16;
         half_step = 0;
         steping = false;
-}
+    }
 
     void character::tik() {
         int target_x = x * 16;
@@ -57,7 +52,7 @@ uint8_t direct_right = 3;
             steping = false;
             return;
         }
-    steping = true;
+        steping = true;
         if (dx) {
             direct = dx > 0 ? direct_right : direct_left;
             render_x = step_toward(render_x, target_x);
@@ -68,13 +63,13 @@ uint8_t direct_right = 3;
         int remaining = abs(target_x - render_x) + abs(target_y - render_y);
         half_step = remaining > 8 ? 1 : 0;
         steping = remaining != 0;
-}
+    }
 
     character *get_default_player() {
-    if (warrior == nullptr) {
-        warrior = new character;
-        warrior->set_pos(91, 232);
+        if (warrior == nullptr) {
+            warrior = new character;
+            warrior->set_pos(91, 232);
+        }
+        return warrior;
     }
-    return warrior;
-}
 } // namespace metalmax

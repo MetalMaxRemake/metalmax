@@ -12,6 +12,7 @@
 #include "../charset/utf8_text.h"
 #include "../data/game_data.h"
 #include "status/game_state.h"
+#include "render_name.h"
 
 namespace metalmax {
 static volatile int count = 0;
@@ -24,8 +25,12 @@ void splash_render::process_key_click(uint8_t direct_key, uint8_t function_key) 
     if (splash_scene >= 5) {
         if (direct_key & (up | down)) { start_selection ^= 1; }
         if (!(function_key & a)) { return; }
-        if (start_selection && !game_state::load()) { return; }
-        if (!start_selection) { game_state::new_game(); }
+        if (!start_selection) {
+            pop();
+            push(new name_render);
+            return;
+        }
+        if (!game_state::load()) { return; }
         auto &s_state = game_state::get();
         const int map_id = s_state.map, x = s_state.x, y = s_state.y;
         pop();
@@ -135,6 +140,9 @@ uint8_t *splash_render::render(uint8_t *screen_buffer) {
 }
 
 splash_render::~splash_render() {
-
+    count = 0;
+    splash_scene = 0;
+    logo_y = 0;
+    percent = 0;
 }
 } // namespace metalmax

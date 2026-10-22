@@ -4,6 +4,11 @@
 #include "logic/render_battle.h"
 #include "logic/render_dialogue.h"
 #include "logic/render_inventory.h"
+#include "logic/render_tank.h"
+#include "logic/render_splash.h"
+#include "logic/render_name.h"
+#include "logic/map_interaction.h"
+#include "logic/story_runtime.h"
 #include "logic/render_shop.h"
 #include "logic/status/game_state.h"
 #include "sprite/map_npcs.h"
@@ -45,8 +50,42 @@ static void draw(const char *path,std::vector<uint8_t> &screen) {
 }
 int main(int argc,char **argv) {
     assert(argc==3);game_data::apply_palette();game_state::new_game();game_state::set_save_directory(argv[1]);
+    auto find_player_item = [](unsigned player, unsigned id) {
+        for (unsigned i = 0; i < game_state::k_player_inventory_size; i++) {
+            if (game_state::get().players[player].inventory[i] == id) { return i; }
+        }
+        assert(false);
+        return 0u;
+    };
+    auto write_flat_inventory = [](uint8_t *out) {
+        unsigned slot = 0;
+        for (const auto &p: game_state::get().players) {
+            for (uint8_t item: p.inventory) {
+                if (item && slot < game_state::k_inventory_size) { out[slot++] = item; }
+            }
+        }
+        for (uint8_t item: game_state::get().inventory) {
+            if (item && slot < game_state::k_inventory_size) { out[slot++] = item; }
+        }
+    };
     std::vector<uint8_t> screen(global_config::k_screen_buffer_size);
+    splash_render splash;
+    for (int i = 0; i < 400; i++) { splash.tik_logic(); }
+    splash.render(screen.data());
+    name_render naming;
+    naming.render(screen.data());
+    naming.process_key_click(0, 1);
+    assert(!strcmp(game_state::player_name(0), "HUNTER") && get_current_map() == 3);
+    assert(map_npcs::count() == 3);
+    story_runtime::scene(2);
+    dynamic_cast<map_render *>(top())->tik_logic();
+    assert(get_current_map() == 2 && map_npcs::count() == 2);
+    release_logic_thread();
     auto *map=new map_render;map->update_map(1,14,14);push(map);
+    auto pop_to_map = [&]() {
+        while (top() && top() != map) { pop(); }
+        assert(top() == map);
+    };
     auto *npc=map_npcs::get(2);assert(npc && npc->data.action==2);
     int old_x=npc->tile_x,old_y=npc->tile_y;bool moved=false,animated=false;
     srand(123);
@@ -158,11 +197,75 @@ int main(int argc,char **argv) {
     change_map(2,3,6);assert(top()==map && get_current_map()==2);
     // Same category replacement keeps equipment slots compact and balances
     // attack/defense; full inventory operations are transactional.
-    assert(game_state::add_item(42));unsigned slot=0;while (game_state::get().inventory[slot]!=42) { slot++; }
-    int attack=game_state::get().players[0].attack;assert(game_state::equip(slot));
+    assert(!game_state::has_item(202));
+    assert(game_state::add_item(42));
+    unsigned slot = find_player_item(0, 42);
+    int attack = game_state::get().players[0].attack;
+    assert(game_state::equip(slot, 0));
     assert(game_state::get().players[0].attack==attack+7 && game_state::has_item(41));
-    assert(game_state::add_item(169));slot=0;while (game_state::get().inventory[slot]!=169) { slot++; }
-    game_state::get().players[0].hp=20;assert(game_state::use_healing_item(slot));assert(game_state::get().players[0].hp==50);
+    game_state::get().players[1].active = 1;
+    assert(game_state::add_item_to_player(42, 1));
+    slot = find_player_item(1, 42);
+    int player0_attack = game_state::get().players[0].attack;
+    int player1_attack = game_state::get().players[1].attack;
+    assert(game_state::equip(slot, 1));
+    assert(game_state::get().players[0].attack == player0_attack);
+    assert(game_state::get().players[1].attack == player1_attack + game_data::item(42).value);
+    assert(game_state::has_item(202));
+    assert(game_state::add_item_to_player(170, 1));
+    slot = find_player_item(1, 170);
+    assert(game_state::discard_item(slot, 1));
+    assert(game_state::add_item(169));
+    slot = find_player_item(0, 169);
+    game_state::get().players[0].hp = 20;
+    assert(game_state::use_healing_item(slot, 0));
+    assert(game_state::get().players[0].hp == 50);
+    inventory_render inventory;
+    inventory.render(screen.data());
+    inventory.process_key_click(right, 0);
+    inventory.render(screen.data());
+    equipment_render equipment;
+    equipment.render(screen.data());
+    equipment.process_key_click(right, 0);
+    equipment.render(screen.data());
+    status_render status;
+    status.render(screen.data());
+    status.process_key_click(right, 0);
+    status.render(screen.data());
+    // Tanks are now first-class state: map position, riding, pulling,
+    // equipment and UI all share the save-backed game_state.
+    assert(game_state::get().tanks[0].owned && game_state::get().tanks[0].map == 139);
+    map->update_map(139, 20, 21);
+    assert(map->process_key(right, 0));
+    assert(game_state::get().riding_tank == 0 && game_state::get().tanks[0].riding);
+    for (int i = 0; i < 8; i++) { map->tik_logic(); }
+    assert(game_state::get().tanks[0].x == 21 && game_state::get().tanks[0].y == 21);
+    game_state::exit_tank();
+    assert(game_state::get().riding_tank < 0 && !game_state::get().tanks[0].riding);
+    game_state::move_tank(0, 139, 18, 21, 3);
+    game_state::move_tank(1, 139, 20, 21, 3);
+    game_state::get().tanks[1].owned = 1;
+    game_state::pull_tank(1);
+    map->update_map(139, 21, 21);
+    assert(map->process_key(right, 0));
+    for (int i = 0; i < 8; i++) { map->tik_logic(); }
+    assert(game_state::get().tanks[1].x == 21 && game_state::get().tanks[1].y == 21);
+    game_state::unpull_tank();
+    assert(game_state::add_tank_item(65, 0));
+    unsigned tank_slot = 0;
+    while (game_state::get().tanks[0].inventory[tank_slot] != 65) { tank_slot++; }
+    unsigned old_weapon = game_state::get().tanks[0].equipment[0];
+    assert(game_state::equip_tank(tank_slot, 0, 0));
+    assert(game_state::get().tanks[0].equipment[0] == 65 &&
+           game_state::get().tanks[0].inventory[tank_slot] == old_weapon);
+    tank_status_render tank_status;
+    tank_status.render(screen.data());
+    tank_status.process_key_click(right, 0);
+    tank_status.render(screen.data());
+    tank_equipment_render tank_equipment;
+    tank_equipment.render(screen.data());
+    tank_equipment.process_key_click(right, 0);
+    tank_equipment.render(screen.data());
     // Save includes map/event/player/inventory. A corrupted save is rejected
     // without replacing the live state.
     assert(game_state::save());uint32_t money=game_state::get().money;game_state::get().money=1;
@@ -177,7 +280,9 @@ int main(int argc,char **argv) {
         old[base+28]=p.active;memcpy(old+base+29,p.equipment,8);old[base+37]=p.equipment_state;
     }
     put32(120,money);
-    for (unsigned i=0;i<32;i++) { old[124+i*2]=game_state::get().inventory[i]; }
+    uint8_t flat_inventory[game_state::k_inventory_size] = {};
+    write_flat_inventory(flat_inventory);
+    for (unsigned i = 0; i < 32; i++) { old[124 + i * 2] = flat_inventory[i]; }
     old[236]=game_state::get().map;old[238]=game_state::get().x;old[240]=game_state::get().y;old[242]=game_state::get().direction;
     uint32_t crc=0xffffffff;
     for (uint8_t value:old) { crc^=value;for (int bit=0;bit<8;bit++) { crc=(crc>>1)^(0xedb88320u&-(crc&1)); } }
@@ -195,6 +300,57 @@ int main(int argc,char **argv) {
     game_state::get().money=1000;auto *shop=new shop_render(2,0);push(shop);
     shop->process_key_click(0,1);assert(game_state::get().money==1000-price && game_state::has_item(entry.item));
     pop();pop();assert(top()==map);
+    auto tank_shop_data = game_data::shop(0, 0);
+    assert(tank_shop_data.count);
+    const auto &tank_entry = game_data::shop_entry_at(tank_shop_data.offset);
+    game_state::get().money = 100000;
+    auto *tank_shop = new shop_render(0, 0);
+    push(tank_shop);
+    tank_shop->process_key_click(0, 1);
+    assert(game_state::has_item(tank_entry.item));
+    pop_to_map();
+    game_state::get().players[0].hp = 1;
+    auto *inn = new shop_render(6, 0);
+    push(inn);
+    inn->process_key_click(0, 1);
+    assert(game_state::get().players[0].hp == game_state::get().players[0].max_hp);
+    pop_to_map();
+    game_state::get().tanks[0].sp = 1;
+    auto *sp_vendor = new shop_render(13, 0);
+    push(sp_vendor);
+    sp_vendor->process_key_click(0, 1);
+    assert(game_state::get().tanks[0].sp > 1);
+    pop_to_map();
+    audio = 0;
+    auto *jukebox = new shop_render(10, 0);
+    push(jukebox);
+    jukebox->process_key_click(0, 1);
+    assert(audio != 0);
+    pop_to_map();
+    game_state::get().players[0].hp = 1;
+    open_computer(0x88, 0);
+    assert(game_state::get().players[0].hp == game_state::get().players[0].max_hp);
+    pop_to_map();
+    game_state::get().tanks[0].sp = 1;
+    open_computer(0xa4, 0);
+    assert(game_state::get().tanks[0].sp == game_state::get().tanks[0].max_sp);
+    pop_to_map();
+    unsigned old_max_defense = game_state::get().tanks[0].max_defense;
+    game_state::get().money = 1000;
+    open_computer(0x8c, 0);
+    assert(game_state::get().tanks[0].max_defense > old_max_defense);
+    pop_to_map();
+    money = game_state::get().money;
+    open_computer(0xc8, 0);
+    assert(game_state::get().money != money || game_state::get().money == money - 10);
+    pop_to_map();
+    open_computer(0, -1);
+    assert(get_current_map() == 9);
+    pop_to_map();
+    change_map(1, 14, 14);
+    open_computer(0x40, 0);
+    assert(dynamic_cast<shop_render *>(top()) != nullptr);
+    pop_to_map();
     // New-game world entrance_t reaches town01 after the middle of the fade.
     change_map(0,91,232);get_default_player()->god_mode=true;
     map->process_key(up,0);
@@ -220,6 +376,65 @@ int main(int argc,char **argv) {
     }
     change_map(1,14,14);map->render(screen.data());
     dialogue_render dialogue(game_data::text(11,129));dialogue.render(screen.data());draw((std::string(argv[1])+"/dialogue.ppm").c_str(),screen);
+    // Battle-local item and equipment commands mutate the selected character or
+    // ridden tank directly, without opening map inventory screens.
+    memset(game_state::get().players[0].inventory, 0, game_state::k_player_inventory_size);
+    game_state::get().players[0].inventory[0] = 169;
+    game_state::get().players[0].hp = 20;
+    game_state::get().players[0].defense = 5000;
+    auto *item_battle = new battle_render(1);
+    push(item_battle);
+    for (int i = 0; i < 61; i++) { item_battle->tik_logic(); }
+    item_battle->process_key_click(right, 0);
+    item_battle->process_key_click(right, 0);
+    item_battle->process_key_click(0, 1);
+    item_battle->process_key_click(0, 1);
+    assert(game_state::get().players[0].hp > 20 && game_state::get().players[0].inventory[0] == 0);
+    pop();
+    memset(game_state::get().players[0].inventory, 0, game_state::k_player_inventory_size);
+    game_state::get().players[0].equipment[0] = 41;
+    game_state::get().players[0].equipment_state |= 0x80;
+    game_state::get().players[0].attack = 15;
+    game_state::get().players[0].inventory[0] = 42;
+    attack = game_state::get().players[0].attack;
+    auto *equip_battle = new battle_render(1);
+    push(equip_battle);
+    for (int i = 0; i < 61; i++) { equip_battle->tik_logic(); }
+    equip_battle->process_key_click(right, 0);
+    equip_battle->process_key_click(right, 0);
+    equip_battle->process_key_click(right, 0);
+    equip_battle->process_key_click(0, 1);
+    equip_battle->process_key_click(0, 1);
+    assert(game_state::get().players[0].attack == attack + 7);
+    pop();
+    game_state::enter_tank(0);
+    auto &battle_tank = game_state::get().tanks[0];
+    battle_tank.sp = 10;
+    battle_tank.max_sp = 300;
+    memset(battle_tank.inventory, 0, game_state::k_tank_inventory_size);
+    battle_tank.inventory[0] = 203;
+    auto *tank_item_battle = new battle_render(1);
+    push(tank_item_battle);
+    for (int i = 0; i < 61; i++) { tank_item_battle->tik_logic(); }
+    tank_item_battle->process_key_click(right, 0);
+    tank_item_battle->process_key_click(right, 0);
+    tank_item_battle->process_key_click(0, 1);
+    tank_item_battle->process_key_click(0, 1);
+    assert(battle_tank.inventory[0] == 0 && battle_tank.sp > 10);
+    pop();
+    battle_tank.inventory[0] = 65;
+    old_weapon = battle_tank.equipment[0];
+    auto *tank_equip_battle = new battle_render(1);
+    push(tank_equip_battle);
+    for (int i = 0; i < 61; i++) { tank_equip_battle->tik_logic(); }
+    tank_equip_battle->process_key_click(right, 0);
+    tank_equip_battle->process_key_click(right, 0);
+    tank_equip_battle->process_key_click(right, 0);
+    tank_equip_battle->process_key_click(0, 1);
+    tank_equip_battle->process_key_click(0, 1);
+    assert(battle_tank.equipment[0] == 65 && battle_tank.inventory[0] == old_weapon);
+    pop();
+    game_state::exit_tank();
     // A resolved battle awards exactly once, then returns to the same map.
     game_state::get().players[0].attack=5000;auto *battle=new battle_render(25);push(battle);
     for (int i=0;i<61;i++) { battle->tik_logic(); }
@@ -247,5 +462,6 @@ int main(int argc,char **argv) {
     }
     fclose(f);
     printf("MEMORY State=%zu Player=%zu Npc=%zu ScriptMachine=%zu Character=%zu packed=%u\n",sizeof(game_state::state),sizeof(game_state::player),sizeof(map_npcs::npc),sizeof(script_machine),sizeof(character),game_data::packed_bytes());
-    printf("HOST_RUNTIME_OK poses=%u sprite_models=%u player_model=9 npc_walk=ok dialogue=ok saves=ok map_renders=240 battle=ok shop=ok entrance_t=ok collision=ok\n",poses,model_cases);
+    printf("HOST_RUNTIME_OK poses=%u sprite_models=%u player_model=9 npc_walk=ok dialogue=ok saves=ok map_renders=240 battle=ok shop=ok splash=ok entrance_t=ok collision=ok\n",
+           poses, model_cases);
 }

@@ -2,6 +2,7 @@
 #include "map_data/map_data.h"
 #include "tile_bmp.h"
 #include "../graphic/bitmap_render.h"
+#include "../logic/story_runtime.h"
 
 namespace metalmax {
 static int current_map = 0;
@@ -14,7 +15,7 @@ unsigned short get_tile_idx(int x, int y) {
     const int width = map_size[current_map * 2 + 1];
     const int height = map_size[current_map * 2];
     if (x < 0 || y < 0 || x >= width || y >= height) { return map_fill[current_map]; }
-    return short_map_data[current_map][y * width + x];
+    return story_runtime::tile(current_map, x, y, short_map_data[current_map][y * width + x]);
 }
 
 void fill_one_tile_in_screen(int x, int y, int id, uint8_t *screen) {

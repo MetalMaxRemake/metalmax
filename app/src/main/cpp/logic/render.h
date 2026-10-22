@@ -41,6 +41,9 @@ base_render *top();
 void pop();
 
 void change_map(int map_id, int x, int y);//only support std pos
+    void clear_map_history();
+
+    void push_map_history(int map_id, int x, int y);
 
 int get_current_map();
 

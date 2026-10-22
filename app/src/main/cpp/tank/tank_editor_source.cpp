@@ -3,9 +3,7 @@
 #include "../data/resource_decode.h"
 #include <cstring>
 #include <algorithm>
-
 namespace {
-
 #include "source_data/tank_editor_022010.h"
 #include "source_data/tank_editor_0220d4.h"
 #include "source_data/tank_editor_028142.h"

@@ -1,6 +1,5 @@
 // Generated font data.
 #include <stdint.h>
-
 namespace metalmax {
     extern const uint8_t asci[96][8] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 32, 32, 0, 32, 0, 0, 0,
                                         48, 48, 0, 0, 0, 0, 0, 0, 24, 60, 40, 124, 48, 0, 0, 32,

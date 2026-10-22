@@ -2,6 +2,7 @@
 #include "render_menu.h"
 #include "render_debug.h"
 #include "render_battle.h"
+#include "story_runtime.h"
 #include "status/game_state.h"
 #include "../maps/map.h"
 #include "../maps/map_data/map_data.h"
@@ -13,6 +14,7 @@
 #include "../audio/native_sound.h"
 #include "../audio/mm_sound.h"
 #include "../monster/monster_data/monster_data.h"
+#include "../tank/tank_data.h"
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
@@ -24,6 +26,15 @@ struct last_position {
 };
 static std::vector<last_position> history;
 static unsigned water_tick = 0;
+
+    void clear_map_history() { history.clear(); }
+
+    void push_map_history(int map, int x, int y) {
+        if (map < 0 || map >= 240) { return; }
+        if (history.size() >= 64) { history.erase(history.begin()); }
+        history.push_back({uint8_t(map), uint8_t(std::max(0, std::min(255, x))),
+                           uint8_t(std::max(0, std::min(255, y)))});
+    }
 
 map_render::map_render() { srand(static_cast<unsigned>(time(nullptr))); }
 
@@ -40,6 +51,10 @@ void map_render::update_map(int map, int x, int y) {
     game_state::get().map = map_id;
     game_state::get().x = p->x;
     game_state::get().y = p->y;
+    if (game_state::get().riding_tank >= 0) {
+        game_state::move_tank(game_state::get().riding_tank, map_id, p->x, p->y, p->direct);
+    }
+    story_runtime::reset_map_runtime(map_id);
     refresh_music();
 }
 
@@ -57,11 +72,36 @@ void map_render::on_un_focus() {}
 void map_render::reset_palette() const { native_graphic::set_global_fade_percent(100); }
 
 void map_render::render_players(uint8_t *screen, character *p) const {
+    if (game_state::get().riding_tank >= 0) { return; }
+    if (!story_runtime::player_visible()) { return; }
     bitmap_render::render_bitmap_with_transport(p->current_bitmap(), 16, 16, p->render_x - camera_x,
                                                 p->render_y - camera_y, screen);
 }
 
 void map_render::render_sprite(uint8_t *screen) const { map_npcs::render(screen, camera_x, camera_y); }
+
+    void map_render::render_tanks(uint8_t *screen) const {
+        int bank = game_data::map_sprite_bank(map_id);
+        for (unsigned i = 0; i < game_state::k_tank_count; i++) {
+            const auto &tank = game_state::get().tanks[i];
+            if (!tank.owned) { continue; }
+            int x = 0, y = 0, direction = tank.direction;
+            if (game_state::get().riding_tank == static_cast<int>(i)) {
+                auto *player = get_default_player();
+                x = player->render_x;
+                y = player->render_y;
+                direction = player->direct;
+            } else {
+                if (tank.map != map_id) { continue; }
+                x = tank.x * 16;
+                y = tank.y * 16;
+            }
+            unsigned chassis = tank.equipment[tank_data::k_chassis_slot];
+            int model = chassis >= 145 && chassis <= 152 ? static_cast<int>(chassis - 144) : 1;
+            game_data::draw_sprite(bank, model, direction, 0, 1, x - camera_x, y - camera_y,
+                                   screen);
+        }
+    }
 
 void map_render::render_water(uint8_t *screen) const {
     const int states[4] = {0, 1, 2, 1};
@@ -97,6 +137,7 @@ uint8_t *map_render::render(uint8_t *screen) {
     camera_y = p->render_y - (global_config::k_screen_height - 16) / 2;
     render_map(camera_x, camera_y, screen);
     render_water(screen);
+    render_tanks(screen);
     render_sprite(screen);
     render_players(screen, p);
     return screen;
@@ -106,6 +147,7 @@ void map_render::tik_logic() {
     auto *p = get_default_player();
     p->tik();
     map_npcs::tick();
+    story_runtime::apply_pending_scene();
     water_tick++;
     if (entrance_animation) {
         entrance_animation--;
@@ -138,18 +180,32 @@ void map_render::process_key_click(uint8_t, uint8_t function) {
 bool map_render::process_key(uint8_t direct, uint8_t function) {
     auto *p = get_default_player();
     if (entrance_animation) { return true; }
+    if (story_runtime::control_locked()) { return true; }
     if (p->steping || !direct) { return !function; }
     int dir = direct & up ? 0 : direct & down ? 1 : direct & left ? 2 : 3;
     static const int dx[4] = {0, 0, -1, 1}, dy[4] = {-1, 1, 0, 0};
     p->direct = dir;
     p->half_step=0;
     int x = p->x + dx[dir], y = p->y + dy[dir];
+    int old_x = p->x, old_y = p->y;
     if (may_enter_another_map(p, x, y) || may_exit_to_last_map(p, x, y)) { return true; }
     if (!map_npcs::passable(map_id, x, y)) { return !function; }
+    int target_tank = game_state::tank_at(map_id, x, y);
+    if (target_tank >= 0) {
+        if (game_state::get().pulled_tank == target_tank) { return !function; }
+        if (game_state::get().riding_tank >= 0) { return !function; }
+        game_state::enter_tank(target_tank);
+    }
     if (map_npcs::blocks(x, y) && !map_npcs::push_npc(x, y, dir)) { return !function; }
     p->x = x;
     p->y = y;
     p->steping = true;
+    if (game_state::get().riding_tank >= 0) {
+        game_state::move_tank(game_state::get().riding_tank, map_id, p->x, p->y, p->direct);
+    }
+    if (game_state::get().pulled_tank >= 0) {
+        game_state::move_tank(game_state::get().pulled_tank, map_id, old_x, old_y, p->direct);
+    }
     trigger_door(p);
     trigger_monster();
     return !function;
